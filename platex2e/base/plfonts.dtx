@@ -1,14 +1,14 @@
 % \iffalse meta-comment
 %% File: plfonts.dtx
 %
-%  Copyright 1994-1999 ASCII Corporation.
+%  Copyright 1994-2000 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
 %
-% \CheckSum{1499}
+% \CheckSum{1497}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -45,13 +45,17 @@
 %	してしまっていたのを修正}
 % \changes{v1.3g}{1999/04/05}{plpatch.ltxの内容を反映}
 % \changes{v1.3h}{1999/08/09}{\cs{strut}の改善}
+% \changes{v1.3i}{2000/07/13}{\cs{text..}コマンドの左側に\cs{xkanjiskip}が
+%    入らないのを修正}
+% \changes{v1.3j}{2000/10/24}{\cs{adjustbaseline}で余分なアキが入らない
+%    ようにした}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plfonts.dtx}[1998/08/10 v1.3f pLaTeX New Font Selection Scheme]
+\ProvidesFile{plfonts.dtx}[2000/10/24 v1.3j pLaTeX New Font Selection Scheme]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plfonts.dtx}
@@ -982,13 +986,18 @@
 % 現在の欧文フォントの``/''の中央がくるようにベースラインシフトを設定します。
 % \changes{v1.0c}{1995/08/31}{欧文書体の基準を`M'から`/'に変更}
 % \changes{v1.2}{1995/11/21}{縦組時のみ調整するようにした}
+% \changes{v1.3j}{2000/10/24}{文頭に鈎括弧などがあるときに余計なアキがで
+%    る問題に対処}
 %
-% まず、ベースラインシフト量をゼロにします。
+% 当初はまずベースラインシフト量をゼロにしていましたが、
+% \cs{tbaselineshift}を連続して変更した後に鈎括弧類を使うと余計なアキが
+% でる問題が起こるため、\cs{tbaselineshift}をゼロクリアする処理を削除し
+% ました。
 %    \begin{macrocode}
 \newbox\adjust@box
 \newdimen\adjust@dimen
 \def\adjustbaseline{%
-  \iftdir\tbaselineshift\z@
+  \iftdir
 %    \end{macrocode}
 % 和文フォントの基準値を設定します。
 %    \begin{macrocode}
@@ -1449,7 +1458,7 @@
 %    \end{macrocode}
 %
 % \subsection{イタリック補正}
-% \changes{v1.2}{2000/07/13}{\cs{text..}コマンドの左側に\cs{xkanjiskip}が
+% \changes{v1.3i}{2000/07/13}{\cs{text..}コマンドの左側に\cs{xkanjiskip}が
 %    入らないのを修正（ありがとう、乙部＠東大さん）}
 % \begin{macro}{\check@nocorr@}
 % 「\verb|あ\texttt{abc}い|」としたとき、書体の変更を指定された欧文の左側に

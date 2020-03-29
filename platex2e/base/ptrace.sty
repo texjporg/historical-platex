@@ -116,7 +116,7 @@
 \newbox\adjust@box
 \newdimen\adjust@dimen
 \def\adjustbaseline{%
-  \iftdir\tbaselineshift\z@
+  \iftdir
   \setbox\adjust@box\hbox{\char\euc"A1A1}%
     \cht\ht\adjust@box
     \cdp\dp\adjust@box
