@@ -3,90 +3,14 @@
 %% driver files from the doc files in this package when run through
 %% pLaTeX or pTeX.
 %%
+%% Copyright 1994,1995,1996,1997 ASCII Corporation.
 %% 
 %% This file is part of the pLaTeX2e system.
 %% -----------------------------------------
 %% 
-%%  This system is distributed in the hope that it will be useful,
-%%  but WITHOUT ANY WARRANTY; without even the implied warranty of
-%%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-%% 
-%% IMPORTANT NOTICE:
 %%
-%% Copyright 1994,1995 ASCII Corporation.
-%% 
-%% Copyright 1994 the LaTeX3 project and the individual authors.
-%% All rights reserved. For further copyright information see the file
-%% legal.txt, and any other copyright indicated in this file.
-%% 
-%% Permission is granted to distributed verbatim copies of this file
-%% together with all other files of the LaTeX2e system (as mentioned
-%% in manifest.txt).
-%% 
-%% No other permissions to copy or distribute this file in any form
-%% are granted and in particular no permission to modify its contents.
-%%
-%% --------------- start of docstrip commands ------------------
-%%
-%%
-%% This docstrip .ins file makes it possible to unpack a docstrip
-%% file using initex. This would enable a doc format LaTeX distribution 
-%% to be bootstrapped just from the web (2c) sources for TeX, and the
-%% LaTeX files. It saves building plain.fmt :-)
-%%
-%%  David Carlisle 
-%%
-\catcode`\Z=\catcode`\% 
-\ifnum1=\catcode`\{{\egroup\else
-  \catcode`\Z=9
-Z
-Z  \catcode`\{=1  \catcode`\}=2 
-Z  \catcode`\#=6  \catcode`\^=7
-Z  \catcode`\@=11 \catcode`\^^L=13
-Z  \let\bgroup={  \let\egroup=}
-Z
-Z  \dimendef\z@=10 \z@=0pt \chardef\@ne=1 \countdef\m@ne=22 \m@ne=-1
-Z
-Z  \def\wlog{\immediate\write\m@ne} \def\space{ }
-Z
-Z  \count10=22 % allocates \count registers 23, 24, ...
-Z  \count15=9 % allocates \toks registers 10, 11, ...
-Z  \count16=-1 % allocates input streams 0, 1, ...
-Z  \count17=-1 % allocates output streams 0, 1, ...
-Z
-Z  \def\alloc@#1#2#3{\advance\count1#1\@ne#2#3\count1#1\relax}
-Z
-Z  \def\newcount{\alloc@0\countdef} \def\newtoks{\alloc@5\toksdef}
-Z  \def\newread{\alloc@6\chardef}   \def\newwrite{\alloc@7\chardef}
-Z
-Z  \def\newif#1{%
-Z    \@if\def#1{true}{\let#1\iftrue}\@if\def#1{false}{\let#1\iffalse}%
-Z    \@if\relax#1{false}}
-Z
-Z  \def\@if#1#2#3{%
-Z    \expandafter#1\csname\expandafter\@gobblethree\string#2#3\endcsname}
-Z  \def\@gobblethree#1#2#3{}
-Z
-Z  \def\loop#1\repeat{\def\body{#1}\iterate}
-Z  \def\iterate{\body \let\next\iterate \else\let\next\relax\fi \next}
-Z  \let\repeat\fi
-Z
-Z  \def\empty{}
-Z
-Z  \def\tracingall{\tracingcommands2 \tracingstats2 
-Z    \tracingpages1 \tracingoutput1 \tracinglostchars1 
-Z    \tracingmacros2 \tracingparagraphs1 \tracingrestores1 
-Z    \showboxbreadth 10000 \showboxdepth 10000 \errorstopmode
-Z    \errorcontextlines 10000 \tracingonline1 }
-Z
-\bgroup}\fi\catcode`\Z=11
-
-
-\def\batchfile{plcore.ins}
-
 \let\documentclass\undefined
 \input ltdirchk.dtx
-\input testdist.dtx
 \input docstrip.dtx
 
 {
@@ -97,7 +21,8 @@ Z
 \Msg{*}
 \Msg{* Welcome to the Installation routine of}
 \Msg{*}
-\Msg{* pLaTeX2e based on \fmtname\space <\fmtversion>}
+\Msg{* pLaTex2e\space<1997/02/01>}
+\Msg{* \space\space based on \fmtname\space <\fmtversion>}
 \Msg{*}
 \Msg{* Depending on your machine the installation}
 \Msg{* might take a long time --- this is the}
@@ -109,93 +34,18 @@ Z
 \Msg{}
 }
 
-\let\OriginalAsk=\Ask
-\def\Ask#1#2{%
-  \OriginalAsk{#1}{#2}%
-  \global\let\Ask\OriginalAsk
-  \Ask\質問をしない{%
-  デフォルトでは、それぞれのファイルに対して、この質問をします。^^J%
-  ここで `y' と答えると、これより先、確認をせずに上書きをしていきます。}%
-   \ifx\y\質問をしない\gdef\Ask##1##2{\def##1{y}}\else
-      \ifx\yes\質問をしない\gdef\Ask##1##2{\def##1{y}}\fi\fi}
-           
+\askonceonly
 \keepsilent
-\preamble
-
-Copyright 1994,1995 ASCII Corporation.
-
-Copyright 1994 the LaTeX3 project and the individual authors.
-All rights reserved. For further copyright information see the file
-legal.txt, and any other copyright indicated in this file.
-
-This file is part of the pLaTeX2e system.
------------------------------------------
-
- This system is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-
-IMPORTANT NOTICE:
-
-For error reports in case of UNCHANGED versions see readme files.
-
-Please do not request updates from us directly.  Distribution is
-done through Mail-Servers and TeX organizations.
-
-You are not allowed to change this file.
-
-You are allowed to distribute this file under the condition that
-it is distributed together with all files mentioned in 00readme.txt.
-
-If you receive only some of these files from someone, complain!
-
-You are NOT ALLOWED to distribute this file alone.  You are NOT
-ALLOWED to take money for the distribution or use of either this
-file or a changed version, except for a nominal charge for copying
-etc.
-\endpreamble
-
-\keepsilent
-
-\let\mainpreamble\WritePreamble
-\def\Lbatchinput#1{%
-  \let\savedpream\WritePreamble
-  \let\savedpostam\WritePostamble
-  \batchinput{#1}
-  \let\WritePreamble\savedpream
-  \let\WritePostamble\savedpostam}
 
 \Msg{*** Generating the pLaTeX files ***}
 
-% \generateFile{docstrip.tex}{t}{\from{docstrip.dtx}{program,stats}}
+\batchinput{plfmt.ins}
 
-\generateFile{platex.ltx}{t}{\from{platex.dtx}{plcore}}
-\generateFile{plcore.ltx}{t}{%
-   \from{plvers.dtx}{plcore}
-   \from{plfonts.dtx}{plcore}
-   \from{plcore.dtx}{plcore}
-   \from{plvers.dtx}{plfinal}
-}
+\batchinput{plcls.ins}
 
-\generateFile{kinsoku.tex}{t}{\from{kinsoku.dtx}{plcore}}
-\generateFile{pldefs.ltx}{t}{\from{plfonts.dtx}{pldefs,xpt}}
+\batchinput{pl209.ins}
 
-\generateFile{JY1mc.fd}{t}{\from{plfonts.dtx}{JY1mc}}
-\generateFile{JY1gt.fd}{t}{\from{plfonts.dtx}{JY1gt}}
-\generateFile{JT1mc.fd}{t}{\from{plfonts.dtx}{JT1mc}}
-\generateFile{JT1gt.fd}{t}{\from{plfonts.dtx}{JT1gt}}
-
-\generateFile{plext.sty}{t}{\from{plext.dtx}{plcore}}
-\generateFile{ptrace.sty}{t}{\from{plfonts.dtx}{trace}}
-
-\Lbatchinput{jclasses.ins}
-
-\Lbatchinput{pl209.ins}
-
-\generateFile{pldoc.tex}{t}{\from{platex.dtx}{pldoc}}
-\generateFile{omake-sh.ins}{t}{\from{platex.dtx}{shins}}
-\generateFile{omake-pl.ins}{t}{\from{platex.dtx}{plins}}
+\batchinput{pldocs.ins}
 
 \Msg{}
 \Msg{***********************************************************}
@@ -205,4 +55,4 @@ etc.
 \Msg{***********************************************************}
 \Msg{}
 
-\endinput
+\endbatchfile

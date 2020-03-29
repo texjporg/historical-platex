@@ -1,62 +1,84 @@
+% \iffalse meta-comment
+%% File: plvers
+%
+%  Copyright 1995,1996,1997 ASCII Corporation.
+%
+%  This file is part of the pLaTeX2e system.
+%  -----------------------------------------
+%
+% \fi
+%
+% \CheckSum{92}
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+%%
+%
+% \setcounter{StandardModuleDepth}{1}
+% \StopEventually{}
 %
 % \iffalse
-%%% File: plvers
-%
 %<*driver>
 % \fi
-\ProvidesFile{plvers.dtx}
-             [1996/03/05 v1.0b pLaTeX Kernel (Version Info)]
+\ProvidesFile{plvers.dtx}[1997/01/31 v1.0c pLaTeX Kernel (Version Info)]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plvers.dtx}
-\title{\filename\thanks{LaTeX authors:
-   Johannes Braams, David Carlisle, Alan Jeffrey,
-   Leslie Lamport, Frank Mittelbach, Chris Rowley, Rainer Sch\"opf}}
-\date{\filedate}
 \author{Ken Nakano}
+\title{\filename}
+\date{作成日：\filedate}
 \begin{document}
-\maketitle
- \DocInput{\filename}
+  \maketitle
+  \DocInput{\filename}
 \end{document}
 %</driver>
 % \fi
 %
-% \CheckSum{92}
-%
 % \section{バージョンの設定}
-% まず、このディストリビューションでのp\LaTeX{}の日付とバージョン番号
-% を定義します。また、p\LaTeX{}が起動されたときに表示される文字列の
+% まず、このディストリビューションでのp\LaTeXe{}の日付とバージョン番号
+% を定義します。また、p\LaTeXe{}が起動されたときに表示される文字列の
 % 設定もします。
 %
-% \StopEventually{}
+% \changes{v1.0}{1995/05/16}{p\LaTeXe\ 用に\file{ltvers.dtx}を修正}
+% \changes{v1.0a}{1995/08/30}{\LaTeX\ \texttt{!<1995/06/01!>}版用に修正}
+% \changes{v1.0b}{1996/01/31}{\LaTeX\ \texttt{!<1995/12/01!>}版用に修正}
+% \changes{v1.0c}{1997/01/11}{\LaTeX\ \texttt{!<1996/06/01!>}版用に修正}
+% \changes{v1.0d}{1997/01/23}{\LaTeX\ \texttt{!<1996/12/01!>}版用に修正}
 %
-% \changes{v1.0}{1995/05/16}{pLaTeX用に\file{ltvers.dtx}を修正}
-% \changes{v1.0a}{1995/08/30}{LaTeX `1995/06/01'版用に修正}
-% \changes{v1.0b}{1996/01/31}{LaTeX `1995/12/01'版用に修正}
-%
-% このバージョンのp\LaTeX{}は、次のバージョンの\LaTeX{}をもとにしています。
+% このバージョンのp\LaTeXe{}は、次のバージョンの\LaTeX{}\footnote{%
+% LaTeX authors: Johannes Braams, David Carlisle, Alan Jeffrey,
+%   Leslie Lamport, Frank Mittelbach, Chris Rowley, Rainer Sch\"opf}を
+% もとにしています。
 %    \begin{macrocode}
-%<*2ekernel>
-\def\fmtname{LaTeX2e}
-\def\fmtversion{1995/12/01}
-%</2ekernel>
+%<2ekernel>\def\fmtname{LaTeX2e}
+%<2ekernel>\def\fmtversion{1996/12/01}
 %    \end{macrocode}
 %
-% p\LaTeX{}のフォーマットファイル名とバージョンです。
+% p\LaTeXe{}のフォーマットファイル名とバージョンです。
 %
 %    \begin{macrocode}
 %<*plcore>
 \def\pfmtname{pLaTeX2e}
-\def\pfmtversion{1996/03/05}
+\def\pfmtversion{1997/02/01}
 %</plcore>
 %    \end{macrocode}
 %
-%
 % \subsection{パッチファイルのロード}
 %
-% 次の部分は、p\LaTeX{}のパッチファイルをロードするためのコードです。
+% 次の部分は、p\LaTeXe{}のパッチファイルをロードするためのコードです。
 % バグを修正するためのパッチを配布するかもしれません。
-% \file{ltfinal.dtx}の最後の部分の流用です。
 %    \begin{macrocode}
 %<*plfinal>
 \IfFileExists{plpatch.ltx}

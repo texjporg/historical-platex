@@ -1,4 +1,5 @@
 % \iffalse meta-comment
+%% File: plext.dtx
 %
 %  Copyright 1994,1995,1996 ASCII Corporation.
 %
@@ -6,7 +7,8 @@
 %  -------------------------------------
 %
 % \fi
-% \CheckSum{1833}
+%
+% \CheckSum{1842}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -22,9 +24,9 @@
 %%   Right bracket \]     Circumflex    \^     Underscore    \_
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
+%%
 %
 % \setcounter{StandardModuleDepth}{1}
-%
 % \StopEventually{}
 %
 % \iffalse
@@ -44,21 +46,21 @@
 %
 % \iffalse
 \NeedsTeXFormat{pLaTeX2e}
+%<*driver>
 \ProvidesFile{plext.dtx}
-%<plcore>\ProvidesPackage{plext}
-  [1996/01/30 v1.1h pLaTeX package file]
+%</driver>
+%<plcore>\ProvidesPackage{plext}[1996/01/30 v1.1h pLaTeX package file]
 %<*driver>
 \documentclass{jltxdoc}
 \usepackage{plext}
 \GetFileInfo{plext.dtx}
-%
-\title{p\LaTeXe 拡張パッケージ\space\fileversion}
+\title{p\LaTeXe{}拡張パッケージ\space\fileversion}
 \author{Ken Nakano}
 \date{作成日：\filedate}
-%
 \begin{document}
    \maketitle
-   \DocInput{plext.dtx}
+   \tableofcontents
+   \DocInput{\filename}
 \end{document}
 %</driver>
 % \fi
@@ -116,7 +118,8 @@
 % 左から、``y'', ``t'', ``z''オプションを指定してあります。
 %
 % \begin{figure}[htb]
-% \begin{small}\begin{sample}{10zw}
+% \begin{small}
+% \begin{tsample}{10zw}
 % \vfil
 %  \parbox<z>{10zw}{たとえば、これはいったい何、いったいどうして、
 %   などと思えるようなことが世の中にはたくさんあります！}\par
@@ -127,7 +130,8 @@
 %  \parbox<y>{10zw}{たとえば、これはいったい何、いったいどうして、
 %   などと思えるようなことが世の中にはたくさんあります。}
 % \vfil
-% \end{sample}\end{small}
+% \end{tsample}
+% \end{small}
 % \caption{組方向オプションの使用例\label{fig:diroption}}
 % \end{figure}
 %
@@ -147,9 +151,9 @@
 % tabular環境とarray環境は、組方向を指定するオプションを追加しました。
 % これらのコマンドは、\file{lttab.dtx}で定義されています。
 %
-% \begin{macro}{array}
-% \begin{macro}{tabular}
-% \begin{macro}{tabular*}
+% \begin{macro}{\array}
+% \begin{macro}{\tabular}
+% \begin{macro}{\tabular*}
 % array環境とtabular環境を開始するコマンドです。
 % tabular環境にはアスタリスク形式があります。
 %    \begin{macrocode}
@@ -334,7 +338,7 @@
 % \subsection{フロートとキャプションの出力位置}
 % キャプションとフロートは、
 % 出力位置の指定や大きさの指定などができるように拡張しています。
-% 詳細は、\tlatexbook{}を参照してください。
+% 詳細は、『日本語\LaTeXe{}ブック』を参照してください。
 %
 % |\layoutfloat|コマンドで作られるボックスです。
 %    \begin{macrocode}
@@ -360,7 +364,7 @@
 \def\caption@dir{Z}
 \let\captiondir\relax
 %    \end{macrocode}
-% キャプションの幅と高さです。
+% キャプションの幅です。
 %    \begin{macrocode}
 \newdimen\captionwidth \captionwidth\z@
 %    \end{macrocode}
@@ -375,7 +379,7 @@
 %    \end{macrocode}
 % キャプションに使われる文字です。
 %    \begin{macrocode}
-\def\captionfontsetup{\small\normalfont}
+\def\captionfontsetup{\normalfont\normalsize}
 %    \end{macrocode}
 %
 % \begin{macro}{\layoutfloat}
@@ -450,12 +454,17 @@
     \@latex@info{Redeclaring capiton layout setting of '#1'}%
   \fi
   \expandafter
-  \def\csname #1@layoutcaption\endcsname{%
+  \gdef\csname #1@layoutcaption\endcsname{%
      \if Z\caption@dir\def\caption@dir{#2}\fi
      \ifdim\captionwidth=\z@ \captionwidth=#3\relax\fi
      \if Z\caption@posa\def\caption@posa{#4}\fi
      \if Z\caption@posb\def\caption@posb{#5}\fi}}
 \@onlypreamble\DeclareLayoutCaption
+%    \end{macrocode}
+% \changes{v1.0h}{1996/03/13}{キャプション出力位置の初期値を設定}
+%    \begin{macrocode}
+\DeclareLayoutCaption{figure}<y>(.8\linewidth)[cd]
+\DeclareLayoutCaption{table}<y>(.8\linewidth)[cu]
 %    \end{macrocode}
 % \end{macro}
 %
@@ -535,10 +544,12 @@
 % 設定されていない場合は、警告メッセージを出力し、
 % 現在の組モードでのデフォルト値を使用します。
 % 設定されていれば、そのデフォルト値にします。
+%
+% \changes{v1.1h}{1996/03/13}{typo: \cs{@latex@warning}.}
 %    \begin{macrocode}
   \expandafter
   \ifx\csname\@captype @layoutcaption\endcsname\relax
-     \latex@warning{Default caption layout of `\@captype' unknown.}%
+     \@latex@warning{Default caption layout of `\@captype' unknown.}%
        \def\caption@dir{Z}\captionwidth\z@
        \def\caption@posa{Z}\def\caption@posb{Z}%
   \else
@@ -1033,7 +1044,7 @@
 % ここでは、連数字、漢数字、傍点、下線について説明をしています。
 %
 % 連数字と漢数字、および傍点と下線についての詳細は、
-% \tlatexbook{}を参照してください。
+% 『日本語\LaTeXe{}ブック』を参照してください。
 % なお、傍点に使う文字は\file{pldefs.ltx}で定義されています。
 %
 % なお、連数字コマンドは３種類ありましたが、
@@ -1114,6 +1125,7 @@
 % \subsubsection*{漢数字}
 %
 % \begin{macro}{\Kanji}
+% \begin{macro}{\@Kanji}
 % \begin{macro}{\kanji}
 % |\Kanji|コマンドを定義します。|\Kanji|コマンドは|\Alpha|と同じように、
 % カウンタに対してのみ使用することができます。
@@ -1122,10 +1134,14 @@
 % |\kanji 1989|のように指定をします。
 % ただし、横組モードのときには、何もしません。
 % つねに漢数字にしたい場合は、|\kansuji|プリミティブを使ってください。
+%
+% \changes{v1.0h}{1996/03/13}{\cs{@Kanji}を追加。英語版と同様にした。}
 %    \begin{macrocode}
-\def\Kanji#1{\kansuji\number\csname c@#1\endcsname}
+\def\Kanji#1{\expandafter\@Kanji\csname c@#1\endcsname}
+\def\@Kanji#1{\expandafter\kansuji\number #1}
 \def\kanji{\iftdir\expandafter\kansuji\fi}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %

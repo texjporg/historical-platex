@@ -1,13 +1,14 @@
 % \iffalse meta-comment
 %% File: plcore.dtx
 %
-%  Copyright 1994,1995,1996 ASCII Corporation.
+%  Copyright 1994,1995,1996,1997 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
-% \CheckSum{823}
+%
+% \CheckSum{891}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -23,9 +24,9 @@
 %%   Right bracket \]     Circumflex    \^     Underscore    \_
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
+%%
 %
 % \setcounter{StandardModuleDepth}{1}
-%
 % \StopEventually{}
 %
 % \iffalse
@@ -38,25 +39,25 @@
 %    プリアンブルコマンドを追加}
 % \changes{v1.1d}{1996/02/17}{\cs{printglossary}を追加}
 % \changes{v1.1e}{1996/03/12}{tabbing環境での和欧文間スペース}
+% \changes{v1.1f}{1996/07/10}{トンボまわりを修正}
+% \changes{v1.1g}{1997/01/16}{\LaTeX\ \textt{!<1996/06/01!>}に対応}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plcore.dtx}[1996/01/30 v1.1c pLaTeX core file]
+\ProvidesFile{plcore.dtx}[1997/01/29 v1.1g pLaTeX core file]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plcore.dtx}
-%
-\title{p\LaTeXe の拡張\space\fileversion}
+\title{p\LaTeXe{}の拡張\space\fileversion}
 \author{Ken Nakano}
 \date{作成日：\filedate}
-%
 \begin{document}
    \maketitle
    \tableofcontents
-   \DocInput{plcore.dtx}
+   \DocInput{\filename}
 \end{document}
 %</driver>
 % \fi
@@ -77,19 +78,20 @@
 % \item 疑似タイプ入力
 % \item tabbing環境
 % \item 用語集の出力
+% \item 時分を示すカウンタ
 % \end{itemize}
 %
 %
 % \section{コード}
 %
-% このファイルの内容は、p\LaTeX{}のコア部分です。
+% このファイルの内容は、p\LaTeXe{}のコア部分です。
 %    \begin{macrocode}
 %<*plcore>
 %    \end{macrocode}
 %
 % \subsection{プリアンブルコマンド}
 % 文書ファイルが必要とするフォーマットファイルの指定をするコマンドを
-% 拡張子、p\LaTeXe フォーマットファイルも認識するようにします。
+% 拡張子、p\LaTeXe{}フォーマットファイルも認識するようにします。
 %
 % \begin{macro}{\NeedsTeXFormat}
 % \begin{macro}{\@needsPformat}
@@ -135,8 +137,8 @@
 % \begin{macro}{\documentstyle}
 % |\documentclass|の代わりに|\documentstyle|が使われると、
 % \LaTeX~2.09互換モードに入ります。このとき、
-% オリジナルの\LaTeX では\file{latex209.def}を読み込みますが、
-% p\LaTeX{}では\file{pl209.def}を読み込みます。
+% オリジナルの\LaTeX{}では\file{latex209.def}を読み込みますが、
+% p\LaTeXe{}では\file{pl209.def}を読み込みます。
 % このコマンドは\file{ltmiscen.dtx}で定義されています。
 %    \begin{macrocode}
 \def\documentstyle{%
@@ -174,15 +176,17 @@
 % \changes{v1.1c}{1995/08/25}{行頭禁則文字の直前での改行での不具合の修正}
 % 日本語\TeX{}の行頭禁則処理は、禁則対象文字の直前に、
 % |\prekinsokupenalty|で指定されたペナルティの値を挿入することで
-% 行なっています。そのため、ペナルティ値に$10000$の値を持つ文字の直後で
-% |\\|で改行しようとしても、改行されません。
+% 行なっています。
+% ところが、改行コマンドは負のペナルティの値を挿入することで改行を行ないます。
+% そのために、禁則ペナルティの値が$10000$の文字の直後では、ペナルティの値が
+% 相殺され、改行することができません。
 %
 % \begin{verbatim}
 % あいうえお\\
 % ！かきくけこ
 % \end{verbatim}
 %
-% そのため、|\newline|マクロに|\mbox{}|を入れることによって、
+% したがって、|\newline|マクロに|\mbox{}|を入れることによって、
 % |\newline|マクロのペナルティ$-10000$と行頭文字のペナルティ$10000$が
 % 加算されないようにします。|\\|は|\newline|マクロを呼び出しています。
 %
@@ -198,7 +202,7 @@
 % ボトムフロート、脚注という順番の方が一般的ですので、
 % このような順番になるよう修正をします。
 %
-% したがって、文書ファイルによっては、\LaTeX{}の組版結果と異なる場合が
+% したがって、文書ファイルによっては\LaTeX{}の組版結果と異なる場合が
 % ありますので、注意をしてください。
 %
 % \begin{macro}{\@makecol}
@@ -326,9 +330,27 @@
 % ここではトンボを出力するためのマクロを定義しています。
 %
 % \begin{macro}{\iftombow}
-% トンボを出力するには、|\documentclass|のオプションで|tombow|を指定します。
+% \begin{macro}{\iftombowdate}
+% |\iftombow|はトンボを出力するかどうか、|\iftombowdate|はDVIを作成した
+% 日付をトンボの脇に出力するかどうかを示すために用います。
 %    \begin{macrocode}
 \newif\iftombow \tombowfalse
+\newif\iftombowdate \tombowdatetrue
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@tombowwidth}
+% |\@tombowwidth|には、トンボ用罫線の太さを指定します。
+% デフォルトは0.1ポイントです。
+% この値を変更し、|\maketombowbox|コマンドを実行することにより、トンボの
+% 罫線太さを変更して出力することができます。通常の使い方では、
+% トンボの罫線を変更する必要はありません。DVIをフィルムに面付け出力する
+% とき、トンボをつけずに位置はそのままにする必要があるときに、この太さを
+% ゼロポイントにします。
+%    \begin{macrocode}
+\newdimen\@tombowwidth
+\setlength{\@tombowwidth}{.1\p@}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -339,28 +361,13 @@
 % \begin{macro}{\@TC}
 % \begin{macro}{\@TR}
 % \begin{macro}{\@Tr}
-% 天側：左、中、右
+% |\@TL|と|\@Tl|はページ上部の左側、
+% |\@TC|はページ上部の中央、
+% |\@TR|と|\@Tr|はページ上部の左側のトンボとなるボックスです。
 %    \begin{macrocode}
 \newbox\@TL\newbox\@Tl
 \newbox\@TC
 \newbox\@TR\newbox\@Tr
-%
-\setbox\@TL\hbox to\z@{\yoko\hss
-      \vrule width13mm height.1\p@
-      \vrule height10mm width.1\p@}
-\setbox\@Tl\hbox to\z@{\yoko\hss
-      \vrule width10mm height.1\p@
-      \vrule height13mm width.1\p@}
-\setbox\@TC\hbox{\yoko
-      \vrule width10mm height.1\p@
-      \vrule height10mm width.1\p@
-      \vrule width10mm height.1\p@}
-\setbox\@TR\hbox to\z@{\yoko
-      \vrule height10mm width.1\p@
-      \vrule width13mm height.1\p@\hss}
-\setbox\@Tr\hbox to\z@{\yoko
-      \vrule height13mm width.1\p@
-      \vrule width10mm height.1\p@\hss}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -373,28 +380,13 @@
 % \begin{macro}{\@BC}
 % \begin{macro}{\@BR}
 % \begin{macro}{\@Br}
-% 地側：左、中、右
+% |\@BL|と|\@Bl|はページ下部の左側、
+% |\@BC|はページ下部の中央、
+% |\@BR|と|\@Br|はページ下部の左側のトンボとなるボックスです。
 %    \begin{macrocode}
 \newbox\@BL\newbox\@Bl
 \newbox\@BC
 \newbox\@BR\newbox\@Br
-%
-\setbox\@BL\hbox to\z@{\yoko\hss
-      \vrule width13mm depth.1\p@
-      \vrule depth10mm width.1\p@}
-\setbox\@Bl\hbox to\z@{\yoko\hss
-      \vrule width10mm depth.1\p@
-      \vrule depth13mm width.1\p@}
-\setbox\@BC\hbox{\yoko
-      \vrule width10mm depth.1\p@
-      \vrule depth10mm width.1\p@
-      \vrule width10mm depth.1\p@}
-\setbox\@BR\hbox to\z@{\yoko
-      \vrule depth10mm width.1\p@
-      \vrule width13mm depth.1\p@\hss}
-\setbox\@Br\hbox to\z@{\yoko
-      \vrule depth13mm width.1\p@
-      \vrule width10mm depth.1\p@\hss}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -404,19 +396,112 @@
 %
 % \begin{macro}{\@CL}
 % \begin{macro}{\@CR}
-% 天地中央：左と右
+% |\@CL|はページ左側の中央、|\@CR|はページ右側の中央のトンボとなる
+% ボックスです。
 %    \begin{macrocode}
 \newbox\@CL
-\setbox\@CL\hbox to\z@{\yoko\hss
-      \vrule width10mm height.05\p@ depth.05\p@
-      \vrule height10mm depth10mm width.1\p@}
-%
 \newbox\@CR
-\setbox\@CR\hbox to\z@{\yoko
-      \vrule height10mm depth10mm width.1\p@
-      \vrule height.05\p@ depth.05\p@ width10mm\hss}
 %    \end{macrocode}
 % \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@bannertoken}
+% \begin{macro}{\@bannerfont}
+% |\@bannertoken|トークンは、トンボの横に出力する文字列を入れます。
+% デフォルトでは何も出力しません。
+% |\@bannerfont|フォントは、その文字列を出力するためのフォントです。
+% 9ポイントのタイプライタ体としています。
+% \changes{v1.1f}{1996/09/03}{Add \cs{@bannerbox}.}
+%    \begin{macrocode}
+\font\@bannerfont=cmtt9
+\newtoks\@bannertoken
+\@bannertoken{}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\maketombowbox}
+% |\maketombow|コマンドは、トンボとなるボックスを作るために用います。
+% このコマンドは、トンボとなるボックスを作るだけで、それらのボックスを
+% 出力するのではないことに注意をしてください。
+%    \begin{macrocode}
+\def\maketombowbox{%
+  \setbox\@TL\hbox to\z@{\yoko\hss
+      \vrule width13mm height\@tombowwidth depth\z@
+      \vrule height10mm width\@tombowwidth depth\z@
+%    \end{macrocode}
+% \changes{v1.0f}{1996/07/10}{トンボの横にDVIファイルの作成日を出力する
+%    ようにした。}
+% \changes{v1.0g}{1997/01/23}{作成日の出力をするかどうかをフラグで指定する
+%    ようにした。}
+%    \begin{macrocode}
+      \iftombowdate
+        \raise4pt\hbox to\z@{\hskip5mm\@bannerfont\the\@bannertoken\hss}%
+      \fi}%
+  \setbox\@Tl\hbox to\z@{\yoko\hss
+      \vrule width10mm height\@tombowwidth depth\z@
+      \vrule height13mm width\@tombowwidth depth\z@}%
+  \setbox\@TC\hbox{\yoko
+      \vrule width10mm height\@tombowwidth depth\z@
+      \vrule height10mm width\@tombowwidth depth\z@
+      \vrule width10mm height\@tombowwidth depth\z@}%
+  \setbox\@TR\hbox to\z@{\yoko
+      \vrule height10mm width\@tombowwidth depth\z@
+      \vrule width13mm height\@tombowwidth depth\z@\hss}%
+  \setbox\@Tr\hbox to\z@{\yoko
+      \vrule height13mm width\@tombowwidth depth\z@
+      \vrule width10mm height\@tombowwidth depth\z@\hss}%
+%
+  \setbox\@BL\hbox to\z@{\yoko\hss
+      \vrule width13mm depth\@tombowwidth height\z@
+      \vrule depth10mm width\@tombowwidth height\z@}%
+  \setbox\@Bl\hbox to\z@{\yoko\hss
+      \vrule width10mm depth\@tombowwidth height\z@
+      \vrule depth13mm width\@tombowwidth height\z@}%
+  \setbox\@BC\hbox{\yoko
+      \vrule width10mm depth\@tombowwidth height\z@
+      \vrule depth10mm width\@tombowwidth height\z@
+      \vrule width10mm depth\@tombowwidth height\z@}%
+  \setbox\@BR\hbox to\z@{\yoko
+      \vrule depth10mm width\@tombowwidth height\z@
+      \vrule width13mm depth\@tombowwidth height\z@\hss}%
+  \setbox\@Br\hbox to\z@{\yoko
+      \vrule depth13mm width\@tombowwidth height\z@
+      \vrule width10mm depth\@tombowwidth height\z@\hss}%
+%
+  \setbox\@CL\hbox to\z@{\yoko\hss
+      \vrule width10mm height.5\@tombowwidth depth.5\@tombowwidth
+      \vrule height10mm depth10mm width\@tombowwidth}%
+  \setbox\@CR\hbox to\z@{\yoko
+      \vrule height10mm depth10mm width\@tombowwidth
+      \vrule height.5\@tombowwidth depth.5\@tombowwidth width10mm\hss}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@outputtombow}
+% |\@outputtombow|コマンドは、トンボを出力するのに用います。
+%    \begin{macrocode}
+\def\@outputtombow{%
+  \iftombow
+  \vbox to\z@{\kern-13mm\relax
+    \moveleft3mm\vbox to\@@paperheight{%
+      \hbox to\@@paperwidth{\hskip3mm\relax
+         \copy\@TL\hfill\copy\@TC\hfill\copy\@TR\hskip3mm}%
+      \kern-10mm
+      \hbox to\@@paperwidth{\copy\@Tl\hfill\copy\@Tr}%
+      \vfill
+      \hbox to\@@paperwidth{\copy\@CL\hfill\copy\@CR}%
+      \vfill
+      \hbox to\@@paperwidth{\copy\@Bl\hfill\copy\@Br}%
+      \kern-10mm
+      \hbox to\@@paperwidth{\hskip3mm\relax
+         \copy\@BL\hfill\copy\@BC\hfill\copy\@BR\hskip3mm}%
+    }\vss
+  }%
+  \fi
+}
+%    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\@@paperheight}
@@ -490,42 +575,21 @@
 % |\begingroup|と|\endgroup|で囲みます。
 %    \begin{macrocode}
 \def\@outputpage{%
- \let \protect \noexpand
- \begingroup% for pLaTeX
- \iftdir
-   \dimen\z@\textwidth
-   \textwidth\textheight
-   \textheight\dimen\z@
- \fi
- \shipout\vbox{\yoko
-  \set@typeset@protect
-  \aftergroup\set@typeset@protect
-  \@shipoutsetup
-  \@begindvi
-%    \end{macrocode}
-% トンボの出力部分です。
-%    \begin{macrocode}
-\iftombow
-  \vbox to\z@{\kern-13mm\relax
-     \moveleft3mm\vbox to\@@paperheight{%
-       \hbox to\@@paperwidth{\hskip3mm\relax
-          \copy\@TL\hfill\copy\@TC\hfill\copy\@TR\hskip3mm}%
-       \kern-10mm
-       \hbox to\@@paperwidth{\copy\@Tl\hfill\copy\@Tr}%
-       \vfill
-       \hbox to\@@paperwidth{\copy\@CL\hfill\copy\@CR}%
-       \vfill
-       \hbox to\@@paperwidth{\copy\@Bl\hfill\copy\@Br}%
-       \kern-10mm
-       \hbox to\@@paperwidth{\hskip3mm\relax
-          \copy\@BL\hfill\copy\@BC\hfill\copy\@BR\hskip3mm}%
-  }\vss}%
-\fi
-%    \end{macrocode}
-% 以降は、最初の|\begingroup|を閉じるための|\endgroup|を追加しただけです。
-%    \begin{macrocode}
-     \vskip \@@topmargin
-     \moveright\@themargin \vbox {%
+  \let \protect \noexpand
+  \begingroup% for pLaTeX
+  \iftdir
+    \dimen\z@\textwidth
+    \textwidth\textheight
+    \textheight\dimen\z@
+  \fi
+  \shipout\vbox{\yoko
+    \set@typeset@protect
+    \aftergroup\set@typeset@protect
+    \@shipoutsetup
+    \@begindvi
+    \@outputtombow
+    \vskip \@@topmargin
+    \moveright\@themargin\vbox{%
       \setbox\@tempboxa \vbox to\headheight{%
         \vfil
         \color@hbox
@@ -552,8 +616,8 @@
           \@thefoot
           }%
       \color@endbox
-      }%
     }%
+  }%
   \endgroup% for pLaTeX
   \global \@colht \textheight
   \stepcounter{page}%
@@ -664,7 +728,9 @@
 %
 % \begin{macro}{\verb}
 % \changes{v1.1b}{1995/04/05}{互換モードのときは、pl209.defの定義を使う}
-% オリジナルの|\verb|コマンドでは、数式モードでないときは、
+% \changes{v1.1g}{1997/01/16}
+%    {\cs{verb}コマンドを\LaTeX\ \texttt{!<1996/06/01!>}に合わせて修正}
+% \LaTeX{}の|\verb|コマンドでは、数式モードでないときは、
 % |\leavevmode|で水平モードに入ったあと、|\null|を出力しています。
 % マクロ|\null|は|\hbox{}|として定義されていますので、
 % ここには和欧文間スペース（|\xkanjiskip|）が入りません。
@@ -673,8 +739,9 @@
 %    \begin{macrocode}
 \if@compatibility\else
 \def\verb{\relax\ifmmode\hbox\else\leavevmode\fi
-  \bgroup \@noligs
-    \verbatim@font \verb@eol@error \let\do\@makeother \dospecials
+  \bgroup
+    \verb@eol@error \let\do\@makeother \dospecials
+    \verbatim@font
     \@ifstar\@sverb\@verb}
 \fi
 %    \end{macrocode}
@@ -686,13 +753,12 @@
 % 相互参照や疑似タイプ入力では、和欧文間スペースが入らないので、|\null|を
 % 取り除きましたが、|tabbing|環境では、逆に|\null|がないため、
 % 和欧文間スペースが入ってしまうので、それを追加します。
-%
 %    \begin{macrocode}
 \gdef\@stopfield{\null\color@endgroup\egroup}
 %    \end{macrocode}
 %
 % \subsection{用語集の出力}
-% \LaTeX には、なぜか用語集を出力するためのコマンドがありませんので、
+% \LaTeX{}には、なぜか用語集を出力するためのコマンドがありませんので、
 % 追加をします。
 % \changes{v1.1e}{1996/02/17}{\cs{printglossary}を追加}
 %
@@ -702,6 +768,30 @@
 %    \begin{macrocode}
 \newcommand\printglossary{\@input@{\jobname.gls}}
 %    \end{macrocode}
+% \end{macro}
+%
+% \subsection{時分を示すカウンタ}
+% \TeX には、年月日を示す数値を保持しているカウンタとして、それぞれ
+% |\year|, |\month|, |\day|がプリミティブとして存在します。しかし、
+% 時分については、深夜の零時からの経過時間を示す|\time|カウンタしか存在
+% していません。そこで、p\LaTeXe{}では、時分を示すためのカウンタ|\hour|と
+% |\minute|を作成しています。
+%
+% \begin{macro}{\hour}
+% \begin{macro}{\minute}
+% 何時か（|\hour|）を得るには、|\time|を60で割った商をそのまま用います。
+% 何分か（|\minute|）は、|\hour|に60を掛けた値を|\time|から引いて算出します。
+% ここではカウンタを宣言するだけです。実際の計算は、クラスやパッケージの中
+% で行なわなくてはなりません。そうでなければ、フォーマットファイルを作成
+% した時間に設定されるだけです。
+%    \begin{macrocode}
+\newcount\hour
+\newcount\minute
+%\hour\time \divide\hour by 60\relax
+%\@tempcnta\hour \multiply\@tempcnta 60\relax
+%\minute\time \advance\minute-\@tempcnta
+%    \end{macrocode}
+% \end{macro}
 % \end{macro}
 %
 %

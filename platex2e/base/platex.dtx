@@ -1,5 +1,5 @@
 % \iffalse meta-comment
-%%% $Id: platex.dtx,v 1.7 1995/04/26 13:30:54 ken-na Exp ken-na $
+%% File: platex.dtx
 %
 %  Copyright 1995,1996 ASCII Corporation.
 %
@@ -7,7 +7,8 @@
 %  -------------------------------------
 %
 % \fi
-% \CheckSum{377}
+%
+% \CheckSum{360}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -23,13 +24,13 @@
 %%   Right bracket \]     Circumflex    \^     Underscore    \_
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
+%%
 %
 % \setcounter{StandardModuleDepth}{1}
 % \def\chuui#1{\par\vskip.5\baselineskip
 %   \noindent\bfseries{注意：}\par
 %   \noindent\bgroup\bf#1}
 % \def\endchuui{\egroup\vskip.5\baselineskip}
-%
 % \StopEventually{}
 %
 % \iffalse
@@ -37,44 +38,41 @@
 % \changes{v1.0a}{1995/08/25}{互換性について、\dst{}の使い方、参考文献を追加}
 % \changes{v1.0b}{1996/02/01}{\file{omake-sh.ins}, \file{omake-pl.ins}を
 %     \dst{}の変更にともなう変更をした}
+% \changes{v1.0c}{1997/01/23}{\LaTeX\ \textt{!<1996/12/01!>}に合わせて修正}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{platex.dtx}[1995/08/25 v1.0a pLaTeX document file]
+\ProvidesFile{platex.dtx}[1997/01/29 v1.0c pLaTeX document file]
 % \iffalse
 \documentclass{jltxdoc}
 \usepackage{plext}
 \GetFileInfo{platex.dtx}
-%
-\title{p\LaTeX について}
+\title{p\LaTeXe{}について}
 \author{Ken Nakano}
 \date{作成日：\filedate}
-%
 \begin{document}
    \MakeShortVerb{\+}
    \maketitle
-   \DocInput{platex.dtx}
+   \DocInput{\filename}
 \end{document}
 %</driver>
 % \fi
 %
 %
 % \section{概要}\label{platex:intro}
-% この文書は、p\LaTeX{}の概要を示していますが、使い方のガイドでは
-% ありません。
+% この文書は、p\LaTeXe{}の概要を示していますが、使い方のガイドでは
+% ありません。p\LaTeXe{}の機能についての説明は、\cite{platex2e-book}を
+% 参照してください。日本語\TeX{}については\cite{jtex-tech}を参照してください。
+%
+% p\LaTeXe{}では\cite{tate-book}で説明されている、いくつかの拡張コマンドの
+% 動作を修正しています。その詳細については、\file{plext.dtx}を参照して
+% ください。
 %
 % \LaTeX{}の機能については、\cite{latex-book2}や\cite{latex-comp}などを
-% 参照してください。新しい機能については、\file{usrguide.tex}\footnote{%
-% 訳したものを\file{jusrguid.tex}として添付してあります。}なども
-% 参照してください。
-%
-% 日本語\TeX{}については、\cite{jtex-tech}や
-% \cite{tate-book}を参照してください。
-% このバージョンでは、\cite{tate-book}のコマンドのいくつかを修正しています。
-% その詳細については、\file{plext.dtx}を参照してください。
+% 参照してください。新しい機能については\file{usrguide.tex}を参照してください。
 %
 % この文書の構成は次のようになっています。
 %
@@ -85,23 +83,21 @@
 %  \dst{}のためのオプションについて述べています。
 %
 % \item[第\ref{platex:plcore}節]
-%  p\LaTeX{}で拡張した機能についての概要です。
+%  p\LaTeXe{}で拡張した機能についての概要です。
 %  付属のクラスファイルやパッケージファイルについても簡単に
 %  説明しています。
 %
-% \item[第\ref{platex:compati}節]
+% \item[第\ref{platex:compatibility}節]
 %  旧バージョンのp\LaTeX{}との互換性について述べています。
 %
 % \item[付録\ref{app:pldoc}]
-%  p\LaTeXe{}のソースファイルをまとめて組版するための、
-%  文書ファイルについて説明をしています。
+%  p\LaTeXe{}のdtxファイルをまとめて一つのDVIファイルにするための
+%  文書ファイル説明をしています。
 %
-% \item[付録\ref{app:shprog}]
-%  付録\ref{app:pldoc}の文書ファイルを組版するときに便利な、
-%  シェルスクリプトについて説明しています。
-%
-% \item[付録{app:plprog}]
-%  \dst{}文書ファイル内の入れ子の対応を調べるperlスクリプトです。
+% \item[付録\ref{app:omake}]
+%  付録\ref{app:pldoc}で説明をした文書ファイルを処理するshスクリプト（手順）、
+%  \dst{}文書ファイル内の入れ子の対応を調べるperlスクリプトなどについて
+%  説明しています。
 % \end{description}
 % \end{quote}
 %
@@ -120,9 +116,9 @@
 % pldoc  & p\LaTeXe{}のソースファイルをまとめて組版するための
 %          文書ファイルを生成\\[2mm]
 % shprog & 上記のファイルを作成するためのshスクリプトを生成\\
-% shins  & 上記のshスクリプトを取り出すための\dst{}バッチファイルを生成\\
 % plprog & 入れ子構造を調べる簡単なperlスクリプトを生成\\
-% plins  & 上記のperlスクリプトを取り出すための\dst{}バッチファイルを生成\\
+% Xins   & 上記のshスクリプトやperlスクリプトを取り出すための
+%            \dst{}バッチファイルを生成\\
 % \end{tabular}
 % \end{center}
 % \MakeShortVerb{\|}
@@ -156,8 +152,9 @@
 % \dst プログラムの詳細は、\file{docstrip.dtx}を参照してください。
 %
 %
-% \section{p\LaTeX の機能について}\label{platex:plcore}
-% p\LaTeX{}の機能は、いくつものファイルに分割されて実装されています。
+%
+% \section{p\LaTeXe{}の機能について}\label{platex:plcore}
+% p\LaTeXe{}の機能は、いくつものファイルに分割されて実装されています。
 % これらのファイルはつぎの３種類に分類することができます。
 %
 % \begin{itemize}
@@ -167,24 +164,24 @@
 % \end{itemize}
 %
 % フォーマットファイルには、基本的な機能が定義されており、
-% p\LaTeX{}の核となるファイルです。このファイルに定義されているマクロは、
+% p\LaTeXe{}の核となるファイルです。このファイルに定義されているマクロは、
 % 実行時の速度を高めるために、あらかじめ\TeX の内部形式の形で保存されて
 % います。
 %
 % クラスファイルとパッケージファイルは、従来、スタイルファイルと呼ばれていた
-% ものです。\LaTeXe ではそれらを、レイアウトに関するものをクラスファイルと
+% ものです。\LaTeXe{}ではそれらを、レイアウトに関するものをクラスファイルと
 % 呼び、マクロの拡張をするものをパッケージファイルと呼んで区別するように
 % なりました。
 %
-% \TeX 文書が使用するクラスは、文書のプリアンブルで|\documentclass|コマンド
+% \TeX{}文書が使用するクラスは、文書のプリアンブルで|\documentclass|コマンド
 % を用いて指定します。|\documentclass|ではなく、旧版の|\documentstyle|を
 % 用いると、自動的に\emph{2.09互換モード}に入ります。
 % 互換モードは旧版の文書を組版するためだけに作られていますので、
 % 新しく文書を作成する場合は、|\documentclass|コマンドを用いてください。
-% 互換モードでは\LaTeXe の新機能も使えなくなります。
+% 互換モードでは\LaTeX{}の新機能も使えなくなります。
 %
 % 旧版では、|\documentstyle|のオプションでマクロファイルを読み込んで
-% いましたが、\LaTeXe では、|\usepackage|コマンドを用いて読み込みます。
+% いましたが、\LaTeX{}では、|\usepackage|コマンドを用いて読み込みます。
 %
 % \subsection{フォーマットファイル}
 % フォーマットファイルには、基本的な機能が定義されていますが、
@@ -193,12 +190,12 @@
 % ソースファイル``platex.ltx''を|iniptex|プログラムで処理します。
 %
 % 次のリストが、その内容です。
-% ただし、このバージョンでは、\LaTeX{}からp\LaTeX{}への拡張を
+% ただし、このバージョンでは、\LaTeX{}からp\LaTeXe{}への拡張を
 % \file{plcore.ltx}をロードすることで行ない、
 % \file{latex.ltx}には直接、手を加えないようにしています。
 % したがって\file{platex.ltx}はとても短いものとなっています。
 % \file{latex.ltx}には\LaTeX{}のコマンドが、
-% \file{plcore.ltx}にはp\LaTeX{}で拡張したコマンドが定義されています。
+% \file{plcore.ltx}にはp\LaTeXe{}で拡張したコマンドが定義されています。
 %
 %    \begin{macrocode}
 %<*plcore>
@@ -220,46 +217,49 @@
 %</plcore>
 %    \end{macrocode}
 %
-% 実際にp\LaTeX{}への拡張を行なっている\file{plcore.ltx}は、
+% 実際にp\LaTeXe{}への拡張を行なっている\file{plcore.ltx}は、
 % \dst{}プログラムによって、次のファイルの断片が連結されたものです。
 %
 % \begin{itemize}
-% \item \file{plvers.dtx}は、p\LaTeX{}のフォーマットバージョンを定義しています。
+% \item \file{plvers.dtx}は、p\LaTeXe{}のフォーマットバージョンを
+%   定義しています。
 % \item \file{plfonts.dtx}は、\NFSS2を拡張しています。
 % \item \file{plcore.dtx}は、上記以外のコマンドでフォーマットファイルに
-%  格納されるコマンドを定義しています。
+%   格納されるコマンドを定義しています。
 % \end{itemize}
 %
 % プリロードフォントや組版パラメータなどの設定は、
 % \file{pldefs.ltx}をロードすることで行なっています。
 % このファイルに記述されている設定を変更すれば、
-% p\LaTeX{}をカスタマイズすることができます。
+% p\LaTeXe{}をカスタマイズすることができます。
 % カスタマイズする場合は、このファイルを直接、修正するのではなく、
 % \file{pldefs.cfg}という名前でコピーをして、そのファイルを編集します。
 % \file{pldefs.cfg}は\file{pldefs.ltx}の代わりに読み込まれます。
 %
 %
 % \subsubsection{バージョン}
-% p\LaTeX{}のバージョンやフォーマットファイル名は、
+% p\LaTeXe{}のバージョンやフォーマットファイル名は、
 % \file{plvers.dtx}で定義しています。
 %
 %
 % \subsubsection{\NFSS2コマンド}
-% \LaTeXe{}では、フォント選択機構として\NFSS2を用いています。
+% \LaTeX{}では、フォント選択機構として\NFSS2を用いています。
 % p\LaTeXe{}では、オリジナルの\NFSS2 と同様のインターフェイスで、
 % 和文フォントを選択できるように、\file{plfonts.dtx}で\NFSS2を拡張しています。
 %
-% \NFSS2についての詳細は、\file{jfntguid.tex}を参照してください。
-% このファイルには、プリロードフォントの設定、
-% 和文エンコードの定義、組版パラメータなどの設定、フォント定義ファイルなど
-% の記述も含まれています。
-%
-% p\LaTeX{}の\NFSS2は、フォントを切替えるコマンドを指定するときに、
+% p\LaTeXe{}の\NFSS2は、フォントを切替えるコマンドを指定するときに、
 % それが欧文書体か和文書体のいずれかを対象とするものかを、
 % できるだけ意識しないようにする方向で拡張しています。
 % いいかえれば、コマンドが（可能な限りの）判断をします。
 % したがって数多くある英語版のクラスファイルやパッケージファイルなどで
 % 書体の変更を行っている箇所を修正する必要はあまりありません。
+%
+% \file{plfonts.dtx}ファイルでは、\NFSS2コマンドの定義のほか、プリロード
+% フォントの設定、和文エンコードの定義、組版パラメータなどの設定、
+% フォント定義ファイルなどの記述も含まれています。
+%
+% \NFSS2についての詳細は、\LaTeXe に付属の\file{fntguide.tex}を参照して
+% ください。
 %
 %
 % \subsubsection{出力ルーチンとフロート}
@@ -280,15 +280,15 @@
 %
 % \subsection{クラスファイルとパッケージファイル}
 % クラスファイルとパッケージファイルは、従来、スタイルファイルと呼ばれていた
-% ものです。\LaTeXe ではそれらを、レイアウトに関するものをクラスファイルと
+% ものです。\LaTeX{}ではそれらを、レイアウトに関するものをクラスファイルと
 % 呼び、マクロの拡張をするものをパッケージファイルと呼んで区別するように
 % なりました。
 %
-% p\LaTeXe が提供をする、クラスファイルやパッケージファイルのいくつかは、
+% p\LaTeXe{}が提供をする、クラスファイルやパッケージファイルのいくつかは、
 % オリジナルのファイルを修正しています。
 % 修正箇所には``\texttt{platex}''条件が付けられています。
 % 
-% p\LaTeX{}に付属のクラスファイルは、次のとおりです。
+% p\LaTeXe{}に付属のクラスファイルは、次のとおりです。
 %
 % \begin{itemize}
 % \item jbook.cls,jarticle.cls,jreport.cls\par
@@ -306,16 +306,16 @@
 %   クラスファイル。
 % \end{itemize}
 %
-% また、p\LaTeX{}に付属のパッケージファイルは、次のとおりです。
+% また、p\LaTeXe{}に付属のパッケージファイルは、次のとおりです。
 %
 % \begin{itemize}
 % \item oldpfont.sty\par
-%    p\LaTeX209のフォントコマンドを提供するパッケージ。
+%    p\LaTeX~2.09のフォントコマンドを提供するパッケージ。
 %    \file{oldpfont.dtx}から作成される。
 %
 % \item ptrace.sty\par
-%   \file{tracefnt.sty}で再定義された\NFSS2コマンドをp\LaTeX{}用に
-%   再再定義するためのパッケージ。
+%   \file{tracefnt.sty}で再定義された\NFSS2コマンドをp\LaTeXe{}用に
+%   再々定義するためのパッケージ。
 %
 % \item ascmac.sty, tascmac.sty\par
 %    旧バージョンのp\LaTeX{}で配布されていたファイル。
@@ -325,35 +325,51 @@
 % \end{itemize}
 %
 %
-% \section{旧バージョンとの互換性}\label{platex:compati}
-% ここでは、旧バージョンとの互換性について説明をしています。
+% \section{旧バージョンとの互換性}\label{platex:compatibility}
+% ここでは、このバージョンと以前のバージョンとの互換性や拡張部分について
+% 説明をしています。
 %
-% p\LaTeX{}は、\LaTeX{}の上位互換という形を取っていますが、
+% \subsection{p\LaTeX~2.09との互換性}
+% p\LaTeXe{}は、\LaTeX{}の上位互換という形を取っていますが、
 % いくつかのパラメータなども変更しています。
 % したがって英文書など、\LaTeX{}でも処理できるファイルを
-% p\LaTeX{}で処理しても、完全に同じ結果になるとは限りません。
+% p\LaTeXe{}で処理しても、完全に同じ結果になるとは限りません。
 % これは、英語版の\LaTeX{}でも同じです。
-% 詳細は、\file{usrguide.tex}を参照してください。
+% 詳細は、\LaTeXe に付属の\file{usrguide.tex}を参照してください。
 %
-% 多くの英語版のクラスファイルやパッケージフィルはそのまま使えると思います。
-% ただし、それらがp\LaTeX{}で拡張しているコマンドと同じ名前のコマンドを
-% 再定義している場合は、どうなるかわかりません。
-% たとえば、英語版の\file{tracefnt.sty}は|\selectfont|を再定義していますので、
-% p\LaTeX{}のフォント選択機構がうまく働きません。
+% 多くのクラスファイルやパッケージフィルはそのまま使えると思います。
+% ただし、それらがp\LaTeXe{}で拡張しているコマンドと同じ名前のコマンドを
+% 再定義している場合は、コマンドの拡張の仕方によってはエラーになることも
+% あります。用いようとしている、クラスファイルやパッケージファイルが
+% うまく動くかどうかを、完全に確かめる方法は残念ながらありません。
+% 一番簡単なのは、動かしてみることです。不幸にもうまく動かない場合は、
+% ログファイルや付属の文書ファイルを参考に原因を調べてください。
 %
 %
 %
 % \appendix
 %
 % \section{文書ファイル}\label{app:pldoc}
+% \changes{v1.0c}{1997/01/25}{Add to filecontents environment for pldoc.dic.}
+% ここでは、このパッケージに含まれているdtxファイルをまとめて組版をするための
+% 文書ファイルについて説明をしています。個別に処理した場合と異なり、
+% 変更履歴や索引も付きます。全体で、およそ150ページ程度になります。
 %
-% ここでは、前節で説明をしたファイルをまとめて
-% \footnote{もちろん、それぞれのファイルを個別に、独立した文書として
-% 組版することもできます。}組版をするための文書ファイルについて説明を
-% しています。この文書は、およそ60ページになります。
-%
+% |filecontents|環境は、引数に指定されたファイルが存在するときは何も
+% しませんが、存在しないときは、環境内の内容でファイルを作成します。
+% \file{pldoc.dic}ファイルは、mendexプログラムで索引を処理するときに
+% \cs{西暦}, \cs{和暦}に対する「読み」を付けるために必要です。
 %    \begin{macrocode}
 %<*pldoc>
+\begin{filecontents}{pldoc.dic}
+西暦    せいれき
+和暦    われき
+\end{filecontents}
+%    \end{macrocode}
+% 文書クラスには、\file{jltxdoc}クラスを用います。
+% \file{plext.dtx}の中でサンプルを組み立てていますので、
+% \file{plext}パッケージが必要です。
+%    \begin{macrocode}
 \documentclass{jltxdoc}
 \usepackage{plext}
 \listfiles
@@ -399,18 +415,26 @@
 \def\changes@#1#2#3{%
   \let\protect\@unexpandable@protect
   \edef\@tempa{\noexpand\glossary{#2\space\currentfile\space#1\levelchar
-                                 \expandafter\@gobble
-                                 \saved@macroname\actualchar
-                                 \string\verb\quotechar*%
-                                 \verbatimchar\saved@macroname
-                                 \verbatimchar:\levelchar #3}}%
+               \ifx\saved@macroname\@empty
+                  \space\actualchar\generalname
+               \else
+                  \expandafter\@gobble
+                  \saved@macroname\actualchar
+                  \string\verb\quotechar*%
+                  \verbatimchar\saved@macroname
+                  \verbatimchar
+               \fi
+               :\levelchar #3}}%
   \@tempa\endgroup\@esphack}
 \makeatother
 \RecordChanges
 \CodelineIndex
 \EnableCrossrefs
+\setcounter{IndexColumns}{2}
+\settowidth\MacroIndent{\ttfamily\scriptsize 000\ }
 %    \end{macrocode}
 % ここからが本文ページとなります。
+% \changes{v1.0c}{1997/01/29}{Rename pltpatch to plpatch.}
 %    \begin{macrocode}
 \begin{document}
  \title{The p\LaTeXe\ Sources}
@@ -419,12 +443,12 @@
 % This command will be used to input the patch file
 % if that file exists.
 \newcommand{\includeltpatch}{%
-  \def\currentfile{pltpatch.ltx}
-  \part{pltpatch}
+  \def\currentfile{plpatch.ltx}
+  \part{plpatch}
   {\let\ttfamily\relax
     \xdef\filekey{\filekey, \thepart={\ttfamily\currentfile}}}%
   Things we did wrong\ldots
-  \IndexInput{pltpatch.ltx}}
+  \IndexInput{plpatch.ltx}}
 
 % Get the date from plvers.dtx
 \makeatletter
@@ -439,38 +463,43 @@
     \xdef\X@date{#2}%
     \xdef\patchdate{#5}%
     \endinput}%
-   \InputIfFileExists{pltpatch.ltx}
+   \InputIfFileExists{plpatch.ltx}
     {\let\def\Xdef}{\global\let\includeltpatch\relax}
 \endgroup
 
 \ifx\@date\X@date
-   \edef\@date{\@date\space\patchdate}
+  \def\Xpatch{0}
+  \ifx\patchdate\Xpatch\else
+    \edef\@date{\@date\space Patch level\patchdate}
+  \fi
 \else
-   \@warning{pltpatch.ltx does not match plvers.dtx!}
+   \@warning{plpatch.ltx does not match plvers.dtx!}
    \let\includeltpatch\relax
 \fi
 \makeatother
 
-\settowidth\MacroIndent{\ttfamily\scriptsize 000\ }
-
 \pagenumbering{roman}
 \maketitle
 \renewcommand\maketitle{}
-
 \tableofcontents
 \clearpage
-
 \pagenumbering{arabic}
 
 \DocInclude{plvers}   % pLaTeX version
 
 \DocInclude{plfonts}  % NFSS2 commands
 
-\DocInclude{plcore}   % pLaTeX kernel commands
+\DocInclude{plcore}   % kernel commands
 
-\DocInclude{plext}    % pLaTeX external commands
+\DocInclude{plext}    % external commands
+
+\DocInclude{pl209}    % 2.09 compatibility mode commands
 
 \DocInclude{kinsoku}  % kinsoku parameter
+
+\DocInclude{jclasses} % Standard class
+
+\DocInclude{jltxdoc}  % dtx documents class
 
 \includeltpatch       % patch file
 
@@ -503,11 +532,11 @@
 
   \PrintIndex
 \endgroup
-%    \end{doucment}
-% 最後に、索引が２度組版されないようにします。
-% \file{ltxdoc.cfg}に２度目の|\PrintIndex|が指定されているかも
-% しれないからです。
-%    \begin{doucment}
+%    \end{macrocode}
+% \file{ltxdoc.cfg}に２度目の|\PrintIndex|が指定されているかもしれません。
+% そこで、最後に、変更履歴や索引が２度組版されないように|\PrintChanges|および
+% |\PrintIndex|コマンドを何も実行しないようにします。
+%    \begin{macrocode}
 \let\PrintChanges\relax
 \let\PrintIndex\relax
 \end{document}
@@ -516,9 +545,10 @@
 %
 %
 %
+% \section{おまけプログラム}\label{app:omake}
 %
-% \section{シェルスクリプト\file{mkpldoc.sh}}\label{app:shprog}
-% ここでは、p\LaTeX{}のマクロ定義ファイルをまとめて組版するときに便利な、
+% \subsection{シェルスクリプト\file{mkpldoc.sh}}\label{app:shprog}
+% ここでは、p\LaTeXe{}のマクロ定義ファイルをまとめて組版するときに便利な、
 % シェルスクリプト\footnote{このシェルスクリプトはUNIX用です。
 % しかしrmコマンドをdeleteコマンドにするなどすれば、簡単にDOSなどのバッチ
 % ファイルに修正することができます。}について説明をしています。
@@ -526,27 +556,17 @@
 % \dst{}バッチファイルについても説明をしています。
 %
 % このシェルスクリプトの使用方法は次のとおりです。
+% \begin{verbatim}
+%    sh mkpldoc.sh
+% \end{verbatim}
 %
-% |sh mkpldoc.sh|
-%
-% なお、日本語版のmakeindexでは変更履歴ファイルを作成できないため、
-% このスクリプトではmendexを用いています。
-% mendexはmakeindexの上位互換のファイル整形コマンドで、
-% 索引語の読みを自動的に付けるなどの機能があります。
-%
-% \subsection{\file{mkpldoc.sh}}
-% まず、\file{gind.ist}ファイルと\file{gglo.ist}ファイルをコピーします。
-% \texttt{TEXMF}の値は、インストールされているディレクトリ合わせて、
-% 適当に変更してください。
+% \subsubsection{\file{mkpldoc.sh}の内容}
+% まず、以前に\file{pldoc.tex}を処理したときに作成された、
+% 目次ファイルや索引ファイルなどを削除します。
+% \changes{v1.0c}{1997/01/23}{Don't copy gind.ist and gglo.ist from
+%        \$TEXMF/tex/latex2e/base directory.}
 %    \begin{macrocode}
 %<*shprog>
-set TEXMF /usr/local/lib/texmf
-cp $TEXMF/tex/latex2e/base/gind.ist .
-cp $TEXMF/tex/latex2e/base/gglo.ist .
-%    \end{macrocode}
-% 次に、以前に\file{pldoc.tex}を処理したときに作成された、
-% 目次ファイルや索引ファイルなどを削除します。
-%    \begin{macrocode}
 rm pldoc.toc pldoc.idx pldoc.glo
 %    \end{macrocode}
 % そして、\file{ltxdoc.cfg}を空にします。
@@ -558,9 +578,11 @@ echo "" > ltxdoc.cfg
 % そして、\file{pldoc.tex}を処理します。
 %    \begin{macrocode}
 platex pldoc.tex
-%</shprog>
 %    \end{macrocode}
 % 索引と変更履歴を作成します。
+% このスクリプトでは、変更履歴や索引を生成するのにmendexプログラムを用いて
+% います。mendexはmakeindexの上位互換のファイル整形コマンドで、
+% 索引語の読みを自動的に付けるなどの機能があります。
 %
 % |-s|オプションは、索引ファイルを整形するためのスタイルオプションです。
 % 索引用の\file{gind.ist}と変更履歴用の\file{gglo.ist}は、
@@ -571,8 +593,7 @@ platex pldoc.tex
 % |-f|は、項目に``読み''がなくてもエラーとしないオプションです。
 % makeindexコマンドには、このオプションがありません。
 %    \begin{macrocode}
-%<*shprog>
-mendex -s gind.ist -o pldoc.ind pldoc.idx
+mendex -s gind.ist -d pldoc.dic -o pldoc.ind pldoc.idx
 mendex -f -s gglo.ist -o pldoc.gls pldoc.glo
 %    \end{macrocode}
 % \file{ltxdoc.cfg}の内容を|\includeonly{}|にし、\file{pldoc.tex}を処理します。
@@ -592,78 +613,34 @@ platex pldoc.tex
 %    \begin{macrocode}
 echo "" > ltxdoc.cfg
 platex pldoc.tex
-# EOF
+# EOT
 %</shprog>
 %    \end{macrocode}
 %
 %
-% \subsection{\dst{}バッチファイル}
-% まず、\dst{}バッチファイルの名前を定義し、\dst{}プログラムをロードします。
-%    \begin{macrocode}
-%<*shins>
-\def\batchfile{omake-sh.ins}
-\input{docstrip}
-%    \end{macrocode}
-% \dst{}プログラムは、連続する二つのパーセント記号(\%\%)ではじまる行を
-% メタコメントとみなし、条件によらず出力をします。
-% しかし、この\TeX{}のコメントは、シェルにとってはエラーとなります。
-% そこで、メタコメントを出力するコマンドを再定義し、出力しないようにします。
-%
-% \changes{v1.0b}{1996/02/01}{\dst{}にともなう変更}
-%    \begin{macrocode}
-\def\noputline@do#1#2#3{\relax}
-\def\putMetaComment#1\endLine{%
-   \advance\commentsPassed\@ne
-   \let\do\noputline@do
-   \outputfiles}
-%    \end{macrocode}
-% \dst{}プログラムは、ファイルの先頭に\dst{}オプションや作成日付などを
-% \TeX{}のコメントを付けて出力します。しかし、この有益なコメントも
-% シェルスクリプトにとっては、エラーを引き起こすだけです。
-% ここでは、先頭と末尾にテキストを出力するコマンドを無効にして、
-% これらが出力されないようにしています。
-%    \begin{macrocode}
-\def\WritePreamble#1{\relax}
-\def\WritePostamble#1{\relax}
-%    \end{macrocode}
-% |\keepsilent|は、実行しているときの経過を端末に出力しないように指定をする
-% コマンドです。
-% |\generateFile|で、どのファイルに、どのファイルのどの部分を出力するのか
-% を指定します。
-%    \begin{macrocode}
-\keepsilent
-\generateFile{mkpldoc.sh}{f}{\from{platex.dtx}{shprog}}
-%</shins>
-%    \end{macrocode}
-%
-%
-%
-%
-%
-% \section{perlスクリプト\file{dstcheck.pl}}\label{app:plprog}
+% \subsection{perlスクリプト\file{dstcheck.pl}}\label{app:plprog}
 % \dst{}文書ファイルは、\LaTeX{}のソースとその文書を同時に管理する方法として、
 % とてもすぐれていると思います。しかし、たとえば\file{jclasses.dtx}のように、
 % 条件が多くなると、入れ子構造がわからなくなってしまいがちです。
 % \LaTeX{}で処理すれば、エラーによってわかりますが、
-% 文書ファイルが大きくなると面倒です。ファイルがまだ小さいうちは、
-% 何のツールの助けもなしに、済ませることができます。
+% 文書ファイルが大きくなると面倒です。
 %
 % ここでは、\dst{}文書ファイルの入れ子構造を調べるのに便利な、
 % perlスクリプトについて説明をしています。
-% また、このperlスクリプトを取り出すための、
-% \dst{}バッチファイルについても説明をしています。
 %
 % このperlスクリプトの使用方法は次のとおりです。
 %
-% |perl dstcheck.pl \meta{file-name}|
+% \begin{verbatim}
+%    perl dstcheck.pl file-name
+% \end{verbatim}
 %
-% \subsection{\file{dstcheck.pl}}
-%
-% 次の部分は、コメントです。
+% \subsubsection{\file{dstcheck.pl}の内容}
+% 最初に、このperlスクリプトが何をするのかを簡単に記述したコメントを
+% 付けます。
 %    \begin{macrocode}
 %<*plprog>
 ##
-## DOCSTRIP 文書内の環境と条件の入れ子を調べる perl スクリプト
+## DOCSTRIP 文書内の環境や条件の入れ子を調べる perl スクリプト
 ##
 %    \end{macrocode}
 % このスクリプトは、入れ子の対応を調べるために、次のスタックを用います。
@@ -784,52 +761,50 @@ exit;
 %    \end{macrocode}
 %
 % \subsection{\dst{}バッチファイル}
-% まず、バッチファイルの名前を定義し、\dst{}パッケージをロードします。
-%    \begin{macrocode}
-%<*plins>
-\def\batchfile{omake-pl.ins}
-\input{docstrip}
-%    \end{macrocode}
+% \changes{v1.0b}{1996/02/01}{\dst{}にともなう変更}
+% \changes{v1.0c}{1997/01/23}{\dst{}にともなう変更}
+% ここでは、付録\ref{app:shprog}と付録\ref{app:plprog}で説明をした二つの
+% スクリプトを、このファイルから取り出すための\dst{}バッチファイルについて
+% 説明をしています。
 %
+% まず、\dst{}パッケージをロードします。
+% また、実行経過のメッセージを出力しないようにしています。
+%    \begin{macrocode}
+%<*Xins>
+\input docstrip
+\keepsilent
+%    \end{macrocode}
 % \dst{}プログラムは、連続する二つのパーセント記号(\%\%)ではじまる行を
 % メタコメントとみなし、条件によらず出力をします。
-% しかし、この\TeX{}のコメントは、perlにとってはエラーとなります。
-% そこで、メタコメントを出力するコマンドを再定義し、出力しないようにします。
-%
-% \changes{v1.0b}{1996/02/01}{\dst{}にともなう変更}
+% しかし、``\%''は\TeX{}ではコメントであっても、shやperlにとってはコメント
+% ではありません。そこで、メタコメントとして出力する文字を``\#\#''と
+% 変更します。
 %    \begin{macrocode}
-\def\noputline@do#1#2#3{\relax}
-\def\putMetaComment#1\endLine{%
-   \advance\commentsPassed\@ne
-   \let\do\noputline@do
-   \outputfiles}
+{\catcode`#=12 \gdef\MetaPrefix{## }}
 %    \end{macrocode}
-%
-% \dst{}プログラムは、ファイルの先頭に\dst{}オプションや作成日付などを
-% \TeX{}のコメントを付けて出力します。しかし、この有益なコメントも
-% perlスクリプトにとっては、エラーを引き起こすだけです。
-% そこで、このコメント記号をシャープ(\#)に変更します。
-% \#が\TeX{}のマクロの引数を示す記号の文字であることに注意をしてください。
+% そして、プリアンブルに出力されるメッセージを宣言します。
+% ここでは、とくに何も指定していませんが、宣言をしないとデフォルトの記述が
+% `\%\%'付きで出力されてしまうため、それを抑制する目的で使用しています。
 %    \begin{macrocode}
-\begingroup
-  \catcode`\#=12
-  \gdef\perCent{#}
-  \gdef\DoubleperCent{## }
-\endgroup
+\declarepreamble\thispre
+\endpreamble
+\usepreamble\thispre
 %    \end{macrocode}
-% そして、最後に出力される|\endinput|を出力させないように、
-% |\WritePostamble|コマンドも再定義をします。
+% ポストアンブルも同様に、宣言をしないと`|\endinput|'が出力されます。
 %    \begin{macrocode}
-\def\WritePostamble#1{\relax}
+\declarepostamble\thispost
+\endpostamble
+\usepostamble\thispost
 %    \end{macrocode}
-% |\keepsilent|は、実行しているときの経過を端末に出力しないように指定をする
-% コマンドです。
-% |\generateFile|で、どのファイルに、どのファイルのどの部分を出力するのか
+% |\generate|コマンドで、どのファイルに、どのファイルのどの部分を出力するのか
 % を指定します。
 %    \begin{macrocode}
-\keepsilent
-\generateFile{dstcheck.pl}{f}{\from{platex.dtx}{plprog}}
-%</plins>
+\generate{
+   \file{dstcheck.pl}{\from{platex.dtx}{plprog}}
+   \file{mkpldoc.sh}{\from{platex.dtx}{shprog}}
+}
+\endbatchfile
+%</Xins>
 %    \end{macrocode}
 %
 % \newpage
@@ -861,12 +836,17 @@ exit;
 % \newblock ``{\em {\LaTeX:} A Document Preparation System}''.
 % \newblock Addison-Wesley, 1986.
 % \newblock (邦訳：倉沢良一監修, 大野俊治・小暮博通・藤浦はる美訳,
-%            文書処理システム \LaTeX, アスキー出版局, 1990)
+%            文書処理システム \LaTeX, アスキー, 1990)
 %
 % \bibitem{jtex-tech}
 % アスキー出版技術部責任編集
 % \newblock 『日本語\TeX テクニカルブックI』
-% \newblock アスキー出版局, 1990.
+% \newblock アスキー, 1990.
+%
+% \bibitem{platex2e-book}
+% 中野 賢
+% \newblock 『日本語\LaTeXe ブック』
+% \newblock アスキー, 1996.
 %
 % \bibitem{perl}
 % 河野真治著
@@ -880,9 +860,6 @@ exit;
 % \fi
 %
 % \renewcommand{\thesection}{\arabic{section}}
-%
-%
-%
 %
 % \Finale
 %

@@ -1,0 +1,157 @@
+----------------
+<1997/02/02>+2
+
+  * jclasses.dtx: \topmargin の計算を間違えていたのを修正。
+
+  * jclasses.dtx: 縦組クラスで開始ページがおかしくなるのを修正。
+
+----------------
+<1997/02/02>+1
+
+  * jclasses.dtx: disablejfam オプションの処理で、互換モードかそうでないかの
+    判断が逆なのを修正。
+
+  * plnews01.tex: \mathrm, \mathbf の部分の記述を修正
+
+----------------
+<1997/02/01>
+
+  * plnews.cls: NEW, plnews01tex 用のクラスファイルを作成した。
+
+  * plnews01.tex: NEW, 前回からの変更をまとめた文書ファイル。
+
+----------------
+<1997/01/31>
+
+  * plcore.dtx: 下付き文字を出力する \textsubscript コマンドを削除。
+
+  * plfonts.dtx: 数式文字フォントの設定をクラスファイルに移動。
+
+  * plfonts.dtx: 和欧文の数式文字フォントを一度に切り替えるためのコマンドを
+    定義する、\reDeclareMathAlphabet コマンドを追加。
+
+  * jclasses.dtx: 数式文字フォントの設定を追加。
+
+  * jclasses.dtx: 日本語ファミリを宣言しないオプション（disablejfam）を
+    2e モードでだけ指定可能にした。
+
+----------------
+<1997/01/30>
+
+  * README.euc: ltxcheck による確認時の記述を追加
+
+  * plcore.dtx: 下付き文字を出力する \textsubscript コマンドを追加。
+
+  * plfonts.dtx: \mathrm, \mathbf を和欧文フォントを切り替えるように拡張。
+
+  * jclasses.dtx: 2eモードで、通常よりテキスト領域を広くとる設定を a4j
+    などのオプション指定時に有効になるように修正した。
+
+  * jclasses.dtx: \thefigure の定義内、\c@chapter のタイプミス修正。
+
+  * pl209.dtx: 互換モードでの \rm や \tt のような二文字の書体変更コマンド
+    の動作を pLaTeX 2.09 での動作と同じにした。
+
+----------------
+<1997/01/29>
+
+  * jclasses.dtx: 日本語ファミリの宣言をしないオプション（disablejfam）
+    を追加。
+
+  * jclasses.dtx: labelitemii で \fi していないのと \bfseries の
+    タイプミスを修正。
+
+  * jclasses.dtx: \documentclass 時のレイアウトを少し広げた。
+
+  * pl209.dtx, jclasses.dtx, plfonts.dtx: 数式モード内で \rm, \bf コマンド
+    でローマン体、ボールド体にならないバグを修正。
+
+----------------
+<1997/01/26>
+
+  * All: 変更履歴の説明を mendex で処理できるように修正。
+
+  * README.euc: EC フォントの記述を追加した。
+
+  * platex.dtx: pldoc.ind を作成するための mendex 辞書ファイルを
+    pldoc.tex を処理したときに、自動的に用意するようにした。
+
+  * plfonts.dtx: 小文字のフォント定義ファイル(jy1mc.fd など)をロードする
+    ようにした。
+
+  * jclasses.dtx: 2.09互換モードで tombow オプションがおかしくなるのを修正。
+
+  * jclasses.dtx: 2.09互換モードで {a,b}{4,5}{j,p} のスタイルオプション
+    をサポート。ただし、ランドスケープモード用の設定はしていない。
+
+----------------
+<1997/01/24>
+
+  * pl209.def: \let\jfam\symmincho としていたのを修正。
+
+----------------
+<1997/01/23>
+
+  * All: LaTeX2e <1996/12/01> に対応
+
+  * plcore.dtx: クラスオプションに tombow を指定したとき、トンボの脇に
+    作成日付を出力するようにした。日付の出力を抑制したい場合は、tombo
+    （最後の w なし）を指定する。
+
+  * jclasses.dtx: LaTeX2e <1996/06/01> と組み合わせたとき、
+    {j|t}{article|book} の \part コマンドの後ろで二段組になってしまう
+    のを修正。
+
+  * jclasses.dtx: verse 環境で「@centercr」という文字列が出力されるのを
+    修正。
+
+  * jclasses.dtx, pl209.dtx: mincho, gothic を数式記号としてではなく、
+    文字として宣言するようにし、数式ファミリを使用しないようにした。
+    ただし、2.09互換モードでは、従来どおり、日本語ファミリを定義している。
+
+  * jltxdoc.dtx: ltxdoc, doc, article クラスをベースにするようにした。
+
+  * pl209.def: latex209.def をロードするようにした。
+
+----------------
+<1996/03/05>
+
+  * All: 縦組拡張部分を外部パッケージ（plext.sty）にした。
+
+  * All: いくつかのタイプミス修正。
+
+  * plfonts.dtx: \DeclareFixedFont の日本語化。
+
+  * plfonts.dtx: 和文代用フォントが使われないのを修正。
+
+  * plfonts.dtx: \notkfam@list, \notffam@list の初期値を変更し、
+    起動直後の速度を速めた。
+
+  * jclasses.dtx: \evensidemargin と \oddsidemargin の影響が縦組と横組で
+    逆なのを修正。
+
+  * jclasses.dtx: report, article クラスのページスタイルのデフォルトを
+    headings から plain にした。
+
+  * jclasses.dtx: bothstyle ページスタイルでの偶数ページと奇数ページの
+    出力位置が逆なのを修正。
+
+  * jclases.dtx: plain や headings から headnombre, footnombre, plain
+    などに切り替えたときに、ページ番号位置が揃わないのを修正。
+
+  * jclasses.dtx: \topmargin の値が反映されないのを修正。
+
+  * jclasses.dtx: \tabbing 環境で和欧文間スペースが入るのを修正。
+
+  * jclasses.dtx: landscape オプションを指定してもランドスケープにならない
+    のを修正。
+
+  * pl209.def: 互換モードの縦組で脚注がおかしくなるのを修正。
+
+  * pl209.def: 互換モードで \Rensuji, \prensuji を使えるようにした。
+
+<1995/09/01>
+
+  * 初版リリース
+
+=== EOT =====

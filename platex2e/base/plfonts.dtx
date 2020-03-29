@@ -1,13 +1,14 @@
 % \iffalse meta-comment
 %% File: plfonts.dtx
 %
-%  Copyright 1994,1995,1996 ASCII Corporation.
+%  Copyright 1994-1997 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
-% \CheckSum{1299}
+%
+% \CheckSum{1306}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -23,11 +24,10 @@
 %%   Right bracket \]     Circumflex    \^     Underscore    \_
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
+%%
 %
 % \setcounter{StandardModuleDepth}{1}
-%
 % \StopEventually{}
-% \MakeShortVerb{\+}
 %
 % \iffalse
 % \changes{v1.0}{1994/09/16}{first edition}
@@ -35,24 +35,26 @@
 % \changes{v1.1b}{1995/04/25}{\cs{selectfont}修正}
 % \changes{v1.1c}{1995/08/22}{縦横フォント同時切り替え}
 % \changes{v1.2}{1995/11/09}{\cs{DeclareFixedFont}の日本語化}
+% \changes{v1.3}{1996/03/25}{数式ファミリの定義変更}
+% \changes{v1.3a}{1997/01/25}{\LaTeX\ \texttt{!<1996/12/01!>に対応}}
+% \changes{v1.3b}{1997/01/28}{\cs{textmc}, \cs{textgt}の動作修正}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plfonts.dtx}[1995/11/21 v1.2 pLaTeX core file]
+\ProvidesFile{plfonts.dtx}[1997/01/29 v1.3b pLaTeX New Font Selection Scheme]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plfonts.dtx}
-%
-\title{p\LaTeX{}のフォントコマンド\space\fileversion}
+\title{p\LaTeXe{}のフォントコマンド\space\fileversion}
 \author{Ken Nakano}
 \date{作成日：\filedate}
-%
 \begin{document}
    \maketitle
-   \DocInput{plfonts.dtx}
+   \tableofcontents
+   \DocInput{\filename}
 \end{document}
 %</driver>
 % \fi
@@ -98,10 +100,6 @@
 % \end{tabular}
 % \end{center}
 % \MakeShortVerb{\|}
-%
-%
-%
-%
 %
 %
 %
@@ -251,9 +249,9 @@
 % \subsubsection{一時コマンド}
 %
 % \begin{macro}{\afont}
-% \LaTeXe 内部の|\do@subst@correction|マクロでは、
+% \LaTeX{}内部の|\do@subst@correction|マクロでは、
 % |\fontname\font|で返される外部フォント名を用いて、
-% \LaTeXe フォント名を定義しています。したがって、|\font|をそのまま使うと、
+% \LaTeX{}フォント名を定義しています。したがって、|\font|をそのまま使うと、
 % 和文フォント名に欧文の外部フォントが登録されたり、
 % 縦組のフォント名が横組用の外部フォントに割り付けられたりしますので、
 % |\jfont|か|\tfont|を用いるようにします。
@@ -268,7 +266,7 @@
 % ここでは、フォントのエンコードやファミリの名前を登録するリストについて
 % 説明をしています。
 %
-% p\LaTeX{}の\NFSS2では、一つのコマンドで和文か欧文のいずれか、あるいは両方を
+% p\LaTeXe{}の\NFSS2では、一つのコマンドで和文か欧文のいずれか、あるいは両方を
 % 変更するため、コマンドに指定された引数が何を示すのかを判断しなくては
 % なりません。この判断材料として、リストを用います。
 %
@@ -309,11 +307,13 @@
 % \changes{v1.1b}{1995/05/10}{リスト内の空白を削除}
 %
 % ここで、これらのリストに具体的な値を入れて初期化をするのは、
-% リストにエンコードの登録をするように|\DecalreFontEncoding|を再定義
+% リストにエンコードの登録をするように|\DeclareFontEncoding|を再定義
 % する前に、欧文エンコードが宣言されるため、リストに登録されないからです。
+% \changes{v1.1}{1997/01/25}{Add TS1 encoding to the starting member of
+%     \cs{fenc@list}.}
 %    \begin{macrocode}
-\def\fenc@list{\enc@elt<OML>\enc@elt<T1>\enc@elt<OT1>%
-               \enc@elt<OMS>\enc@elt<OMX>\enc@elt<U>}
+\def\fenc@list{\enc@elt<OML>\enc@elt<T1>\enc@elt<OT1>\enc@elt<OMS>%
+               \enc@elt<OMX>\enc@elt<TS1>\enc@elt<U>}
 \def\kenc@list{\enc@elt<JY1>\enc@elt<JT1>}
 %    \end{macrocode}
 % \end{macro}
@@ -339,7 +339,7 @@
 % \changes{v1.1b}{1995/05/10}{リスト内の空白を削除}
 %
 % ここで、これらのリストに具体的な値を入れて初期化をするのは、
-% リストにファミリの登録をするように、|\DecalreFontFamily|が
+% リストにファミリの登録をするように、|\DeclareFontFamily|が
 % 再定義される前に、このコマンドが使用されるため、
 % リストに登録されないからです。
 %    \begin{macrocode}
@@ -412,6 +412,7 @@
 % 次のコマンドの定義をしています。
 %
 % \DeleteShortVerb{\|}
+% \MakeShortVerb{\+}
 % \begin{center}
 % \begin{tabular}{l|l}
 % \emph{コマンド} & \emph{意味}\\\hline
@@ -421,6 +422,7 @@
 % +\DeclareKanjiSubstitution+ & 和文の代用フォントの宣言\\
 % +\DeclareErrorKanjiFont+ & 和文のエラーフォントの宣言 \\
 % +\DeclareFixedFont+ & フォントの名前の宣言 \\
+% +\reDeclareMathAlphabet+ & 和欧文を同時に切り替えるコマンド宣言\\
 % +\{Declare|Set}RelationFont+ & 従属書体の宣言\\
 % +\userelfont+ & 欧文書体を従属書体にする\\
 % +\selectfont+ & フォントを切り替える\\
@@ -436,6 +438,7 @@
 % +\textunderscore+ & テキストモードでの下線マクロ\\
 % \end{tabular}
 % \end{center}
+% \DeleteShortVerb{\+}
 % \MakeShortVerb{\|}
 %
 %
@@ -643,16 +646,63 @@
       \expandafter\expandafter\expandafter
       \inlist@\expandafter\tmp@item\expandafter{\kenc@list}%
       \ifin@
-         \edef\tmpa@encoding{\k@encoding}%
-         \usekanji{#2}{#3}{#4}{#5}%
-         \edef\tmpb@encoding{\k@encoding}%
-         \ifx\tmpa@encoding\tmpb@encoding\let\font\jfont
-         \else\let\font\tfont\fi
-      \else\useroman{#2}{#3}{#4}{#5}\fi
+        \edef\tmpa@encoding{\k@encoding}%
+        \usekanji{#2}{#3}{#4}{#5}%
+        \edef\tmpb@encoding{\k@encoding}%
+        \ifx\tmpa@encoding\tmpb@encoding
+          \let\font\jfont
+        \else
+          \let\font\tfont
+        \fi
+      \else
+        \useroman{#2}{#3}{#4}{#5}%
+      \fi
       \global\expandafter\let\expandafter#1\the\font
       \let\font\afont
    \endgroup
   }
+\@onlypreamble\DeclareFixedFont
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\reDeclareMathAlphabet}
+% \changes{v1.0}{1997/01/30}{\cs{reDeclareMathAlphabet}を追加。
+%    ありがとう、ymtさん。}
+% 数式モード内で、数式文字用の和欧文フォントを同時に切り替えるコマンドです。
+%
+% p\LaTeXe{}には、本来の動作モードと2.09互換モードの二つがあり、
+% 両モードで数式文字を変更するコマンドや動作が異なります。
+% 本来の動作モードでは、|\mathrm{...}|のように|\math??|に引数を指定して
+% 使います。このときは引数にだけ影響します。2.09互換モードでは、|\rm|の
+% ような二文字コマンドを使います。このコマンドには引数を取らず、書体は
+% グルーピングの範囲で反映されます。二文字コマンドは、ネイティブモード
+% でも使えるようになっていて、動作も2.09互換モードのコマンドと同じです。
+%
+% しかし、内部的には|\@math??|という一つのコマンドがすべての動作を受け持ち、
+% |\math??|コマンドや|\??|コマンドから呼び出された状態に応じて、動作を変え
+% ています。したがって、欧文フォントと和文フォントの両方を一度に変更する、
+% 数式文字変更コマンドを作るとき、それぞれの状態に合った動作で動くように
+% フォント切り替えコマンドを実行させる必要があります。
+%    \begin{macrocode}
+\def\reDeclareMathAlphabet#1#2#3{%
+  \DeclareRobustCommand{#1}[1]{%
+    \ifmmode
+      \ifx\math@bgroup\@empty % 2.09 compatibility
+        #2\relax#3\relax##1\relax
+      \else % native mode
+        \ifx\math@bgroup\relax % oldstyle
+          #2\relax\@fontswitch\relax{#3}##1\relax
+        \else
+          #2{#3{##1}}%
+        \fi
+      \fi
+    \else
+      #2{##1}%
+    \fi
+  }%
+}
+\@onlypreamble\reDeclareMathAlphabet
 %    \end{macrocode}
 % \end{macro}
 %
@@ -795,8 +845,8 @@
   \enc@update
 %    \end{macrocode}
 % 最後に、サイズが変更されていれば、ベースラインの調整などを行ないます。
-% 英語版の|\selectfont|では、最初に行なっていますが、
-% p\LaTeX{}では、ベースラインシフトの調整をするために、
+% 英語版の|\selectfont|では最初に行なっていますが、
+% p\LaTeXe{}ではベースラインシフトの調整をするために、
 % 書体を確定しなければならないため、一番最後に行ないます
 %
 % \changes{v1.1b}{1995/04/26}{ベースラインの調整をサイズ変更時に
@@ -859,7 +909,7 @@
 %
 %
 % \begin{macro}{\adjustbaseline}
-% 現在の和文フォントの空白（EUCコードA1A1）の中央に
+% 現在の和文フォントの空白（EUCコード\texttt{0xA1A1}）の中央に
 % 現在の欧文フォントの``/''の中央がくるようにベースラインシフトを設定します。
 % \changes{v1.0c}{1995/08/31}{欧文書体の基準を`M'から`/'に変更}
 % \changes{v1.2}{1995/11/21}{縦組時のみ調整するようにした}
@@ -886,9 +936,10 @@
 % 計算式は次のとおりです。
 %
 % \begin{eqnarray*}
-% \lefteqn{ベースラインシフト量 = }\\
-%  && \{ (全角空白の深さ) - (\mbox{/}の深さ) \}
-%       - \frac{(全角空白の高さ+深さ) - (\mbox{/}の高さ+深さ)}{2}\\
+% \textmc{ベースラインシフト量} &=&
+%   \{ (\textmc{全角空白の深さ}) - (\textmc{/の深さ}) \} \\
+%       &&- \frac{(\textmc{全角空白の高さ}+\textmc{深さ})
+%              - (\textmc{/の高さ}+\textmc{深さ})}{2}
 % \end{eqnarray*}
 %
 %    \begin{macrocode}
@@ -1071,7 +1122,7 @@
     \else
       \@tempswafalse
       \def\fam@elt{\noexpand\fam@elt}%
-      \message{(I search font definition file:}%
+      \message{(I search ##1#1.fd :}%
       \def\enc@elt<##1>{\message{.}\IfFileExists{##1#1.fd}{\@tempswatrue}{}}%
       \kenc@list
       \message{)}%
@@ -1214,7 +1265,7 @@
 % \begin{macro}{\gtfamily}
 % 和文書体を明朝体にする|\mcfamily|とゴシック体にする|\gtfamily|を定義します。
 % これらは、|\rmfamily|などに対応します。
-% なお、|\mathmc|と|\mathgt|は数式内で用いるときのコマンド名です。
+% |\mathmc|と|\mathgt|は数式内で用いるときのコマンド名です。
 %    \begin{macrocode}
 \DeclareRobustCommand\mcfamily
         {\not@math@alphabet\mcfamily\mathmc
@@ -1314,11 +1365,12 @@
 %    \end{macrocode}
 % フォント定義：
 % これらの具体的な内容は第\ref{plfonts:fontdef}節を参照してください。
+% \changes{v1.3}{1997/01/24}{Rename font definition filename.}
 %    \begin{macrocode}
-\input{JY1mc.fd}
-\input{JY1gt.fd}
-\input{JT1mc.fd}
-\input{JT1gt.fd}
+\input{jy1mc.fd}
+\input{jy1gt.fd}
+\input{jt1mc.fd}
+\input{jt1gt.fd}
 %    \end{macrocode}
 % フォントを有効にする
 %    \begin{macrocode}
@@ -1328,6 +1380,7 @@
 %
 % \begin{macro}{\textmc}
 % \begin{macro}{\textgt}
+% \changes{v1.3b}{1997/01/28}{\cs{textmc}, \cs{textgt}の動作修正}
 % テキストファミリを切り替えるためのコマンドです。
 % \file{ltfntcmd.dtx}で定義されている|\textrm|などに対応します。
 %    \begin{macrocode}
@@ -1338,35 +1391,8 @@
 % \end{macro}
 %
 %
-% \subsection{数式フォント}
-% 数式モード内で用いられるフォントなどの宣言です。
+% \changes{v1.3b}{1997/01/30}{数式用フォントの宣言をクラスファイルに移動した}
 %
-% 数学記号フォント|mincho|と|gothic|を宣言します。
-% また、|mincho|のボールド書体も設定をします。
-%    \begin{macrocode}
-\DeclareSymbolFont{mincho}{JY1}{mc}{m}{n}
-\DeclareSymbolFont{gothic}{JY1}{gt}{m}{n}
-\SetSymbolFont{mincho}{bold}{JY1}{gt}{m}{n}
-%    \end{macrocode}
-% 次に、数学文字フォントを宣言します。
-%    \begin{macrocode}
-\DeclareSymbolFontAlphabet\mathmc{mincho}
-\DeclareSymbolFontAlphabet\mathgt{gothic}
-%    \end{macrocode}
-% |\mathmc|（|\mathrm|）で明朝体とローマン体の組合せ、
-% |\mathgt|（|\mathbf|）でゴシック体とボールド体の組合せになるように
-% これらのコマンドを再定義します。
-% |\mathbold|のときには、|\mathmc|もゴシック体とボールド体の組合せになります。
-%    \begin{macrocode}
-\def\mathmc#1{\@mathmc{\@mathrm{#1}}}
-\def\mathgt#1{\@mathgt{\@mathbf{#1}}}
-\let\mathrm\mathmc
-\let\mathbf\mathgt
-%    \end{macrocode}
-% 最後に、|\jfam|の値を|symmincho|にします。
-%    \begin{macrocode}
-\jfam\symmincho
-%    \end{macrocode}
 %
 % \subsection{プリロードフォント}
 % あらかじめフォーマットファイルにロードされるフォントの宣言です。
@@ -1456,6 +1482,7 @@
 %
 %
 % \section{フォント定義ファイル}\label{plfonts:fontdef}
+% \changes{v1.3}{1997/01/24}{Rename provided font definition filename.}
 % ここでは、フォント定義ファイルの設定をしています。フォント定義ファイルは、
 % \LaTeX{}のフォント属性を\TeX{}フォントに置き換えるためのファイルです。
 % 記述方法についての詳細は、|fntguide.tex|を参照してください。
@@ -1465,43 +1492,50 @@
 % \file{skfonts.fdd}には、写研代用書体を使うためのパッケージと
 % フォント定義が記述されています。
 %    \begin{macrocode}
-%<JY1mc>\ProvidesFile{JY1mc.fd}
-%<JY1gt>\ProvidesFile{JY1gt.fd}
-%<JT1mc>\ProvidesFile{JT1mc.fd}
-%<JT1gt>\ProvidesFile{JT1gt.fd}
-%<JY1mc,JY1gt,JT1mc,JT1gt>       [1995/11/24 v1.2 KANJI font defines]
+%<JY1mc>\ProvidesFile{jy1mc.fd}
+%<JY1gt>\ProvidesFile{jy1gt.fd}
+%<JT1mc>\ProvidesFile{jt1mc.fd}
+%<JT1gt>\ProvidesFile{jt1gt.fd}
+%<JY1mc,JY1gt,JT1mc,JT1gt>       [1997/01/24 v1.3 KANJI font defines]
 %    \end{macrocode}
 % 横組用、縦組用ともに、
 % 明朝体のシリーズ|bx|がゴシック体となるように宣言しています。
 % \changes{v1.2}{1995/11/24}{it, sl, sc の宣言を外した}
+% \changes{v1.3b}{1997/01/29}{フォント定義ファイルのサイズ指定の調整}
 %    \begin{macrocode}
 %<*JY1mc>
 \DeclareKanjiFamily{JY1}{mc}{}
 \DeclareRelationFont{JY1}{mc}{m}{}{OT1}{cmr}{m}{}
 \DeclareRelationFont{JY1}{mc}{bx}{}{OT1}{cmr}{bx}{}
-\DeclareFontShape{JY1}{mc}{m}{n}{<5> <6> <7> <8> <9> sgen*min
-    <10-> min10}{}
+\DeclareFontShape{JY1}{mc}{m}{n}{<5> <6> <7> <8> <9> <10> sgen*min
+    <10.95><12><14.4><17.28><20.74><24.88> min10
+    }{}
 \DeclareFontShape{JY1}{mc}{bx}{n}{<->ssub*gt/m/n}{}
 %</JY1mc>
 %<*JT1mc>
 \DeclareKanjiFamily{JT1}{mc}{}
 \DeclareRelationFont{JT1}{mc}{m}{}{OT1}{cmr}{m}{}
 \DeclareRelationFont{JT1}{mc}{bx}{}{OT1}{cmr}{bx}{}
-\DeclareFontShape{JT1}{mc}{m}{n}{<5> <6> <7> <8> <9> sgen*tmin
-    <10-> tmin10}{}
+\DeclareFontShape{JT1}{mc}{m}{n}{<5> <6> <7> <8> <9> <10> sgen*tmin
+    <10.95><12><14.4><17.28><20.74><24.88> tmin10
+    }{}
 \DeclareFontShape{JT1}{mc}{bx}{n}{<->ssub*gt/m/n}{}
 %</JT1mc>
 %<*JY1gt>
 \DeclareKanjiFamily{JY1}{gt}{}
 \DeclareRelationFont{JY1}{gt}{m}{}{OT1}{cmr}{bx}{}
-\DeclareFontShape{JY1}{gt}{m}{n}{<5> <6> <7> <8> <9> sgen*goth
-    <10-> goth10}{}
+\DeclareFontShape{JY1}{gt}{m}{n}{<5> <6> <7> <8> <9> <10> sgen*goth
+    <10.95><12><14.4><17.28><20.74><24.88> goth10
+    }{}
+\DeclareFontShape{JY1}{gt}{bx}{n}{<->ssub*gt/m/n}{}
 %</JY1gt>
 %<*JT1gt>
 \DeclareKanjiFamily{JT1}{gt}{}
 \DeclareRelationFont{JT1}{gt}{m}{}{OT1}{cmr}{bx}{}
-\DeclareFontShape{JT1}{gt}{m}{n}{<5> <6> <7> <8> <9> sgen*tgoth
-    <10-> tgoth10}{}
+\DeclareFontShape{JT1}{gt}{m}{n}{<5> <6> <7> <8> <9> <10> sgen*tgoth
+    <10.95><12><14.4><17.28><20.74><24.88> tgoth10
+    }{}
+\DeclareFontShape{JT1}{gt}{bx}{n}{<->ssub*gt/m/n}{}
 %</JT1gt>
 %    \end{macrocode}
 %

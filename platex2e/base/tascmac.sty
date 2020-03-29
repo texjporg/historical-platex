@@ -100,13 +100,17 @@
 \boxmaxdepth=\dimen1\fi\fi \mbox{}\vbox{\box0}\fi}}
 %
 %% \yen
-\def\yen{\hbox{\iftdir\yoko\fi
+%
+% \changes{1996/03/13}{v1.1}{Append \cs{leavevmode} in
+%     \cs{yen}, \cs{return}, \cs{Return} command.}
+%
+\def\yen{\leavevmode\hbox{\iftdir\yoko\fi
 \setbox0=\hbox{Y}Y\kern-.97\wd0\vbox{\hrule height.1ex width.98\wd0
 \kern.33ex\hrule height.1ex width.98\wd0\kern.45ex}}}
 %
 %% return-key
-\def\return{\hbox{\iftdir\yoko\fi\@ascgrp\char"20}}
-\def\Return{\hbox{\iftdir\yoko\fi\@ascgrp @}}
+\def\return{\leavevmode\hbox{\iftdir\yoko\fi\@ascgrp\char"20}}
+\def\Return{\leavevmode\hbox{\iftdir\yoko\fi\@ascgrp @}}
 %
 %% \mask & \maskbox
 \newbox\@bwsp \newbox\@@bwsp\newcount\@bcal

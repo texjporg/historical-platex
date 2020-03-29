@@ -1,532 +1,187 @@
 % \iffalse meta-comment
-% $Id: jltxdoc.dtx,v 1.2 1995/04/21 08:46:05 ken-na Exp ken-na $
+%% File: jltxdoc.dtx
 %
-% Copyright 1993-1995 the LaTeX3 project and any individual authors
-% listed elsewhere in this file.  All rights reserved.
-% 
-% For further copyright information see the file legal.txt, and any
-% other copyright notices in this file.
-% 
-% This file is part of the LaTeX2e system.
-% ----------------------------------------
-%   This system is distributed in the hope that it will be useful,
-%   but WITHOUT ANY WARRANTY; without even the implied warranty of
-%   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-% 
-%   For error reports concerning UNCHANGED versions of this file no more
-%   than one year old, see bugs.txt.
-% 
-%   Please do not request updates from us directly.  Primary
-%   distribution is through the CTAN archives.
-% 
-% 
-% IMPORTANT COPYRIGHT NOTICE:
-% 
-% You are NOT ALLOWED to distribute this file alone.
-% 
-% You are allowed to distribute this file under the condition that it is
-% distributed together with all the files listed in manifest.txt.
-% 
-% If you receive only some of these files from someone, complain!
-% 
-% Permission is granted to copy this file to another file with a clearly
-% different name and to customize the declarations in that copy to serve
-% the needs of your installation, provided that you comply with
-% the conditions in the file legal.txt.
-% 
-% However, NO PERMISSION is granted to produce or to distribute a
-% modified version of this file under its original name.
-%  
-% You are NOT ALLOWED to change this file.
-% 
-% 
+%  Copyright 1995,1996,1997  ASCII Corporation.
+%
+%  This file is part of pLaTeX2e system.
+%  -------------------------------------
+%
+% \fi
+%
+% \CheckSum{147}
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+%%
+%
+% \setcounter{StandardModuleDepth}{1}
+% \StopEventually{}
+%
+% \iffalse
+% \changes{v1.0a}{1997/01/23}{\LaTeX \texttt{!<1996/12/01!>}への対応に
+%     合わせて修正}
 % \fi
 %
 % \iffalse
-%
-%<*!platex>
-%<class>\NeedsTeXFormat{LaTeX2e}
-%<class>\ProvidesClass{ltxdoc}
-%<class>         [1994/05/27 v2.0n Standard LaTeX documentation class]
-%</!platex>
-%<*platex>
-%<class>\NeedsTeXFormat{pLaTeX2e}
-%<class>\ProvidesClass{jltxdoc}
-%<class>         [1996/03/01 v2.0n-p Standard pLaTeX documentation class]
-%</platex>
-%
+%<*class>
+\NeedsTeXFormat{pLaTeX2e}
+\ProvidesFile{jltxdoc.dtx}[1997/01/23 v1.0a Standard pLaTeX file]
+%</class>
 %<*driver>
-\documentclass{jltxdoc} % This file use `jltxdoc.cls' : platex
-\GetFileInfo{jltxdoc.cls} % This file use `jltxdoc.cls' : platex
-\providecommand\dst{\expandafter{\normalfont\scshape docstrip}}
-\title{The file \texttt{ltxdoc.dtx} for use with 
-      \LaTeXe.\thanks{This file has version
-           number \fileversion, dated \filedate.}\\[2pt]
-      It contains the code for \texttt{ltxdoc.cls}}
-\date{\filedate}
-\author{David Carlisle}
+\documentclass{jltxdoc}
+\GetFileInfo{jltxdoc.dtx}
+\title{p\LaTeXe{}ドキュメント記述用クラス\space\fileversion}
+\author{Ken Nakano}
+\date{作成日：\filedate}
 \begin{document}
-\maketitle
- \DocInput{jltxdoc.dtx} % This file is not `ltxdoc.dtx' : platex
+   \maketitle
+   \DocInput{\filename}
 \end{document}
 %</driver>
-%
 % \fi
 %
-% \CheckSum{442} % Original file's check sum is `376'
-%
-% \changes{v2.0i}{1994/04/29}{Update the documentation.}
-%
-% \section{Documentation of the \LaTeX\ sources}
-%
-% This class file is designed for documenting the \LaTeX\ source files.
-% You may however find it generally useful as a class for typesetting
-% the documentation of files  produced in `doc' format.
-%
-% Each documented file in the standard distribution comes with extension
-% |dtx|. The appropriate class package or initex file will be extracted
-% from the source by the docstrip system. Each |dtx| file may be
-% directly processed with \LaTeXe, for example
-%\begin{verbatim}
-% latex2e docclass.dtx
-%\end{verbatim}
-% would produce the documentation of the Class and package interface.
-%
-% Each file that is used in producing the \LaTeXe\ format (ie not
-% including the standard class and packages) will be printed together in
-% one document if you \LaTeX\ the file |sources2e.tex|. This has the
-% advantage that one can produce a full index of macro usage across all
-% the source files.
-%
-% If you need to customise the typesetting of any of these files, there
-% are two options:
-% \begin{itemize}
-% \item You can use \dst\ with the module `driver' to extract a small
-% \LaTeX\ file that you may edit to use whatever class or package
-% options you require, before inputting the source file.
-% \item You can create a file |ltxdoc.cfg|. This configuration file will
-% be read whenever the |ltxdoc| class is used, and so can be used to
-% customise the typesetting of all the source files, without having to
-% edit lots of small driver files.
-%\end{itemize}
-%
-% The second option is usually more convenient. various possibilities
-% are discussed in the next section.
-%
-% \section{Customisation}
-%
-% The simplest form of customisation is to pass more options to the
-% |article| class which is loaded by |ltxdoc|. For instance if you wish
-% all the documentation to be formated for A4 paper, add the following
-% line to |ltxdoc.cfg|:
-%\begin{verbatim}
-%<*!platex>
-% \PassOptionsToClass{a4paper}{article}
-%</!platex>
-%<*platex>
-% \PassOptionsToClass{a4paper}{jarticle}
-%</platex>
-%\end{verbatim}
-%
-% All the source files are in two parts, separated by |\StopEventually|.
-% The first part (should) contain `user' documentation. The second part
-% is a full documented listing of the source code. The |doc| package
-% provides the command |\OnlyDescription| which suppresses the code
-% listings. This may also be used in the configuration file, but as the
-% |doc| package is read later, you must delay the execution of
-% |\OnlyDescription| until after the |doc| package has been read. The
-% simplest way is to use |\AtBeginDocument|. Thus you could put the
-% following in your |ltxdoc.cfg|.
-%\begin{verbatim}
-% \AtBeginDocument{\OnlyDescription}
-%\end{verbatim}
-%
-%
-% If the full source listing |sources2e.tex| is processed, then an index
-% and change history are produced by default, however indices are not
-% normally produced for individual files.
-%
-% As an example, consider |ltclass.dtx|, which contains the sources for
-% the new class and package interface commands.  With no |cfg|
-% file, a 19~page document is produced. With the above configuration
-% a slightly more readable document (4~pages) is produced.
-%
-% Conversely, If you really want to read the source listings in detail,
-% You will want to have an index. Again the index commands provided by
-% the doc package may be used, but their execution must be delayed.
-%\begin{verbatim}
-% \AtBeginDocument{\CodelineIndex\EnableCrossrefs}
-% \AtEndDocument{\PrintIndex}
-%\end{verbatim}
-%
-% The |doc| package writes index files to be sorted using MakeIndex with
-% the |gind| style, so one would then use a command such as
-%\begin{verbatim}
-% makeindex -s gind.ist ltclass.idx
-%\end{verbatim}
-% and re-run \LaTeX.
-%
-% Similarly to print a Change history, you would add
-%\begin{verbatim}
-% \AtBeginDocument{\RecordChanges}
-% \AtEndDocument{\PrintChanges}
-%\end{verbatim}
-% to |ltxdoc.cfg|, and use  MakeIndex with a comand such as
-%\begin{verbatim}
-% makeindex -s gglo.ist -o ltclass.gls ltclass.glo
-%\end{verbatim}
-%
-% Finally if you do not want to list all the sections of |source2e.tex|,
-% you can use  |\includeonly| in the |cfg| file:
-%\begin{verbatim}
-% \includeonly{ltvers,ltboxes}
-%\end{verbatim}
-%
-% \StopEventually
-%
-%
-% \section{Options}                       
-%
+% \file{jltxdoc}クラスは、\file{ltxdoc}をテンプレートにして、日本語用の
+% 修正を加えています。
 %    \begin{macrocode}
 %<*class>
-\DeclareOption{a5paper}{\@latexerr{Option not supported}%
-   {}}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\DeclareOption*{%
-%<!platex>    \PassOptionsToClass  {\CurrentOption}{article}}
-%<platex>    \PassOptionsToClass  {\CurrentOption}{jarticle}}
-%    \end{macrocode}
-%
-% \section{Configuration}
-% Input a local configuration file, if it exists.
-%    \begin{macrocode}
-\InputIfFileExists{ltxdoc.cfg}
-           {\typeout{*************************************^^J%
-                     * Local config file ltxdoc.cfg used^^J%
-                     *************************************}}
-           {}
-%    \end{macrocode}
-%    
-%
-% \section{Option Processing}
-%
-%    \begin{macrocode}
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{ltxdoc}}
 \ProcessOptions
+\LoadClass{ltxdoc}
 %    \end{macrocode}
 %
-% \section{Loading article and doc}
-%
+% \begin{macro}{\normalsize}
+% \begin{macro}{\small}
+% \begin{macro}{\parindent}
+% \changes{v1.0a}{1997/01/23}{\cs{normalsize}, \cs{small}などの再定義}
+% \file{ltxdoc}からロードされる\file{article}クラスでの行間などの設定値で、
+% 日本語の文章を組版すると、行間が狭いように思われるので、多少広くするように
+% 再設定します。また、段落先頭での字下げ量を全角一文字分とします。
 %    \begin{macrocode}
-%<!platex>\LoadClass{article}
-%<platex>\LoadClass{jarticle}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\RequirePackage{doc}
-%    \end{macrocode}
-%
-% Make \verb+|+ be a `short verb' character, but not in the document
-% preamble, where an active character may interfere with packages that
-% are loaded.
-%    \begin{macrocode}
-\AtBeginDocument{\MakeShortVerb{\|}}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\CodelineNumbered
-\DisableCrossrefs
-%    \end{macrocode}
-%
-% Increase the text width slightly so that width the standard fonts
-% 72 columns of code may appear in a |macrocode| environment.
-% \changes{v2.0c}{1994/03/15}{Set \cmd{\textwidth}}
-%    \begin{macrocode}
-\setlength{\textwidth}{355pt}
-%    \end{macrocode}
-%
-% Increase the marginpar width slightly, for long command names.
-% \changes{v2.0l}{1994/05/25}{Increase \cmd{\marginparwidth}}
-%    \begin{macrocode}
-\addtolength\marginparwidth{5pt}
-%    \end{macrocode}
-%
-% Silently substitute normal tt for bold. 
-% \changes{v2.0m}{1994/05/26}{Add font substition}
-%    \begin{macrocode}
-\DeclareFontShape{OT1}{cmtt}{bx}{n}
-  {<->ssub * cmtt/m/n}{}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\setcounter{StandardModuleDepth}{1}
-%    \end{macrocode}
-%
-% \section{Useful abbreviations}
-%
-% |\cmd{\foo}| Prints |\foo| verbatim. It may be used inside moving
-% arguments. |\cs{foo}| also prints |\foo|, for those who prefer that
-% syntax. (This second form may even be used when |\foo| is |\outer|).
-% \begin{macro}{\cmd}
-% \changes{v2.0k}{1994/05/21}{New definition, so \cmd\{ works.}
-% \begin{macro}{\cs}
-% \changes{v2.0d}{1994/03/17}{Add \cs{cs}}
-%    \begin{macrocode}
-\def\cmd#1{\cs{\expandafter\cmd@to@cs\string#1}}
-\def\cmd@to@cs#1#2{\char\number`#2\relax}
-\DeclareRobustCommand\cs[1]{\texttt{\char`\\#1}}
+\renewcommand{\normalsize}{%
+    \@setfontsize\normalsize\@xpt{15}%
+  \abovedisplayskip 10\p@ \@plus2\p@ \@minus5\p@
+  \abovedisplayshortskip \z@ \@plus3\p@
+  \belowdisplayshortskip 6\p@ \@plus3\p@ \@minus3\p@
+   \belowdisplayskip \abovedisplayskip
+   \let\@listi\@listI}
+\renewcommand{\small}{%
+  \@setfontsize\small\@ixpt{11}%
+  \abovedisplayskip 8.5\p@ \@plus3\p@ \@minus4\p@
+  \abovedisplayshortskip \z@ \@plus2\p@
+  \belowdisplayshortskip 4\p@ \@plus2\p@ \@minus2\p@
+  \def\@listi{\leftmargin\leftmargini
+              \topsep 4\p@ \@plus2\p@ \@minus2\p@
+              \parsep 2\p@ \@plus\p@ \@minus\p@
+              \itemsep \parsep}%
+  \belowdisplayskip \abovedisplayskip}
+\normalsize
+\setlength\parindent{1zw}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-%
-% |\star| prints |*| for use in documenting star-forms of commands.
-% |\marg{text}| prints \marg{text}, `mandatory argument'.
-% |\oarg{text}| prints \oarg{text}, `optional argument'.
-% |\parg{te,xt}| prints \parg{te,xt}, `picture mode argument'.
-% \changes{v2.0d}{1994/03/17}{Add \cs{marg}}
-% \changes{v2.0h}{1994/04/28}{Add \cs{parg}}
-%    \begin{macrocode}
-\providecommand\star{%
-  \ttfamily*}
-\providecommand\marg[1]{%
-  {\ttfamily\char`\{}{\em#1\/}{\ttfamily\char`\}}}
-\providecommand\oarg[1]{%
-  {\ttfamily[}{\em#1\/}{\ttfamily]}}
-\providecommand\parg[1]{%
-  {\ttfamily(}{\em#1\/}{\ttfamily)}}
-%    \end{macrocode}
-%
-% \section{Old Comments}
-%
-% The \LaTeXe\ sources contain a lot of code inherited from
-% \LaTeX2.09. The comments in this code were not designed to be
-% typeset, and do not contain the necessary \LaTeX\ markup. The
-% \texttt{oldcomments} environment typesets these comments,
-% automatically sensing when any control sequence appears, and
-% implicitly adding the |\verb|. This procedure does not produce
-% particularly beautiful pages, but it allows us to fully document new
-% sections, and have some form of typeset comments on all the old
-% code. 
-% \changes{v2.0e}{1994/03/18}{Use a fixed font.}
-%
-% Scan control names and put them in tt.
-% will actually (incorrectly) scan past |\\| but this does not matter as
-% this is almost never followed by a letter in practice.  
-% (ie |\\foo|) would put |foo| in |\ttfamily|.
-%    \begin{macrocode}
-\def\oc@scan#1{%
-  \ifx\oc@bslash#1%
-                      \egroup\let\next\oc@bslash\else
-  \ifcat a\noexpand#1%
-                      #1\let\next\oc@scan\else
-  \ifx\oc@percent#1%
-                      \def\next{\char`\%\egroup}%
-  \else
-                      #1\let\next\egroup
-  \fi\fi\fi\next}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\def\oc@bslash{\bgroup\oc@ttf\char`\\\oc@scan}%
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\def\oc@verb#1{%
-  \catcode`#1\active
-  \uccode`\~`#1%
-  \uppercase{\def~{{\oc@ttf\char`#1}}}}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\begingroup
-  \obeyspaces%
-  \catcode`\/=\catcode`\\
-  /catcode`/\/active
-  /catcode`<=/catcode`{%
-  /catcode`>=/catcode`}%
-  /catcode`/{/active%
-  /catcode`/}/active%
-  /gdef/oldc< \end{oldcomments}>%
-  /gdef/begmac<    \begin{macrocode}>%
-  /gdef/obs</def <</oc@ttf/ >>>%
-/endgroup%
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\begingroup
-  \catcode`\/=\catcode`\\
-  \catcode`\\=13
-  /catcode`/|=/catcode`/%
-  /catcode`/%=13
-  /gdef/oldcomments{|
-    /makeatletter
-    /let/do/oc@verb/dospecials
-    /frenchspacing/@vobeyspaces/obs
-    /raggedright
-    /oc@verb/>|
-    /oc@verb/<|
-    /let\/oc@bslash
-    /let%/oc@percent
-    /obeylines
-    /parindent/z@
-    /ttfamily/expandafter/let/expandafter/oc@ttf/the/font
-    /rmfamily
-    /hfuzz/maxdimen
-    }
-/endgroup
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\begingroup
-  \sloppy%
-  \obeylines%
-  \gdef\oc@percent#1^^M{%
-    \ifvmode%
-    \def\commentline{#1}%
-    \ifx\commentline\oldc%
-    \end{oldcomments}%
-    \else%
-    \ifx\commentline\begmac%
-    \begin{macrocode}%
-    \else%
-    \leavevmode%
-    #1^^M%
-    \fi\fi%
-    \else%
-    {\oc@ttf\char`\%}#1^^M%
-    \fi}%
-\endgroup%
-%    \end{macrocode}
-%
-%
-% \section{DocInclude}
-%
-%    \begin{macrocode}
-\@addtoreset{CodelineNo}{part}
-%    \end{macrocode}
-%
-% \begin{macro}{\DocInclude}
-% More or less exactly the same as |\include|, but uses |\DocInput|
-% on a |dtx| file, not |\input| on a |tex| file.
-% \changes{v2.0b}{1994/03/14}{Rename from \cmd{\docinclude}}
-% \changes{v2.0f}{1994/03/25}{Use \cmd{\part}}
-%    \begin{macrocode}
-\def\partname{File}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\def\DocInclude#1{%
-  \relax
-  \clearpage
-  \docincludeaux
-  \def\currentfile{#1.dtx}%
-  \ifnum\@auxout=\@partaux
-    \@latexerr{\string\include\space cannot be nested}\@eha
-  \else \@docinclude#1 \fi}
-\def\@docinclude#1 {\clearpage
-\if@filesw \immediate\write\@mainaux{\string\@input{#1.aux}}\fi
-\@tempswatrue\if@partsw \@tempswafalse\edef\@tempb{#1}\@for
-\@tempa:=\@partlist\do{\ifx\@tempa\@tempb\@tempswatrue\fi}\fi
-\if@tempswa \let\@auxout\@partaux \if@filesw
-\immediate\openout\@partaux #1.aux
-\immediate\write\@partaux{\relax}\fi
-\part{#1.dtx}%
-  {\let\ttfamily\relax
-  \xdef\filekey{\filekey, \thepart={\ttfamily\currentfile}}}%
-\DocInput{#1.dtx}%
-\clearpage
-\@writeckpt{#1}\if@filesw \immediate\closeout\@partaux \fi
-\else\@nameuse{cp@#1}\fi\let\@auxout\@mainaux}
-%    \end{macrocode}
-%
-%    \begin{macrocode}
-\gdef\codeline@wrindex#1{\if@filesw
-        \immediate\write\@indexfile
-            {\string\indexentry{#1}%
-            {\filesep\number\c@CodelineNo}}\fi}%
-%    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\file}
+% |\file|マクロは、ファイル名を示すのに用います。
 %    \begin{macrocode}
-\let\filesep\@empty
-%    \end{macrocode}
-%
-%
-%  \begin{macro}{\aalph}
-% Special  form of |\alph| as currently |source2e.tex|
-% includes more than 26 files
-% \changes{v2.0n}{1994/05/27}{Use uppercase letters, for makeindex}.
-%    \begin{macrocode}
-\def\aalph#1{\@aalph{\csname c@#1\endcsname}}
-\def\@aalph#1{%
-  \ifcase#1\or a\or b\or c\or d\or e\or f\or g\or h\or i\or
-         j\or k\or l\or m\or n\or o\or p\or q\or r\or s\or
-         t\or u\or v\or w\or x\or y\or z\or A\or B\or C\or
-         D\or E\or F\or G\or H\or I\or J\or K\or L\or M\or
-         N\or O\or P\or Q\or R\or S\or T\or U\or V\or W\or
-         X\or Y\or Z\else\@ctrerr\fi}
-%    \end{macrocode}
-%  \end{macro}
-%
-% \begin{macro}{\docincludeaux}
-% \changes{v2.06}{1994/03/31}{Use \cmd{\footnotesize} in file key.}
-% \changes{v2.0k}{1994/05/21}{Use \cmd{\aalph}}
-%    \begin{macrocode}
-\def\docincludeaux{%
-  \def\thepart{\aalph{part}}\def\filesep{\thepart-}%
-  \let\filekey\@gobble
-  \g@addto@macro\index@prologue{%
-    \gdef\@oddfoot{\parbox{\textwidth}{\strut\footnotesize
-       \raggedright{\bfseries File Key:} \filekey}}%
-    \let\@evenfoot\@oddfoot}%
-  \global\let\docincludeaux\relax
- \gdef\@oddfoot{%
-   \expandafter\ifx\csname ver@\currentfile\endcsname\relax
-    File \thepart: {\ttfamily\currentfile} %
-   \else
-    \GetFileInfo{\currentfile}%
-    File \thepart: {\ttfamily\filename} %
-    Date: \filedate\ %
-    Version \fileversion
-    \fi
-    \hfill\thepage}%
- \let\@evenfoot\@oddfoot}%
-%    \end{macrocode}
-% \end{macro}
-%
-%    \begin{macrocode}
-%<*platex>
 \providecommand*{\file}[1]{\texttt{#1}}
-\providecommand*{\pstyle}[1]{\textsl{#1}}
-\providecommand*{\Lcount}[1]{\textsl{\small#1}}
-\providecommand*{\Lopt}[1]{\textsf{#1}}
-\providecommand\dst{{\normalfont\scshape docstrip}}
-\providecommand\NFSS{\textsf{NFSS}}
+%    \end{macrocode}
+% \end{macro}
 %
+% \begin{macro}{\pstyle}
+% |\pstyle|マクロは、ページスタイル名を示すのに用います。
+%    \begin{macrocode}
+\providecommand*{\pstyle}[1]{\textsl{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\Lcount}
+% |\Lcount|マクロは、カウンタ名を示すのに用います。
+%    \begin{macrocode}
+\providecommand*{\Lcount}[1]{\textsl{\small#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\Lopt}
+% |\Lopt|マクロは、クラスオプションやパッケージオプションを示すのに用います。
+%    \begin{macrocode}
+\providecommand*{\Lopt}[1]{\textsf{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\dst}
+% |\dst|マクロは、``\dst''を出力する。
+%    \begin{macrocode}
+\providecommand\dst{{\normalfont\scshape docstrip}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\NFSS}
+% |\NFSS|マクロは、``\NFSS''を出力します。
+%    \begin{macrocode}
+\providecommand\NFSS{\textsf{NFSS}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\c@clineno}
+% \begin{macro}{\mlineplus}
+% |\mlineplus|マクロは、その時点でのマクロコードの行番号に、引数に指定された
+% 行数だけを加えた数値を出力します。たとえば|\mlineplus{3}|とすれば、
+% 直前のマクロコードの行番号(\arabic{CodelineNo})に3を加えた数、
+% ``\mlineplus{3}''が出力されます。
+%    \begin{macrocode}
 \newcounter{@clineno}
 \def\mlineplus#1{\setcounter{@clineno}{\arabic{CodelineNo}}%
    \addtocounter{@clineno}{#1}\arabic{@clineno}}
-
-\def\jtechI{『日本語\TeX テクニカルブックＩ』}
-\def\tlatexbook{『縦組対応版 パーソナル日本語\TeX 縦組リファレンスガイド』}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
-\def\sample#1{%
+% \begin{environment}{tsample}
+% |tsample|環境は、環境内に指定された内容を罫線で囲って出力をします。
+% 第一引数は、出力するボックスの高さです。
+% \file{plext.dtx}の中で使用しています。
+% このマクロ内では縦組になることに注意してください。
+%    \begin{macrocode}
+\def\tsample#1{%
   \hbox to\linewidth\bgroup\vrule width.1pt\hss
     \vbox\bgroup\hrule height.1pt
       \vskip.5\baselineskip
       \vbox to\linewidth\bgroup\tate\hsize=#1\relax\vss}
-\def\endsample{%
+\def\endtsample{%
       \vss\egroup
       \vskip.5\baselineskip
     \hrule height.1pt\egroup
   \hss\vrule width.1pt\egroup}
-%</platex>
 %    \end{macrocode}
+% \end{environment}
 %
+% \begin{macro}{\DisableCrossrefs}
+% \begin{macro}{\EnableCrossrefs}
+% \file{jclasses.dtx}を処理するときに、|\if西暦|の部分でエラーになるため、
+% 一時的にクロスリファレンスの機能をオフにします。
+% しかし、デフォルトの定義では完全に制御できないので、ここで再定義をします。
 %    \begin{macrocode}
-\def\task#1#2{}
+\def\DisableCrossrefs{\@bsphack\scan@allowedfalse\@esphack}
+\def\EnableCrossrefs{\@bsphack\scan@allowedtrue
+   \def\DisableCrossrefs{\@bsphack\scan@allowedfalse\@esphack}\@esphack}
 %</class>
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
 % \Finale
 %
+\endinput
