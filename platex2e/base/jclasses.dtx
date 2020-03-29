@@ -52,12 +52,14 @@
 % \changes{v1.1i}{1997/12/12}{report, bookクラスで片面印刷時に、
 %      bothstyleスタイルにすると、コンパイルエラーになるのを修正}
 % \changes{v1.1j}{1998/02/03}{互換モード時のa5pのトップマージンを0.7in増加}
+% \changes{v1.1k}{1998/03/23}{reportとbookクラスで番号を付けない見出しの
+%   ペナルティが\cs{M@}だったのを\cs{@M}に修正}
 % \fi
 %
 % \iffalse
 \NeedsTeXFormat{pLaTeX2e}
 %<*driver>
-\ProvidesFile{jclasses.dtx}[1998/02/03 v1.1j Standard pLaTeX class]
+\ProvidesFile{jclasses.dtx}[1998/03/23 v1.1k Standard pLaTeX class]
 %</driver>
 %<*yoko>
 %<article>\ProvidesClass{jarticle}
@@ -81,8 +83,8 @@
 %<11pt&bk>\ProvidesFile{tbk11.clo}
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
-%<article|report|book>  [1998/02/03 v1.1j Standard pLaTeX class]
-%<10pt|11pt|12pt>  [1998/02/03 v1.1j Standard pLaTeX file (size option)]
+%<article|report|book>  [1998/03/23 v1.1k Standard pLaTeX class]
+%<10pt|11pt|12pt>  [1998/03/23 v1.1k Standard pLaTeX file (size option)]
 %<*driver>
 \documentclass{jltxdoc}
 \GetFileInfo{jclasses.dtx}
@@ -2447,10 +2449,14 @@
   \huge\bfseries#1\par}%
   \nobreak\vskip3ex\@afterheading}
 %</article>
+%    \end{macrocode}
+% \changes{v1.1k}{1998/03/23}{reportとbookクラスで番号を付けない見出しの
+%   ペナルティが\cs{M@}だったのを\cs{@M}に修正}
+%    \begin{macrocode}
 %<*report|book>
 \def\@spart#1{{%
   \centering
-  \interlinepenalty\M@\reset@font
+  \interlinepenalty\@M\reset@font
   \Huge\bfseries#1\par}%
   \@endpart}
 %</report|book>
