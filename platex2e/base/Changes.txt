@@ -1,4 +1,10 @@
-<2004/01/04>
+<2006/01/04>
+  * nidanfloat.dtx: 必須フォーマットファイルをpLaTeX2eからLaTeX2eへ変更。
+  * plfonts.dtx: \DeclareFontEncoding@ 中で \LastDeclaredEncodeng の再定義が
+      抜けていたので追加。
+  * plvers.dtx: バージョン番号更新(platex<2006/01/04>)
+----------------
+<2005/01/04>
   * plfonts.dtx: \fontfamily中のフラグを修正。
       （ありがとうございます、角藤さん）
   * plvers.dtx: バージョン番号更新(platex<2005/01/04>)

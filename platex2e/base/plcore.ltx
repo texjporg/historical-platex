@@ -41,7 +41,7 @@
 %%   Right brace   \}     Tilde         \~}
 %%
 \def\pfmtname{pLaTeX2e}
-\def\pfmtversion{2005/01/04}
+\def\pfmtversion{2006/01/04}
 %% File: plfonts.dtx
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -127,7 +127,9 @@
      \@font@info{Redeclaring font encoding #1}%
   \fi
   \global\@namedef{T@#1}{#2}%
-  \global\@namedef{M@#1}{\default@M#3}}
+  \global\@namedef{M@#1}{\default@M#3}%
+  \xdef\LastDeclaredEncoding{#1}%
+  }
 \def\DeclareKanjiEncoding#1{%
   \@latex@warning{%
      The \string\DeclareKanjiEncoding\space is obsoleted command.  Please use

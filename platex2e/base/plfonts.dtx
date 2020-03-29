@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 %% File: plfonts.dtx
 %
-%  Copyright 1994-2005 ASCII Corporation.
+%  Copyright 1994-2006 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
@@ -55,6 +55,8 @@
 % \changes{v1.3m}{2004/06/14}{\cs{fontfamily}コマンド内部フラグ変更}
 % \changes{v1.3n}{2004/08/10}{和文エンコーディングの切り替えを有効化}
 % \changes{v1.3o}{2005/01/04}{\cs{fontfamily}中のフラグ修正}
+% \changes{v1.3p}{2006/01/04}{\cs{DeclareFontEncoding@}中で
+%    \cs{LastDeclaredEncodeng}の再定義が抜けていたので追加}
 % \fi
 %
 % \iffalse
@@ -475,6 +477,8 @@
 % 欧文エンコードを宣言するためのコマンドです。
 % \file{ltfssbas.dtx}で定義されているものを、
 % |\fenc@list|を作るように再定義をしています。
+% \changes{v1.3p}{2006/01/04}{\cs{DeclareFontEncoding@}中で
+%    \cs{LastDeclaredEncodeng}の再定義が抜けていたので追加}
 %    \begin{macrocode}
 \def\DeclareFontEncoding{%
   \begingroup
@@ -496,7 +500,9 @@
      \@font@info{Redeclaring font encoding #1}%
   \fi
   \global\@namedef{T@#1}{#2}%
-  \global\@namedef{M@#1}{\default@M#3}}
+  \global\@namedef{M@#1}{\default@M#3}%
+  \xdef\LastDeclaredEncoding{#1}%
+  }
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
