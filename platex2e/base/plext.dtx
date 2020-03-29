@@ -44,15 +44,14 @@
 % \changes{v1.1h}{1996/01/30}{キャプション拡張マクロを追加}
 % \changes{v1.1i}{2001/05/10}{縦組でzを指定するとエラーになるのを修正。
 %    ありがとう、大石さん}
+% \changes{v1.2}{2001/09/26}{タグ名をplcoreからpackageに変更した}
 % \fi
 %
 % \iffalse
-\NeedsTeXFormat{pLaTeX2e}
-%<*driver>
+%<package>\NeedsTeXFormat{pLaTeX2e}
+%<package>\ProvidesPackage{plext}
 \ProvidesFile{plext.dtx}
-%</driver>
-%<plcore>\ProvidesPackage{plext}
-  [2001/05/10 v1.1i pLaTeX package file]
+   [2001/09/26 v1.2 pLaTeX package file]
 %<*driver>
 \documentclass{jltxdoc}
 \usepackage{plext}
@@ -144,7 +143,7 @@
 % \begin{macro}{\if@rotsw}
 % このスイッチは、縦組モードで90度回転させるかどうかを示すのに使います。
 %    \begin{macrocode}
-%<*plcore>
+%<*package>
 \newif\if@rotsw
 %    \end{macrocode}
 % \end{macro}
@@ -1230,7 +1229,7 @@
 % \file{ltthm.dtx}で定義されています。
 %    \begin{macrocode}
 \def\@thmcounter#1{\noexpand\rensuji{\noexpand\arabic{#1}}}
-%</plcore>
+%</package>
 %    \end{macrocode}
 % \end{macro}
 %

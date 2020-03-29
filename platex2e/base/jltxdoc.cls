@@ -37,8 +37,9 @@
 %%   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %%   Right brace   \}     Tilde         \~}
 %%
+
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesFile{jltxdoc.dtx}[1997/07/29 v1.0b Standard pLaTeX file]
+\ProvidesClass{jltxdoc}[1997/07/29 v1.0b Standard pLaTeX file]
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{ltxdoc}}
 \ProcessOptions
 \LoadClass{ltxdoc}

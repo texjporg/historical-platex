@@ -1,14 +1,14 @@
 % \iffalse meta-comment
 %% File: jclasses.dtx
 %
-%  Copyright 1995-1999 ASCII Corporation.
+%  Copyright 1995-2001 ASCII Corporation.
 %
 %  This file is part of the pLaTeX2e system.
 %  -----------------------------------------
 %
 % \fi
 %
-% \CheckSum{4401}
+% \CheckSum{4402}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -63,6 +63,10 @@
 % \changes{v1.1p}{1999/1/6}{\cs{oddsidemargin}のポイントへの変換を後ろに}
 % \changes{v1.1q}{1999/05/18}{縦組時のみに設定するようにした}
 % \changes{v1.1r}{1999/08/09}{トップマージンの計算式を修正}
+% \changes{v1.2}{2001/09/04}{\cs{chapter}の出力位置がアスタリスク形式と
+%   そうでないときと違うのを修正(ありがとう、鈴木＠津さん)}
+% \changes{v1.3}{2001/10/04}{目次のページ番号の書体を|\rmfamily|から
+%   |\normalfont|に変更(ありがとう、鈴木た＠MILNさん)}
 % \fi
 %
 % \iffalse
@@ -92,11 +96,11 @@
 %<11pt&bk>\ProvidesFile{tbk11.clo}
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
-%<*article|report|book|driver>
-  [1999/05/18 v1.1q Standard pLaTeX class]
-%</article|report|book|driver>
-%<10pt|11pt|12pt>  [1999/05/18 v1.1q Standard pLaTeX file (size option)]
+  [2001/10/04 v1.3
+%<article|report|book> Standard pLaTeX class]
+%<10pt|11pt|12pt>  Standard pLaTeX file (size option)]
 %<*driver>
+]
 \documentclass{jltxdoc}
 \GetFileInfo{jclasses.dtx}
 \title{p\LaTeXe{}の標準クラス\space\fileversion}
@@ -2546,12 +2550,15 @@
 % このマクロが実際に章見出しを組み立てます。
 % \changes{v1.1o}{1998/12/24}{secnumdepthカウンタを$-1$以下にすると、
 %   見出し文字列も消えてしまうのを修正}
+% \changes{v1.2}{2001/09/04}{\cs{chapter}の出力位置がアスタリスク形式と
+%   そうでないときと違うのを修正(ありがとう、鈴木＠津さん)}
 %    \begin{macrocode}
 \def\@makechapterhead#1{\hbox{}%
   \vskip2\Cvs
   {\parindent\z@
    \raggedright
    \reset@font\huge\bfseries
+   \leavevmode
    \ifnum \c@secnumdepth >\m@ne
      \setlength\@tempdima{\linewidth}%
 %<book>    \if@mainmatter
@@ -2579,12 +2586,15 @@
 %
 % \begin{macro}{\@makeschapterhead}
 % 番号を付けない場合の形式です。
+% \changes{v1.2}{2001/09/04}{\cs{chapter}の出力位置がアスタリスク形式と
+%   そうでないときと違うのを修正(ありがとう、鈴木＠津さん)}
 %    \begin{macrocode}
 \def\@makeschapterhead#1{\hbox{}%
   \vskip2\Cvs
   {\parindent\z@
    \raggedright
    \reset@font\huge\bfseries
+   \leavevmode
    \setlength\@tempdima{\linewidth}%
    \vtop{\hsize\@tempdima#1}}\vskip3\Cvs}
 %</report|book>
@@ -3550,18 +3560,23 @@
 % \begin{macro}{\@dottedtocline}
 % 目次の各行間に|\toclineskip|を入れるように変更します。
 % このマクロは\file{ltsect.dtx}で定義されています。
+% \changes{v1.3}{2001/10/04}{第５引数の書体を|\rmfamily|から|\normalfont|に変更}
 %    \begin{macrocode}
-\def\@dottedtocline#1#2#3#4#5{\ifnum #1>\c@tocdepth \else
-  \vskip\toclineskip \@plus.2\p@
-  {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
-    \parindent #2\relax\@afterindenttrue
-   \interlinepenalty\@M
-   \leavevmode
-   \@lnumwidth #3\relax
-   \advance\leftskip \@lnumwidth \hbox{}\hskip -\leftskip
-    {#4}\nobreak\leaders\hbox{$\m@th \mkern \@dotsep mu.\mkern \@dotsep 
-       mu$}\hfill \nobreak\hbox to\@pnumwidth{%
-         \hss\reset@font\rmfamily \normalcolor #5}\par}\fi}
+\def\@dottedtocline#1#2#3#4#5{%
+  \ifnum #1>\c@tocdepth \else
+    \vskip\toclineskip \@plus.2\p@
+    {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
+     \parindent #2\relax\@afterindenttrue
+     \interlinepenalty\@M
+     \leavevmode
+     \@lnumwidth #3\relax
+     \advance\leftskip \@lnumwidth \hbox{}\hskip -\leftskip
+     {#4}\nobreak
+     \leaders\hbox{$\m@th \mkern \@dotsep mu.\mkern \@dotsep mu$}%
+     \hfill\nobreak
+     \hb@xt@\@pnumwidth{\hss\normalfont \normalcolor #5}%
+     \par}%
+  \fi}
 %    \end{macrocode}
 % \end{macro}
 %

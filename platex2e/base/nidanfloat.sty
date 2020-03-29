@@ -39,7 +39,11 @@
 %%
 \NeedsTeXFormat{pLaTeX2e}
 \ProvidesPackage{nidanfloat}%
-  [1997/10/22 v2.2 'Put double-floats at top/bottom within twocolumn mode']
+  [2001/09/14 v2.5 'Put double-floats at top/bottom within twocolumn mode']
+\DeclareOption{balance}{\AtEndDocument{\let\clearpage\balanceclearpage}}
+\DeclareOption{nobalance}{\relax}
+\ExecuteOptions{nobalance}
+\ProcessOptions
 \newcommand\dblbotfraction{0.5}
 \newcount\c@dblbotnumber
 \setcounter{dblbotnumber}{2}
@@ -134,9 +138,9 @@
     \@flsetnum\@topnum
     \ifnum\@topnum>\z@
       \@tempswafalse
-      \@flcheckspace\@toproom{\@toplist\L@toplist\R@toplis}
+      \@flcheckspace\@toproom\@toplist\L@toplist\R@toplist
       \if@tempswa
-        \@bitor\@currtype{\@midlist\L@botlist\R@botlist}
+        \@bitor\@currtype{\@midlist\L@botlist\R@botlist}%
         \if@test\else
           \if@firstcolumn
             \@flupdates \@topnum \@toproom \L@toplist
@@ -156,7 +160,7 @@
     \@flsetnum\@botnum
     \ifnum\@botnum>\z@
       \@tempswafalse
-      \@flcheckspace\@botroom{\@botlist\L@botlist\R@botlist}
+      \@flcheckspace\@botroom\@botlist\L@botlist\R@botlist
       \if@tempswa
         \global\maxdepth\z@
         \if@firstcolumn
@@ -270,6 +274,27 @@
   \fi
 }
 \global\newdimen\@floatht \@floatht\z@
+\def \@flcheckspace #1#2#3#4{%
+   \advance \@reqcolroom
+  \if@twocolumn
+    \if@firstcolumn
+      \ifx #3\@empty \textfloatsep \else \floatsep \fi
+    \else
+      \ifx #4\@empty \textfloatsep \else \floatsep \fi
+    \fi
+  \else
+     \ifx #2\@empty \textfloatsep \else \floatsep \fi
+  \fi
+   \ifdim \@colroom>\@reqcolroom
+     \ifdim #1>\ht\@currbox
+       \@tempswatrue
+     \else
+       \ifnum \@fpstype<\sixt@@n
+         \@tempswatrue
+       \fi
+     \fi
+   \fi
+}
 \def\@dblflcheckspace#1#2{%
   \@tempdima=#1\relax
   \advance\@tempdima
@@ -373,7 +398,7 @@
 }
 \global\newdimen\@fixht
 \def\@combinefloats{%
-  \boxmaxdepth\maxdepth
+  %%\boxmaxdepth\maxdepth
   \if@twocolumn
     \if@firstcolumn
     \else
@@ -385,22 +410,17 @@
         \@fixht\textheight
         \advance\@fixht-\@tempdima
         \advance\@fixht\maxdepth
-        \setbox\z@=\hbox{漢}%
-        \@tempdima\baselineskip
-        \advance\@tempdima-\topskip
-        \advance\@tempdima-\dp\z@
-        %\advance\@tempdima-\ht\z@
         \vbadness=\@M \splittopskip=\topskip \splitmaxdepth=\maxdepth
         \setbox\z@=\vsplit\@leftcolumn to\@fixht
         \advance\@fixht-\maxdepth
+        \@tempdima\baselineskip \advance\@tempdima-\topskip
         \setbox\@outputbox=\vbox to\@fixht{%
             \ifvoid\@leftcolumn
             \else
               \unvbox\@leftcolumn\vskip\@tempdima
             \fi\relax
             \unvbox\@outputbox\vss}%
-        \setbox\@leftcolumn=\vbox to\@fixht{\unvbox\z@\vss}%
-        \let\botmark\splitbotmark
+        \setbox\@leftcolumn=\vbox to\@fixht{\unvbox\z@}%
       \fi
       \@fixht\ht\@leftcolumn
         \advance\@fixht\dp\@leftcolumn \advance\@fixht\@floatht
@@ -421,7 +441,7 @@
       \vskip-\floatsep\topfigrule\vskip\textfloatsep\unvbox\@leftcolumn
       \vss}%
   \let\@elt\relax
-  \xdef\@freelist{\@freelist\L@toplist}\gdef\L@toplist\@empty
+  \xdef\@freelist{\@freelist\L@toplist}\global\let\L@toplist\@empty
 }
 \def\L@cflb{%
   \let\@elt\@comflelt\setbox\@tempboxa\vbox{}\L@botlist
@@ -430,7 +450,7 @@
       \vskip\textfloatsep\botfigrule\unvbox\@tempboxa\vskip-\floatsep
       \vss}%
   \let\@elt\relax
-  \xdef\@freelist{\@freelist\L@botlist}\gdef\L@botlist\@empty
+  \xdef\@freelist{\@freelist\L@botlist}\global\let\L@botlist\@empty
 }
 \def\R@cflt{%
   \let\@elt\@comflelt\setbox\@tempboxa\vbox{}\R@toplist
@@ -439,7 +459,7 @@
       \vskip-\floatsep\topfigrule\vskip\textfloatsep\unvbox\@outputbox
       \vss}%
   \let\@elt\relax
-  \xdef\@freelist{\@freelist\R@toplist}\gdef\R@toplist\@empty
+  \xdef\@freelist{\@freelist\R@toplist}\global\let\R@toplist\@empty
 }
 \def\R@cflb{%
   \let\@elt\@comflelt\setbox\@tempboxa\vbox{}\R@botlist
@@ -448,7 +468,7 @@
       \vskip\textfloatsep\botfigrule\unvbox\@tempboxa\vskip-\floatsep
       \vss}%
   \let\@elt\relax
-  \xdef\@freelist{\@freelist\R@botlist}\gdef\R@botlist\@empty
+  \xdef\@freelist{\@freelist\R@botlist}\global\let\R@botlist\@empty
 }
 \def\@combinedblfloats{%
   \ifx\@dbltoplist\@empty
@@ -486,14 +506,11 @@
     \global\setbox\@leftcolumn\box\@outputbox
     \@colht\textheight
     \@chkdblfloatht\global\advance\@colht-\@floatht
-    \mark{\firstmark}
   \else
     \global\@firstcolumntrue
     \if@balance % 左右カラムを均等に分割
-      \setbox\z@=\hbox{漢}%
       \@tempdima\baselineskip
-      \advance\@tempdima-\dp\z@
-      \advance\@tempdima-\ht\z@
+      \advance\@tempdima-\topskip
       % 連結
       \setbox\@combinebox=\vbox{%
           \unvbox\@leftcolumn\vskip\@tempdima\unvbox\@outputbox}%
@@ -505,7 +522,6 @@
       \setbox\@leftcolumn=\vsplit\@combinebox to\@tempdima
       \setbox\@outputbox=\vtop{\unvbox\@combinebox}
       \setbox\@leftcolumn=\vtop{\unvbox\@leftcolumn}
-      \let\botmark\splitbotmark
     \fi
     % 整形
     \@tempdima\ht\@leftcolumn
@@ -634,7 +650,6 @@
 \def\balancenewpage{\par\vfil\global\@balancetrue\penalty-\@M}
 \def\balanceclearpage{\balancenewpage
     \write\m@ne{}\vbox{}\global\@balancetrue\penalty-\@Mi}
-\AtEndDocument{\let\clearpage\balanceclearpage}
 \endinput
 %%
 %% End of file `nidanfloat.sty'.

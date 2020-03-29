@@ -4,7 +4,7 @@
 % Copyright 1994,1997,2000,2001 ASCII Co.
 %
 % \fi
-% \CheckSum{1633}
+% \CheckSum{1663}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -33,6 +33,8 @@
 %    なるのを修正（ありがとう、倉沢＠QUIPUさん）}
 % \changes{v2.4}{2001/02/19}{最終ページで左右の行間が揃わない部分を修正}
 % \changes{v2.4}{2001/02/19}{柱が出ないのを修正}
+% \changes{v2.4}{2001/07/23}{ページの大きさが小さくなるのを修正}
+% \changes{v2.5}{2001/09/14}{パッケージオプション(balance,nobalance)を追加}
 % \fi
 %
 % \iffalse
@@ -41,7 +43,7 @@
 \ProvidesFile{nidanfloat.dtx}
 %</driver>
 %<core>\ProvidesPackage{nidanfloat}%
-  [2001/02/19 v2.4 'Put double-floats at top/bottom within twocolumn mode']
+  [2001/09/14 v2.5 'Put double-floats at top/bottom within twocolumn mode']
 %
 %<*driver>
 \documentclass{jltxdoc}
@@ -65,6 +67,22 @@
 %
 % \section{コード}
 %
+% \subsection{パッケージオプション}
+% \changes{v2.5}{2001/09/14}{パッケージオプションを追加}
+% \file{nidanfloat}パッケージでは、最終ページの左右カラムの高さを
+% 均一に振り分けるようににしている。しかし、この機能の影響により、
+% 最終ページでの|\newpage|と|\clearpage|コマンドが正しく動作しない。
+% そこで、この機能を使うかどうかを指定するオプションを導入する。
+% パッケージ指定時にオプション``balance''を指定すると、
+% 最終ページの自動調整を行なうようになる。デフォルトでは行なわない。
+%    \begin{macrocode}
+%<*core>
+\DeclareOption{balance}{\AtEndDocument{\let\clearpage\balanceclearpage}}
+\DeclareOption{nobalance}{\relax}
+\ExecuteOptions{nobalance}
+\ProcessOptions
+%    \end{macrocode}
+%
 % \subsection{フロートパラメータ}
 % ここでは、段抜きのフロートをページ下部に置くために作成をしたパラメータに
 % ついて説明をする。
@@ -73,7 +91,6 @@
 % ２段組時にページ下部に占めることのできる、二段抜きフロートの割合。
 % デフォルトは0.5、すなわちページ半分を占めることができるようにしている。
 %    \begin{macrocode}
-%<*core>
 \newcommand\dblbotfraction{0.5}
 %    \end{macrocode}
 % \end{macro}
@@ -676,11 +693,12 @@
 % \end{macro}
 %
 % \begin{macro}{\@combinefloats}
+% \changes{v2.4}{2001/07/23}{\cs{boxmaxdepth}を\cs{maxdepth}にしないようにした}
 % |@combinefloats|は、カラム単位で、テキストとフロートをマージする。
 % このマクロは右カラムのときに実行する。
 %    \begin{macrocode}
 \def\@combinefloats{%
-  \boxmaxdepth\maxdepth
+  %%\boxmaxdepth\maxdepth
   \if@twocolumn
     \if@firstcolumn
     \else
@@ -723,7 +741,15 @@
               \unvbox\@leftcolumn\vskip\@tempdima
             \fi\relax
             \unvbox\@outputbox\vss}%
-        \setbox\@leftcolumn=\vbox to\@fixht{\unvbox\z@\vss}%
+%    \end{macrocode}
+% \changes{v2.5}{2001/09/14}{\cs{vsplit}時、infiniteエラーになるのを修正}
+% |\@leftcolumn|を作成するときに用いていた|\vss|が
+% \begin{verbatim}
+% ! Infinite glue shrinkage found in box being split.
+% \end{verbatim}
+% のエラーを起こすことがあるので削除した。
+%    \begin{macrocode}
+        \setbox\@leftcolumn=\vbox to\@fixht{\unvbox\z@}%
       \fi
 %    \end{macrocode}
 % 左右、それぞれテキストとカラム幅フロートを組み立てる。
@@ -1027,21 +1053,16 @@
 % \begin{macro}{\balancenewpage}
 % \begin{macro}{\balanceclearpage}
 % テキストを均等に分割して出力するためのマクロ。
+% ただし、このマクロを用いた場合、そのページ内での|\newpage|や
+% |\clearpage|コマンドが無効になることに注意。
 %    \begin{macrocode}
 \def\balancenewpage{\par\vfil\global\@balancetrue\penalty-\@M}
 \def\balanceclearpage{\balancenewpage
     \write\m@ne{}\vbox{}\global\@balancetrue\penalty-\@Mi}
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
-%
-% \begin{macro}{\enddocument}
-% 最終ページのテキストを均等に分割する。
-%    \begin{macrocode}
-\AtEndDocument{\let\clearpage\balanceclearpage}
 \endinput
 %</core>
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 %
 % \Finale

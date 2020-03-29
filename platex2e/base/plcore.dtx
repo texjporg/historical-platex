@@ -1,14 +1,14 @@
 % \iffalse meta-comment
 %% File: plcore.dtx
 %
-%  Copyright 1994-1999 ASCII Corporation.
+%  Copyright 1994-2001 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
 %
-% \CheckSum{867}
+% \CheckSum{879}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -46,13 +46,15 @@
 % \changes{v1.1j}{2001/05/10}{\cs{@makecol}で組み立てられる
 %    \cs{@outputbox}の大きさが、縦組で中身が空のボックスだけの場合も適正になる
 %    ように修正}
+% \changes{v1.2}{2001/09/04}{本文と\cs{footnoterule}が重なってしまうのを修正}
+% \changes{v1.2a}{2001/09/26}{\LaTeX\ \texttt{!<2001/06/01!>}に対応}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plcore.dtx}[1998/02/03 v1.1i pLaTeX core file]
+\ProvidesFile{plcore.dtx}[2001/09/26 v1.2a pLaTeX core file]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plcore.dtx}
@@ -307,7 +309,12 @@
        \unvbox\@outputbox
        \vskip \@tempdima
        \@textbottom
+%    \end{macrocode}
+% つぎの部分がp\LaTeX{}用の修正です。
+% \changes{v1.2}{2001/09/04}{本文と\cs{footnoterule}が重なってしまうのを修正}
+%    \begin{macrocode}
        \ifvoid\footins\else % for pLaTeX
+		 \vskip\skip\footins
          \color@begingroup
             \normalcolor
             \footnoterule
@@ -328,7 +335,13 @@
        \vbox to \@tempdima {%
          \unvbox\@outputbox
          \@textbottom
+%    \end{macrocode}
+% つぎの部分がp\LaTeX{}用の修正です。
+% 脚注があれば、ここでそれを出力します。
+% \changes{v1.2}{2001/09/04}{本文と\cs{footnoterule}が重なってしまうのを修正}
+%    \begin{macrocode}
          \ifvoid\footins\else % for pLaTeX
+		   \vskip\skip\footins
            \color@begingroup
               \normalcolor
               \footnoterule
@@ -568,6 +581,7 @@
 %
 % なお、この変更をローカルなものにするために、
 % |\begingroup|と|\endgroup|で囲みます。
+% \changes{v1.2a}{2001/09/26}{\LaTeX\ \texttt{!<2001/06/01!>}に対応}
 %    \begin{macrocode}
 \def\@outputpage{%
 \begingroup % the \endgroup is put in by \aftergroup
@@ -576,6 +590,8 @@
   \fi
   \let \protect \noexpand
   \@resetactivechars
+  \global\let\@@if@newlist\if@newlist
+  \global\@newlistfalse
   \@parboxrestore
   \shipout\vbox{\yoko
     \set@typeset@protect

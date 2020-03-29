@@ -41,7 +41,7 @@
 %%   Right brace   \}     Tilde         \~}
 %%
 \def\pfmtname{pLaTeX2e}
-\def\pfmtversion{2000/11/03}
+\def\pfmtversion{2001/09/04}
 %% File: plfonts.dtx
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -416,20 +416,20 @@
 \newdimen\adjust@dimen
 \def\adjustbaseline{%
   \iftdir
-  \setbox\adjust@box\hbox{\char\euc"A1A1}%
+    \setbox\adjust@box\hbox{\char\euc"A1A1}%
     \cht\ht\adjust@box
     \cdp\dp\adjust@box
     \cwd\wd\adjust@box
     \cvs\normalbaselineskip
     \chs\cwd
     \cHT\cht \advance\cHT\cdp
-  \setbox\adjust@box\hbox{\tbaselineshift\z@ M}%
-  \adjust@dimen\ht\adjust@box
-  \advance\adjust@dimen\dp\adjust@box
-  \advance\adjust@dimen-\cHT
-  \divide\adjust@dimen\tw@
-  \advance\adjust@dimen\cdp
-  \advance\adjust@dimen-\dp\adjust@box
+    \setbox\adjust@box\hbox{\tbaselineshift\z@ M}%
+    \adjust@dimen\ht\adjust@box
+    \advance\adjust@dimen\dp\adjust@box
+    \advance\adjust@dimen-\cHT
+    \divide\adjust@dimen\tw@
+    \advance\adjust@dimen\cdp
+    \advance\adjust@dimen-\dp\adjust@box
     \tbaselineshift\adjust@dimen
   \fi}
 \DeclareRobustCommand\romanencoding[1]{%
@@ -671,7 +671,8 @@
        \@texttop
        \dimen@ \dp\@outputbox
        \unvbox \@outputbox
-       \vskip -\dimen@
+       \iftdir\hskip\z@
+       \else\vskip -\dimen@\fi
        \@textbottom
        \ifvoid\footins\else % for pLaTeX
          \vskip \skip\footins
@@ -701,6 +702,7 @@
        \vskip \@tempdima
        \@textbottom
        \ifvoid\footins\else % for pLaTeX
+ \vskip\skip\footins
          \color@begingroup
             \normalcolor
             \footnoterule
@@ -715,6 +717,7 @@
          \unvbox\@outputbox
          \@textbottom
          \ifvoid\footins\else % for pLaTeX
+   \vskip\skip\footins
            \color@begingroup
               \normalcolor
               \footnoterule
@@ -818,6 +821,8 @@
   \fi
   \let \protect \noexpand
   \@resetactivechars
+  \global\let\@@if@newlist\if@newlist
+  \global\@newlistfalse
   \@parboxrestore
   \shipout\vbox{\yoko
     \set@typeset@protect
@@ -870,6 +875,7 @@
       \color@endbox
     }%
   }%
+  \global\let\if@newlist\@@if@newlist
   \global \@colht \textheight
   \stepcounter{page}%
   \let\firstmark\botmark

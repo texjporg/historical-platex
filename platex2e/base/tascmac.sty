@@ -31,9 +31,9 @@
 \setbox\@nbox=\hbox to\hsize{\@ascgrp\unhbox\@nbox \hss a\hss b%
 \vrule width1.08pt depth35pt}
 \@bw=\wd\@nbox\advance\@bw -40pt
-\savebox{\@nbody}\bgroup\begin{minipage}{\@bw}% (KN:1998/02/27)
+\begin{lrbox}{\@nbody}\begin{minipage}{\@bw}% (KN:1998/02/27)
   \tbaselineshift\@savetbaselineshift}%
-\def\endboxnote{\end{minipage}\egroup
+\def\endboxnote{\end{minipage}\end{lrbox}%
 \vbox{\parindent=0pt\offinterlineskip\copy\@nbox
 \hbox to\wd\@nbox{\vrule width1.08pt\hfil\box\@nbody\hfil\vrule width1.08pt}
 \hbox to\wd\@nbox{\vrule width1.08pt height15pt\hfil

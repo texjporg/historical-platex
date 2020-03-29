@@ -39,7 +39,8 @@
 %%
 \NeedsTeXFormat{pLaTeX2e}
 \ProvidesClass{jarticle}
-  [1999/05/18 v1.1q Standard pLaTeX class]
+  [2001/10/04 v1.3
+ Standard pLaTeX class]
 \newcounter{@paper}
 \newif\if@landscape \@landscapefalse
 \newcommand{\@ptsize}{}
@@ -627,17 +628,21 @@
 \setlength\toclineskip{\z@}
 \newdimen\@lnumwidth
 \def\numberline#1{\hbox to\@lnumwidth{#1\hfil}}
-\def\@dottedtocline#1#2#3#4#5{\ifnum #1>\c@tocdepth \else
-  \vskip\toclineskip \@plus.2\p@
-  {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
-    \parindent #2\relax\@afterindenttrue
-   \interlinepenalty\@M
-   \leavevmode
-   \@lnumwidth #3\relax
-   \advance\leftskip \@lnumwidth \hbox{}\hskip -\leftskip
-    {#4}\nobreak\leaders\hbox{$\m@th \mkern \@dotsep mu.\mkern \@dotsep
-       mu$}\hfill \nobreak\hbox to\@pnumwidth{%
-         \hss\reset@font\rmfamily \normalcolor #5}\par}\fi}
+\def\@dottedtocline#1#2#3#4#5{%
+  \ifnum #1>\c@tocdepth \else
+    \vskip\toclineskip \@plus.2\p@
+    {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
+     \parindent #2\relax\@afterindenttrue
+     \interlinepenalty\@M
+     \leavevmode
+     \@lnumwidth #3\relax
+     \advance\leftskip \@lnumwidth \hbox{}\hskip -\leftskip
+     {#4}\nobreak
+     \leaders\hbox{$\m@th \mkern \@dotsep mu.\mkern \@dotsep mu$}%
+     \hfill\nobreak
+     \hb@xt@\@pnumwidth{\hss\normalfont \normalcolor #5}%
+     \par}%
+  \fi}
 \def\addcontentsline#1#2#3{%
   \protected@write\@auxout
     {\let\label\@gobble \let\index\@gobble \let\glossary\@gobble

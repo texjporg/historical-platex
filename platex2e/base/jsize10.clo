@@ -39,7 +39,8 @@
 %%
 \NeedsTeXFormat{pLaTeX2e}
 \ProvidesFile{jsize10.clo}
-  [1999/05/18 v1.1q Standard pLaTeX file (size option)]
+  [2001/10/04 v1.3
+  Standard pLaTeX file (size option)]
 \renewcommand{\normalsize}{%
     \@setfontsize\normalsize\@xpt{15}%
   \abovedisplayskip 10\p@ \@plus2\p@ \@minus5\p@

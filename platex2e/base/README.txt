@@ -1,13 +1,13 @@
 ===========================================================================
-                         pLaTeX2e <2000/11/03>
+                         pLaTeX2e <2001/09/26>
 
-                  Copyright 1995-2000 ASCII Corporation
+                  Copyright 1995-2001 ASCII Corporation
 ===========================================================================
 
 ---------------------------------------------------------------------------
 ● pLaTeX2e について
 ---------------------------------------------------------------------------
- * pLaTeX2e <2000/11/03> 版は LaTeX2e <2000/06/01> 版に対応しています。
+ * pLaTeX2e <2001/09/04> 版は LaTeX2e <2001/06/01> 版に対応しています。
 
  * pLaTeX2e は、 TeX バージョン 3.1415 以降をベースにした pTeX で動作をし
    ます。それ以外の TeX では動作しませんので、ご注意ください。
@@ -20,30 +20,6 @@
    しています。旧バージョンとの互換性についての詳細は、pl209.dtx ファイル
    を参照してください。
 
- * この pLaTeX2e は、次の事項を確認のうえ、ご利用ください。
-
-   1. 本プログラムの、日本語化部分に関しては株式会社アスキーに著作権が
-      あります。
-
-   2. その使用が直接的な営利目的（例えば、利用者からプログラムの使用料
-      金をとる等）でない限り、どのような方法、目的で使用されてもかまい
-      ません。ただし、それにより生じた問題に関しては一切、株式会社アス
-      キーでは責任を持ちません。
-
-   3. 他者へのコピーは、その行為が営利目的でない場合に限り自由に行なっ
-      て結構です。
-
-   4. 本プログラム （日本語化に関係する部分） の改変については自由に行
-      なってかまいません。ただし第３項については、改変前のものまたは改
-      変前の状態に簡単に戻せる形で行なって下さい。
-
-      改変内容については株式会社アスキーへの通知義務があるものとし、そ
-      の公開については事前の承諾を必要とします。
-
-   5. 本プログラムの使用または、使用不能から生ずるいかなる他の損害に関
-      しても、株式会社アスキーは、一切責任を負わないものとします。
-
-
 ---------------------------------------------------------------------------
 ● インストール
 ---------------------------------------------------------------------------
@@ -53,19 +29,21 @@ pLaTeX2e をインストールするには、pTeX と LaTeX2e のファイルが必要です。
 照してください。 pTeX のソースファイルは、以下のサイトなどから入手する
 ことができます。
 
-    * ftp://ftp.ascii.co.jp/pub/TeX/ascii-ptex
-    * ftp://ftp.kuis.kyoto-u.ac.jp/TeX/ASCII-pTeX
-    * ftp://bash.cc.keio.ac.jp/pub/TeX/ascii-ptex
+    * ftp://ftp.ascii.co.jp/pub/TeX/ascii-ptex/
+    * ftp://ftp.kuis.kyoto-u.ac.jp/TeX/ASCII-pTeX/
+    * ftp://bash.cc.keio.ac.jp/pub/TeX/ascii-ptex/
+    * ftp://ftp.ring.gr.jp/pub/text/TeX/ascii-ptex/
 
 LaTeX2e は、CTAN サイトの macros/latex/base ディレクトリから入手するこ
 とができます。主な CTAN サイトはつぎのとおりです。
 
-    * ftp://ftp.u-aizu.ac.jp/pub/tex/CTAN
-    * ftp://ftp.riken.go.jp/pub/tex-archive
-    * ftp://lab.kdd.co.jp/TeX/CTAN
-    * ftp://ftp.shsu.edu/tex-archive
-    * ftp://ftp.dante.de/tex-archive
-    * ftp://ftp.tex.ac.uk/tex-archive
+    * ftp://ftp.ring.gr.jp/pub/text/CTAN/
+    * ftp://ftp.u-aizu.ac.jp/pub/tex/CTAN/
+    * ftp://ftp.riken.go.jp/pub/tex-archive/
+    * ftp://lab.kdd.co.jp/TeX/CTAN/
+    * ftp://ftp.shsu.edu/tex-archive/
+    * ftp://ftp.dante.de/tex-archive/
+    * ftp://ftp.tex.ac.uk/tex-archive/
 
 LaTeX2e では、デフォルトで EC エンコードのフォントが用いられています。
 EC エンコードのフォントは、CTAN サイトの fonts/ec ディレクトリにあります。
@@ -87,7 +65,7 @@ LaTeX2e のインストールについての詳細は LaTeX2e に付属の install.txt を
 意味します。
 
     LaTeX2e  --- $TEXMF/tex/latex/base
-    pLaTeX2e --- $TEXMF/tex/platex/base
+    pLaTeX2e --- $TEXMF/ptex/platex/base
 
 ----------------------------------------
 1. LaTeX2e のインストール
@@ -177,7 +155,7 @@ pldoc.tex から pldoc.dvi を作成する手順は、platex.dtx ファイルで説明をして
 ● その他
 ---------------------------------------------------------------------------
 pLaTeX2e で拡張された機能については platex.dtx を参照してください。
-LaTeX2e で拡張された機能については LaTeX2e の usrguid.tex を参照してください。
+LaTeX2e で拡張された機能については LaTeX2e の付属文書を参照してください。
 前回の版からの修正は、plnews*.tex や ltnews*.tex を参照してください。
 
 pTeX と pLaTeX2e の最新情報は、

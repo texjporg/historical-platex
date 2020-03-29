@@ -1,45 +1,60 @@
+<2001/10/04>
+  * jclasses.dtx: 目次で出力されるページ番号の書体を|\normalfont|に変更
+     （ありがとう、鈴木た＠MILNさん）
+  * plnews07.tex: 上記の変更の記述を追加
+----------------
+<2001/09/26>
+  * plnews07.tex: 追加
+  * plvers.dtx: LaTeX <2001/06/01> 用に修正
+  * plcore.dtx: LaTeX <2001/06/01> 用に修正
+  * plext.dtx: タグ名を plcore から package に変更
+  * plfmt.ins: plext.dtx の展開に用いるタグ名の変更
+----------------
+<2001/09/14>
+  * nidanfloat.dtx: パッケージオプション(balance, nobalance)を追加
+----------------
+<2001/09/04>
+  * README.txt: 使用条項を削除（ptex-texmf の COPYRIGHT を採用）
+  * Copyright: 削除（ptex-texmf の COPYRIGHT を採用）
+  * plvers.dtx: pLaTeX <2001/09/04> 用に修正
+  * plpatch.ltx: pLaTeX <2001/09/04> 用に修正
+  * plcore.dtx: \enlargethispage を使ったとき、脚注の線が本文と重なるのを修正
+  * jclasses.dtx: \chapter コマンドをアスタリスク形式で使ったときと
+      そうでないときで、出力位置が異なるのを修正（ありがとう、鈴木＠津さん）
+----------------
 <2001/05/10>
   * plext.dtx: 縦組のとき z オプションでエラーが出るのを修正
     （ありがとう、大石さん）
   * plfonts.dtx: ベースラインシフトの調整値が大きくなっているのを修正
-
 ----------------
 <2001/02/19>
   * nidanfloat.dtx: 最終ページで左右の行間が揃わないのを修正
   * nidanfloat.dtx: 柱が出ないのを修正
-
 ----------------
 <2000/12/20>
   * nidanfloat.dtx: 一段抜きのフロートを混ぜるとエラーになるのを修正
     （ありがとう、倉沢＠QUIPUさん）
-
 ----------------
 <2000/11/03>
   * plvers.dtx: LaTeX <2000/06/01> に合わせて修正。
   * plpatch.ltx: pLaTeX<2000/11/03> 用に修正。
-
 ----------------
 <2000/10/24>
   * plfonts.dtx: \adjustbaselineで余分なアキが入らないようにした
-
 ----------------
 <2000/07/14>
   * plfonts.dtx: \textbf などの書体変更コマンドで、左端の欧文との間に
     \xkanjiskip が入らないのを修正（ありがとう、乙部＠東大さん）
-
 ----------------
 <2000/07/13>
   * nidanfloat.{dtx,ins,sty} を追加。
-
 ----------------
 <2000/02/29>
   * plvers.dtx: LaTeX <1999/12/01> に合わせて修正。
   * plpatch.ltx: pLaTeX<2000/02/29> 用に修正。
-
 ----------------
 <1999/05/18>
   * jclasses.dtx: enumerate 
-
 ----------------
 <1999/04/05>
   * plvers.dtx: LaTeX <1998/12/01> に合わせて修正。
