@@ -40,36 +40,47 @@
 \DeclareRobustCommand\selectfont{%
   \let\tmp@error@fontshape\error@fontshape
   \let\error@fontshape\error@kfontshape
-  \let\tmp@encoding\k@encoding
-  \let\font\jfont
-  \edef\k@encoding{\cy@encoding}%
-  \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
-  \pickup@font
-  \font@name
-\ifnum \tracingfonts>\tw@
-  \@font@info{Kanji(yoko):Switching to \font@name}\fi
+  \edef\tmp@item{{\k@encoding}}%
+  \expandafter\expandafter\expandafter
+  \inlist@\expandafter\tmp@item\expandafter{\kyenc@list}%
+  \ifin@
+    \let\cy@encoding\k@encoding
+    \edef\ct@encoding{\csname t@enc@\k@encoding\endcsname}%
+  \else
+    \expandafter\expandafter\expandafter
+    \inlist@\expandafter\tmp@item\expandafter{\ktenc@list}%
+    \ifin@
+      \let\ct@encoding\k@encoding
+      \edef\cy@encoding{\csname y@enc@\k@encoding\endcsname}%
+    \else
+      \@latex@error{KANJI Encoding scheme `\k@encoding' unknown}\@eha
+    \fi
+  \fi
   \let\font\tfont
-  \edef\k@encoding{\ct@encoding}%
+  \let\k@encoding\ct@encoding
   \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
   \pickup@font
   \font@name
-\ifnum \tracingfonts>\tw@
-  \@font@info{Kanji(tate):Switching to \font@name}\fi
-  \let\k@encoding\tmp@encoding
+  \let\font\jfont
+  \let\k@encoding\cy@encoding
+  \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
+  \pickup@font
+  \font@name
+  \expandafter\def\expandafter\k@encoding\tmp@item
   \kenc@update
   \let\error@fontshape\tmp@error@fontshape
-\if@knjcmd \@knjcmdfalse
-  \expandafter\ifx
-  \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname\relax
+  \if@knjcmd \@knjcmdfalse
     \expandafter\ifx
-    \csname rel@\k@encoding/\k@family/\k@series/all\endcsname\relax
+    \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname\relax
+      \expandafter\ifx
+         \csname rel@\k@encoding/\k@family/\k@series/all\endcsname\relax
+      \else
+         \csname rel@\k@encoding/\k@family/\k@series/all\endcsname
+      \fi
     \else
-       \csname rel@\k@encoding/\k@family/\k@series/all\endcsname
+       \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname
     \fi
-  \else
-     \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname
   \fi
-\fi
   \let\font\afont
   \xdef\font@name{\csname\curr@fontshape/\f@size\endcsname}%
   \pickup@font
@@ -81,6 +92,8 @@
     \set@fontsize\baselinestretch\f@size\f@baselineskip
   \fi
   \size@update}
+\def\KanjiEncodingPair#1#2{\@namedef{t@enc@#1}{#2}\@namedef{y@enc@#2}{#1}}
+\KanjiEncodingPair{JY1}{JT1}
 \def\set@fontsize#1#2#3{%
     \@defaultunits\@tempdimb#2pt\relax\@nnil
     \edef\f@size{\strip@pt\@tempdimb}%
@@ -116,7 +129,6 @@
 \newbox\adjust@box
 \newdimen\adjust@dimen
 \def\adjustbaseline{%
-  \iftdir
     \setbox\adjust@box\hbox{\char\euc"A1A1}%
     \cht\ht\adjust@box
     \cdp\dp\adjust@box
@@ -124,6 +136,7 @@
     \cvs\normalbaselineskip
     \chs\cwd
     \cHT\cht \advance\cHT\cdp
+  \iftdir
     \setbox\adjust@box\hbox{\tbaselineshift\z@ M}%
     \adjust@dimen\ht\adjust@box
     \advance\adjust@dimen\dp\adjust@box

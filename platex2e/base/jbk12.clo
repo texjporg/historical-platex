@@ -39,7 +39,7 @@
 %%
 \NeedsTeXFormat{pLaTeX2e}
 \ProvidesFile{jbk12.clo}
-  [2001/10/04 v1.3
+  [2002/04/09 v1.4
   Standard pLaTeX file (size option)]
 \renewcommand{\normalsize}{%
     \@setfontsize\normalsize\@xiipt{16.5}%

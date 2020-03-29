@@ -41,7 +41,7 @@
 %%   Right brace   \}     Tilde         \~}
 %%
 \def\pfmtname{pLaTeX2e}
-\def\pfmtversion{2001/09/04}
+\def\pfmtversion{2004/08/10}
 %% File: plfonts.dtx
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -151,7 +151,7 @@
     \xdef\cdp@list{\cdp@list\cdp@elt{#1}%
                     {\default@k@family}{\default@k@series}%
                     {\default@k@shape}}%
-    \expandafter\let\csname#1-cmd\endcsname\@changed@cmd
+    \expandafter\let\csname#1-cmd\endcsname\@changed@kcmd
     \def\enc@elt{\noexpand\enc@elt}%
     \xdef\kyenc@list{\kyenc@list\enc@elt<#1>}%
     \xdef\kenc@list{\kenc@list\enc@elt<#1>}%
@@ -173,7 +173,7 @@
     \xdef\cdp@list{\cdp@list\cdp@elt{#1}%
                     {\default@k@family}{\default@k@series}%
                     {\default@k@shape}}%
-    \expandafter\let\csname#1-cmd\endcsname\@changed@cmd
+    \expandafter\let\csname#1-cmd\endcsname\@changed@kcmd
     \def\enc@elt{\noexpand\enc@elt}%
     \xdef\ktenc@list{\ktenc@list\enc@elt<#1>}%
     \xdef\kenc@list{\kenc@list\enc@elt<#1>}%
@@ -355,32 +355,47 @@
 \DeclareRobustCommand\selectfont{%
   \let\tmp@error@fontshape\error@fontshape
   \let\error@fontshape\error@kfontshape
-  \let\tmp@encoding\k@encoding
-  \let\font\jfont
-  \edef\k@encoding{\cy@encoding}%
-  \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
-  \pickup@font
-  \font@name
+  \edef\tmp@item{{\k@encoding}}%
+  \expandafter\expandafter\expandafter
+  \inlist@\expandafter\tmp@item\expandafter{\kyenc@list}%
+  \ifin@
+    \let\cy@encoding\k@encoding
+    \edef\ct@encoding{\csname t@enc@\k@encoding\endcsname}%
+  \else
+    \expandafter\expandafter\expandafter
+    \inlist@\expandafter\tmp@item\expandafter{\ktenc@list}%
+    \ifin@
+      \let\ct@encoding\k@encoding
+      \edef\cy@encoding{\csname y@enc@\k@encoding\endcsname}%
+    \else
+      \@latex@error{KANJI Encoding scheme `\k@encoding' unknown}\@eha
+    \fi
+  \fi
   \let\font\tfont
-  \edef\k@encoding{\ct@encoding}%
+  \let\k@encoding\ct@encoding
   \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
   \pickup@font
   \font@name
-  \let\k@encoding\tmp@encoding
+  \let\font\jfont
+  \let\k@encoding\cy@encoding
+  \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
+  \pickup@font
+  \font@name
+  \expandafter\def\expandafter\k@encoding\tmp@item
   \kenc@update
   \let\error@fontshape\tmp@error@fontshape
-\if@knjcmd \@knjcmdfalse
-  \expandafter\ifx
-  \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname\relax
+  \if@knjcmd \@knjcmdfalse
     \expandafter\ifx
-    \csname rel@\k@encoding/\k@family/\k@series/all\endcsname\relax
+    \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname\relax
+      \expandafter\ifx
+         \csname rel@\k@encoding/\k@family/\k@series/all\endcsname\relax
+      \else
+         \csname rel@\k@encoding/\k@family/\k@series/all\endcsname
+      \fi
     \else
-       \csname rel@\k@encoding/\k@family/\k@series/all\endcsname
+       \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname
     \fi
-  \else
-     \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname
   \fi
-\fi
   \let\font\afont
   \xdef\font@name{\csname\curr@fontshape/\f@size\endcsname}%
   \pickup@font
@@ -390,6 +405,8 @@
     \set@fontsize\baselinestretch\f@size\f@baselineskip
   \fi
   \size@update}
+\def\KanjiEncodingPair#1#2{\@namedef{t@enc@#1}{#2}\@namedef{y@enc@#2}{#1}}
+\KanjiEncodingPair{JY1}{JT1}
 \def\set@fontsize#1#2#3{%
     \@defaultunits\@tempdimb#2pt\relax\@nnil
     \edef\f@size{\strip@pt\@tempdimb}%
@@ -415,7 +432,6 @@
 \newbox\adjust@box
 \newdimen\adjust@dimen
 \def\adjustbaseline{%
-  \iftdir
     \setbox\adjust@box\hbox{\char\euc"A1A1}%
     \cht\ht\adjust@box
     \cdp\dp\adjust@box
@@ -423,6 +439,7 @@
     \cvs\normalbaselineskip
     \chs\cwd
     \cHT\cht \advance\cHT\cdp
+  \iftdir
     \setbox\adjust@box\hbox{\tbaselineshift\z@ M}%
     \adjust@dimen\ht\adjust@box
     \advance\adjust@dimen\dp\adjust@box
@@ -462,6 +479,8 @@
   \inlist@\expandafter\tmp@item\expandafter{\kenc@list}%
   \ifin@ \kanjiencoding{#1}\else\romanencoding{#1}\fi}
 \def\@@kenc@update{%
+  \expandafter\let\csname\ck@encoding -cmd\endcsname\@changed@kcmd
+  \expandafter\let\csname\k@encoding-cmd\endcsname\@current@cmd
   \default@KT
   \csname T@\k@encoding\endcsname
   \csname D@\k@encoding\endcsname
@@ -481,8 +500,27 @@
   \fi
 }
 \let\kenc@update\relax
+\def\@changed@kcmd#1#2{%
+   \ifx\protect\@typeset@protect
+      \@inmathwarn#1%
+      \expandafter\ifx\csname\ck@encoding\string#1\endcsname\relax
+         \expandafter\ifx\csname ?\string#1\endcsname\relax
+            \expandafter\def\csname ?\string#1\endcsname{%
+               \TextSymbolUnavailable#1%
+            }%
+         \fi
+         \global\expandafter\let
+               \csname\cf@encoding \string#1\expandafter\endcsname
+               \csname ?\string#1\endcsname
+      \fi
+      \csname\ck@encoding\string#1%
+         \expandafter\endcsname
+   \else
+      \noexpand#1%
+   \fi}
 \newif\if@notkfam
 \newif\if@notffam
+\newif\if@tempswz
 \DeclareRobustCommand\romanfamily[1]{\edef\f@family{#1}}
 \DeclareRobustCommand\kanjifamily[1]{\edef\k@family{#1}}
 \DeclareRobustCommand\fontfamily[1]{%
@@ -497,12 +535,12 @@
     \inlist@\expandafter\tmp@item\expandafter{\notkfam@list}%
     \ifin@ \@notkfamtrue
     \else
-      \@tempswafalse
+      \@tempswzfalse
       \def\fam@elt{\noexpand\fam@elt}%
       \message{(I search kanjifont definition file:}%
       \def\enc@elt<##1>{\message{.}%
         \edef\reserved@a{\lowercase{\noexpand\IfFileExists{##1#1.fd}}}%
-        \reserved@a{\@tempswatrue}{}\relax}%
+        \reserved@a{\@tempswztrue}{}\relax}%
       \kenc@list
       \message{)}%
       \if@tempswa
@@ -518,12 +556,12 @@
     \expandafter\expandafter\expandafter
     \inlist@\expandafter\tmp@item\expandafter{\notffam@list}%
     \ifin@ \@notffamtrue \else
-      \@tempswafalse
+      \@tempswzfalse
       \def\fam@elt{\noexpand\fam@elt}%
       \message{(I search font definition file:}%
       \def\enc@elt<##1>{\message{.}%
         \edef\reserved@a{\lowercase{\noexpand\IfFileExists{##1#1.fd}}}%
-        \reserved@a{\@tempswatrue}{}\relax}%
+        \reserved@a{\@tempswztrue}{}\relax}%
       \fenc@list
       \message{)}%
       \if@tempswa
@@ -565,7 +603,7 @@
     \romanseries{\seriesdefault}%
     \romanshape{\shapedefault}%
     \selectfont\ignorespaces}
-\adjustbaseline
+^^I\adjustbaseline
 \let\reset@font\normalfont
 \DeclareRobustCommand\mcfamily
         {\not@math@alphabet\mcfamily\mathmc
@@ -702,7 +740,7 @@
        \vskip \@tempdima
        \@textbottom
        \ifvoid\footins\else % for pLaTeX
- \vskip\skip\footins
+^^I^^I \vskip\skip\footins
          \color@begingroup
             \normalcolor
             \footnoterule
@@ -717,7 +755,7 @@
          \unvbox\@outputbox
          \@textbottom
          \ifvoid\footins\else % for pLaTeX
-   \vskip\skip\footins
+^^I^^I   \vskip\skip\footins
            \color@begingroup
               \normalcolor
               \footnoterule

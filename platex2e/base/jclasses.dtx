@@ -68,6 +68,10 @@
 % \changes{v1.3}{2001/10/04}{目次のページ番号の書体を\cs{rmfamily}から
 %   \cs{normalfont}に変更(ありがとう、鈴木た＠MILNさん)}
 % \changes{v1.4}{2002/04/09}{縦組スタイルで\cs{flushbottom}しないようにした}
+% \changes{v1.5}{2004/01/15}{\cs{part},\cs{chapter}の\cs{@afterindentfalse}を
+%   \cs{@afterindenttrue}に変更。
+%   \cs{section},\cs{subsection},\cs{subsubsection}の前後空きの伸縮幅を修正。
+%   (ありがとうございます、鈴木た＠MILNさん)}
 % \fi
 %
 % \iffalse
@@ -2380,7 +2384,7 @@
 %    \begin{macrocode}
 %<*article>
 \newcommand{\part}{\par\addvspace{4ex}%
-  \@afterindentfalse
+  \@afterindenttrue
   \secdef\@part\@spart}
 %</article>
 %    \end{macrocode}
@@ -2519,7 +2523,7 @@
   \if@openright\cleardoublepage\else\clearpage\fi
   \thispagestyle{jpl@in}%
   \global\@topnum\z@
-  \@afterindentfalse
+  \@afterindenttrue
   \secdef\@chapter\@schapter}
 %    \end{macrocode}
 % \end{macro}
@@ -2608,8 +2612,8 @@
 % 見出しの前後に空白を付け、|\Large\bfseries|で出力をします。
 %    \begin{macrocode}
 \newcommand{\section}{\@startsection{section}{1}{\z@}%
-   {1.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%
-   {.5\Cvs \@plus.3\Cdp}%
+   {1.5\Cvs \@plus.5\Cvs \@minus.2\Cvs}%
+   {.5\Cvs \@plus.3\Cvs}%
    {\reset@font\Large\bfseries}}
 %    \end{macrocode}
 % \end{macro}
@@ -2618,8 +2622,8 @@
 % 見出しの前後に空白を付け、|\large\bfseries|で出力をします。
 %    \begin{macrocode}
 \newcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
-   {1.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%
-   {.5\Cvs \@plus.3\Cdp}%
+   {1.5\Cvs \@plus.5\Cvs \@minus.2\Cvs}%
+   {.5\Cvs \@plus.3\Cvs}%
    {\reset@font\large\bfseries}}
 %    \end{macrocode}
 % \end{macro}
@@ -2628,8 +2632,8 @@
 % 見出しの前後に空白を付け、|\normalsize\bfseries|で出力をします。
 %    \begin{macrocode}
 \newcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
-   {1.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%
-   {.5\Cvs \@plus.3\Cdp}%
+   {1.5\Cvs \@plus.5\Cvs \@minus.2\Cvs}%
+   {.5\Cvs \@plus.3\Cvs}%
    {\reset@font\normalsize\bfseries}}
 %    \end{macrocode}
 % \end{macro}

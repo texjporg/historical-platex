@@ -39,7 +39,7 @@
 %%
 \NeedsTeXFormat{pLaTeX2e}
 \ProvidesClass{tarticle}
-  [2001/10/04 v1.3
+  [2002/04/09 v1.4
  Standard pLaTeX class]
 \newcounter{@paper}
 \newif\if@landscape \@landscapefalse
@@ -395,7 +395,7 @@
 \renewcommand{\thesubparagraph}{%
    \theparagraph¡¦\rensuji{\@arabic\c@subparagraph}}
 \newcommand{\part}{\par\addvspace{4ex}%
-  \@afterindentfalse
+  \@afterindenttrue
   \secdef\@part\@spart}
 \def\@part[#1]#2{%
   \ifnum \c@secnumdepth >\m@ne
@@ -420,16 +420,16 @@
   \huge\bfseries#1\par}%
   \nobreak\vskip3ex\@afterheading}
 \newcommand{\section}{\@startsection{section}{1}{\z@}%
-   {1.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%
-   {.5\Cvs \@plus.3\Cdp}%
+   {1.5\Cvs \@plus.5\Cvs \@minus.2\Cvs}%
+   {.5\Cvs \@plus.3\Cvs}%
    {\reset@font\Large\bfseries}}
 \newcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
-   {1.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%
-   {.5\Cvs \@plus.3\Cdp}%
+   {1.5\Cvs \@plus.5\Cvs \@minus.2\Cvs}%
+   {.5\Cvs \@plus.3\Cvs}%
    {\reset@font\large\bfseries}}
 \newcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
-   {1.5\Cvs \@plus.5\Cdp \@minus.2\Cdp}%
-   {.5\Cvs \@plus.3\Cdp}%
+   {1.5\Cvs \@plus.5\Cvs \@minus.2\Cvs}%
+   {.5\Cvs \@plus.3\Cvs}%
    {\reset@font\normalsize\bfseries}}
 \newcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}%
    {3.25ex \@plus 1ex \@minus .2ex}%
@@ -789,7 +789,6 @@
 \if@twocolumn
   \twocolumn
   \sloppy
-  \flushbottom
 \else
   \onecolumn
 \fi

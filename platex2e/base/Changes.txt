@@ -1,3 +1,16 @@
+<2004/08/10>
+  * plfonts.dtx: verbatim環境で余計な前後空きが発生しないように \fontfamily
+      を修正。
+      （ありがとうございます、本田さん）
+  * plfonts.dtx: JY1,JT1以外の和文エンコーディングも使用できるように修正。
+      （ありがとうございます、井上さん）
+  * jclasses.dtx: \part, \chapter の \@afterindentfalse を \@afterindenttrue
+      に変更。
+  * jclasses.dtx: \section, \subsection, \subsubsection の前後空きの
+      伸縮幅を修正。
+      （ありがとうございます、鈴木た＠MILNさん）
+  * LaTeX2e 2003/12/01 版への対応を確認。
+----------------
 <2002/04/09>
   * jclasses.dtx: 縦組スタイルで \flushbottom しないようにした。
 ----------------

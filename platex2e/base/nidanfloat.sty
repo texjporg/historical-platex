@@ -39,7 +39,7 @@
 %%
 \NeedsTeXFormat{pLaTeX2e}
 \ProvidesPackage{nidanfloat}%
-  [2001/09/14 v2.5 'Put double-floats at top/bottom within twocolumn mode']
+  [2003/05/15 v2.6 Put double-floats at top/bottom within twocolumn mode]
 \DeclareOption{balance}{\AtEndDocument{\let\clearpage\balanceclearpage}}
 \DeclareOption{nobalance}{\relax}
 \ExecuteOptions{nobalance}
@@ -302,7 +302,7 @@
   \ifdim\@tempdima>\ht\@currbox
     \@tempswatrue
   \else
-    \ifnum\@fpstyle<\sixt@@n
+    \ifnum\@fpstype<\sixt@@n
       \advance\@tempdima\@textmin
       \if \@tempdima>\ht\@currbox
         \@tempswatrue

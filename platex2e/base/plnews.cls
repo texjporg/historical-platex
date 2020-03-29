@@ -56,8 +56,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \renewcommand{\section}{%
     \@startsection{section}{1}{\z@}
-       {1.5\Cvs \@plus.6\Cdp \@minus.2\Cdp}%
-       {.5\Cvs \@plus.3\Cdp}{\reset@font\Large\bfseries}
+       {1.5\Cvs \@plus.6\Cvs \@minus.2\Cvs}%
+       {.5\Cvs \@plus.3\Cvs}{\reset@font\Large\bfseries}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

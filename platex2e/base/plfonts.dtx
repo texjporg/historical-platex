@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 %% File: plfonts.dtx
 %
-%  Copyright 1994-2001 ASCII Corporation.
+%  Copyright 1994-2004 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
@@ -52,13 +52,15 @@
 % \changes{v1.3k}{2001/05/10}{\cs{adjustbaseline}の調整量}
 % \changes{v1.3l}{2002/04/05}{\cs{adjustbaseline}でフォントの基準値が縦書き
 %    以外では設定されないのを修正}
+% \changes{v1.3m}{2004/06/14}{\cs{fontfamily}コマンド内部フラグ変更}
+% \changes{v1.3n}{2004/08/10}{和文エンコーディングの切り替えを有効化}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plfonts.dtx}[2002/04/05 v1.3l pLaTeX New Font Selection Scheme]
+\ProvidesFile{plfonts.dtx}[2004/08/10 v1.3n pLaTeX New Font Selection Scheme]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plfonts.dtx}
@@ -532,7 +534,7 @@
     \xdef\cdp@list{\cdp@list\cdp@elt{#1}%
                     {\default@k@family}{\default@k@series}%
                     {\default@k@shape}}%
-    \expandafter\let\csname#1-cmd\endcsname\@changed@cmd
+    \expandafter\let\csname#1-cmd\endcsname\@changed@kcmd
     \def\enc@elt{\noexpand\enc@elt}%
     \xdef\kyenc@list{\kyenc@list\enc@elt<#1>}%
     \xdef\kenc@list{\kenc@list\enc@elt<#1>}%
@@ -556,7 +558,7 @@
     \xdef\cdp@list{\cdp@list\cdp@elt{#1}%
                     {\default@k@family}{\default@k@series}%
                     {\default@k@shape}}%
-    \expandafter\let\csname#1-cmd\endcsname\@changed@cmd
+    \expandafter\let\csname#1-cmd\endcsname\@changed@kcmd
     \def\enc@elt{\noexpand\enc@elt}%
     \xdef\ktenc@list{\ktenc@list\enc@elt<#1>}%
     \xdef\kenc@list{\kenc@list\enc@elt<#1>}%
@@ -866,6 +868,7 @@
 %
 % \changes{v1.0c}{1995/08/22}{縦横両方のフォントを切り替えるようにした}
 % \changes{v1.2}{1995/11/22}{エラーフォントに対応した}
+% \changes{v1.3n}{2004/08/10}{和文エンコーディングの切り替えを有効化}
 % |\selectfont|コマンドは、まず、和文フォントを切り替えます。
 %    \begin{macrocode}
 %</plcore>
@@ -873,22 +876,33 @@
 \DeclareRobustCommand\selectfont{%
   \let\tmp@error@fontshape\error@fontshape
   \let\error@fontshape\error@kfontshape
-  \let\tmp@encoding\k@encoding
-  \let\font\jfont
-  \edef\k@encoding{\cy@encoding}%
-  \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
-  \pickup@font
-  \font@name
-%<trace>\ifnum \tracingfonts>\tw@
-%<trace>  \@font@info{Kanji(yoko):Switching to \font@name}\fi
+  \edef\tmp@item{{\k@encoding}}%
+  \expandafter\expandafter\expandafter
+  \inlist@\expandafter\tmp@item\expandafter{\kyenc@list}%
+  \ifin@
+    \let\cy@encoding\k@encoding
+    \edef\ct@encoding{\csname t@enc@\k@encoding\endcsname}%
+  \else
+    \expandafter\expandafter\expandafter
+    \inlist@\expandafter\tmp@item\expandafter{\ktenc@list}%
+    \ifin@
+      \let\ct@encoding\k@encoding
+      \edef\cy@encoding{\csname y@enc@\k@encoding\endcsname}%
+    \else
+      \@latex@error{KANJI Encoding scheme `\k@encoding' unknown}\@eha
+    \fi
+  \fi
   \let\font\tfont
-  \edef\k@encoding{\ct@encoding}%
+  \let\k@encoding\ct@encoding
   \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
   \pickup@font
   \font@name
-%<trace>\ifnum \tracingfonts>\tw@
-%<trace>  \@font@info{Kanji(tate):Switching to \font@name}\fi
-  \let\k@encoding\tmp@encoding
+  \let\font\jfont
+  \let\k@encoding\cy@encoding
+  \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
+  \pickup@font
+  \font@name
+  \expandafter\def\expandafter\k@encoding\tmp@item
   \kenc@update
   \let\error@fontshape\tmp@error@fontshape
 %    \end{macrocode}
@@ -897,18 +911,18 @@
 % このフラグは|\userelfont|コマンドによって\emph{真}となります。
 % このフラグはここで再び、\emph{偽}に設定されます。
 %    \begin{macrocode}
-\if@knjcmd \@knjcmdfalse
-  \expandafter\ifx
-  \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname\relax
+  \if@knjcmd \@knjcmdfalse
     \expandafter\ifx
-    \csname rel@\k@encoding/\k@family/\k@series/all\endcsname\relax
+    \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname\relax
+      \expandafter\ifx
+         \csname rel@\k@encoding/\k@family/\k@series/all\endcsname\relax
+      \else
+         \csname rel@\k@encoding/\k@family/\k@series/all\endcsname
+      \fi
     \else
-       \csname rel@\k@encoding/\k@family/\k@series/all\endcsname
+       \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname
     \fi
-  \else
-     \csname rel@\k@encoding/\k@family/\k@series/\k@shape\endcsname
   \fi
-\fi
 %    \end{macrocode}
 % そして、欧文フォントを切り替えます。
 %    \begin{macrocode}
@@ -932,6 +946,15 @@
     \set@fontsize\baselinestretch\f@size\f@baselineskip
   \fi
   \size@update}
+%    \end{macrocode}
+% \end{macro}
+%
+% 和文の縦横のエンコーディングはそれぞれ対にして扱うため、セット化します
+%
+% \changes{v1.3n}{2004/08/10}{和文エンコーディングの切り替えを有効化}
+%    \begin{macrocode}
+\def\KanjiEncodingPair#1#2{\@namedef{t@enc@#1}{#2}\@namedef{y@enc@#2}{#1}}
+\KanjiEncodingPair{JY1}{JT1}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1138,6 +1161,29 @@
 }
 \let\kenc@update\relax
 %    \end{macrocode}
+%
+% |\@changed@cmd|の和文エンコーディングバージョン。
+% \changes{v1.3n}{2004/08/10}{和文エンコーディングの切り替えを有効化}
+%    \begin{macrocode}
+\def\@changed@kcmd#1#2{%
+   \ifx\protect\@typeset@protect
+      \@inmathwarn#1%
+      \expandafter\ifx\csname\ck@encoding\string#1\endcsname\relax
+         \expandafter\ifx\csname ?\string#1\endcsname\relax
+            \expandafter\def\csname ?\string#1\endcsname{%
+               \TextSymbolUnavailable#1%
+            }%
+         \fi
+         \global\expandafter\let
+               \csname\cf@encoding \string#1\expandafter\endcsname
+               \csname ?\string#1\endcsname
+      \fi
+      \csname\ck@encoding\string#1%
+         \expandafter\endcsname
+   \else
+      \noexpand#1%
+   \fi}
+%    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\@notkfam}
@@ -1150,6 +1196,10 @@
 %    \begin{macrocode}
 \newif\if@notkfam
 \newif\if@notffam
+%    \end{macrocode}
+% \changes{v1.3m}{2004/06/14}{\cs{fontfamily}コマンド内部フラグ変更}
+%    \begin{macrocode}
+\newif\if@tempswz
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1182,6 +1232,7 @@
 % 偽にセットします。
 %
 % \changes{v1.2}{1995/11/21}{代用フォントが使われないバグを修正}
+% \changes{v1.3m}{2004/06/14}{\cs{fontfamily}コマンド内部フラグ変更}
 %    \begin{macrocode}
 \DeclareRobustCommand\fontfamily[1]{%
   \edef\tmp@item{{#1}}%
@@ -1228,12 +1279,12 @@
 %    修正。ありがとう、大岩さん}
 %    \begin{macrocode}
     \else
-      \@tempswafalse
+      \@tempswzfalse
       \def\fam@elt{\noexpand\fam@elt}%
       \message{(I search kanjifont definition file:}%
       \def\enc@elt<##1>{\message{.}%
         \edef\reserved@a{\lowercase{\noexpand\IfFileExists{##1#1.fd}}}%
-        \reserved@a{\@tempswatrue}{}\relax}%
+        \reserved@a{\@tempswztrue}{}\relax}%
       \kenc@list
       \message{)}%
       \if@tempswa
@@ -1263,12 +1314,12 @@
     \expandafter\expandafter\expandafter
     \inlist@\expandafter\tmp@item\expandafter{\notffam@list}%
     \ifin@ \@notffamtrue \else
-      \@tempswafalse
+      \@tempswzfalse
       \def\fam@elt{\noexpand\fam@elt}%
       \message{(I search font definition file:}%
       \def\enc@elt<##1>{\message{.}%
         \edef\reserved@a{\lowercase{\noexpand\IfFileExists{##1#1.fd}}}%
-        \reserved@a{\@tempswatrue}{}\relax}%
+        \reserved@a{\@tempswztrue}{}\relax}%
       \fenc@list
       \message{)}%
       \if@tempswa

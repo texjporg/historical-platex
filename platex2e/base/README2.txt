@@ -56,4 +56,4 @@ language.dat からエラーの出たハイフンパターンを削除して、エラーのでな
 際に起こる可能性もあります。
 
 ==
-富樫 秀昭 <hideak-t@ascii.co.jp>
+富樫 秀昭 <hideak-t at ascii.co.jp>

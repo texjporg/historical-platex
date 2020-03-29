@@ -1,10 +1,10 @@
 % \iffalse
 %%File: nidanfloat.dtx
 %
-% Copyright 1994,1997,2000,2001 ASCII Co.
+% Copyright 1994 ASCII Co.
 %
 % \fi
-% \CheckSum{1663}
+% \CheckSum{1666}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -35,6 +35,8 @@
 % \changes{v2.4}{2001/02/19}{柱が出ないのを修正}
 % \changes{v2.4}{2001/07/23}{ページの大きさが小さくなるのを修正}
 % \changes{v2.5}{2001/09/14}{パッケージオプション(balance,nobalance)を追加}
+% \changes{v2.6}{2003/05/15}{\cs{@fstype}を\cs{@fstyle}とタイプミスしていた
+%    のを修正（ありがとう、川上＠航空宇宙研究所さん）}
 % \fi
 %
 % \iffalse
@@ -43,7 +45,7 @@
 \ProvidesFile{nidanfloat.dtx}
 %</driver>
 %<core>\ProvidesPackage{nidanfloat}%
-  [2001/09/14 v2.5 'Put double-floats at top/bottom within twocolumn mode']
+  [2003/05/15 v2.6 Put double-floats at top/bottom within twocolumn mode]
 %
 %<*driver>
 \documentclass{jltxdoc}
@@ -52,7 +54,7 @@
   バージョン \space\fileversion}
 \date{作成日：\filedate}
 \author{中野 賢\footnote{株式会社 アスキー 出版技術部
-  （メールアドレス：ken-na@ascii.co.jp）}}
+  （メールアドレス：ken-na at ascii.co.jp）}}
 \begin{document}
   \maketitle
   \DocInput{nidanfloat.dtx}
@@ -70,9 +72,9 @@
 % \subsection{パッケージオプション}
 % \changes{v2.5}{2001/09/14}{パッケージオプションを追加}
 % \file{nidanfloat}パッケージでは、最終ページの左右カラムの高さを
-% 均一に振り分けるようににしている。しかし、この機能の影響により、
+% 均一に振り分けるようにしている。しかし、この機能の影響により、
 % 最終ページでの|\newpage|と|\clearpage|コマンドが正しく動作しない。
-% そこで、この機能を使うかどうかを指定するオプションを導入する。
+% そこで、この機能を使うかどうかを指定するオプションを導入した。
 % パッケージ指定時にオプション``balance''を指定すると、
 % 最終ページの自動調整を行なうようになる。デフォルトでは行なわない。
 %    \begin{macrocode}
@@ -84,7 +86,7 @@
 %    \end{macrocode}
 %
 % \subsection{フロートパラメータ}
-% ここでは、段抜きのフロートをページ下部に置くために作成をしたパラメータに
+% ここでは、段抜きのフロートをページ下部に置くために作成したパラメータに
 % ついて説明をする。
 %
 % \begin{macro}{\dblbotfraction}
@@ -529,6 +531,7 @@
 % \begin{macro}{\@dblflcheckspace}
 % 段抜きフロートがページ上部あるいは下部に占めることのできる割合を越えて
 % いないかをチェックする。越えていなければ|\@tempswa|を真にする。
+% \changes{v2.6}{2003/05/15}{\cs{@fstype}を\cs{@fstyle}とタイプミスしていた}
 %    \begin{macrocode}
 \def\@dblflcheckspace#1#2{%
   \@tempdima=#1\relax
@@ -537,7 +540,7 @@
   \ifdim\@tempdima>\ht\@currbox
     \@tempswatrue
   \else
-    \ifnum\@fpstyle<\sixt@@n
+    \ifnum\@fpstype<\sixt@@n
       \advance\@tempdima\@textmin
       \if \@tempdima>\ht\@currbox
         \@tempswatrue
