@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{1306}
+% \CheckSum{1433}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -38,18 +38,20 @@
 % \changes{v1.3}{1996/03/25}{数式ファミリの定義変更}
 % \changes{v1.3a}{1997/01/25}{\LaTeX\ \texttt{!<1996/12/01!>に対応}}
 % \changes{v1.3b}{1997/01/28}{\cs{textmc}, \cs{textgt}の動作修正}
+% \changes{v1.3c}{1997/04/08}{和文エンコード関連の修正}
+% \changes{v1.3d}{1997/06/25}{\cs{em},\cs{emph}で和文を強調書体に}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plfonts.dtx}[1997/01/29 v1.3b pLaTeX New Font Selection Scheme]
+\ProvidesFile{plfonts.dtx}[1997/06/25 v1.3d pLaTeX New Font Selection Scheme]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plfonts.dtx}
 \title{p\LaTeXe{}のフォントコマンド\space\fileversion}
-\author{Ken Nakano}
+\author{Ken Nakano \& Hideaki Togashi}
 \date{作成日：\filedate}
 \begin{document}
    \maketitle
@@ -297,11 +299,15 @@
 %
 % \begin{macro}{\fenc@list}
 % \begin{macro}{\kenc@list}
+% \begin{macro}{\kyenc@list}
+% \begin{macro}{\ktenc@list}
 % |\fenc@list|には、|\DeclareFontEncoding|コマンドで宣言されたエンコード名が
 % 格納されていきます。
 %
-% |\kenc@list|には、|\DeclareKanjiEncoding|コマンドで宣言されたエンコード名が
-% 格納されていきます。
+% |\kyenc@list|には、|\DeclareYokoKanjiEncoding|コマンドで宣言された
+% エンコード名が格納されていきます。
+% |\ktenc@list|には、|\DeclareTateKanjiEncoding|コマンドで宣言された
+% エンコード名が格納されていきます。
 %
 % \changes{v1.1b}{1995/03/28}{リストの初期値を変更}
 % \changes{v1.1b}{1995/05/10}{リスト内の空白を削除}
@@ -314,8 +320,12 @@
 %    \begin{macrocode}
 \def\fenc@list{\enc@elt<OML>\enc@elt<T1>\enc@elt<OT1>\enc@elt<OMS>%
                \enc@elt<OMX>\enc@elt<TS1>\enc@elt<U>}
-\def\kenc@list{\enc@elt<JY1>\enc@elt<JT1>}
+\let\kenc@list\@empty
+\let\kyenc@list\@empty
+\let\ktenc@list\@empty
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -416,8 +426,9 @@
 % \begin{center}
 % \begin{tabular}{l|l}
 % \emph{コマンド} & \emph{意味}\\\hline
-% +\Declare{Font|Kanji}Encoding+ & エンコードの宣言\\
-% +\DeclareKanjiEncodingDefaults+ & デフォルトの和文エンコードの宣言\\
+% +\Declare{Font|YokoKanji|TateKanji}Encoding+ & エンコードの宣言\\
+% +\Declare{Yoko|Tate}KanjiEncodingDefaults+ &
+%        デフォルトの和文エンコードの宣言\\
 % +\Declare{Font|Kanji}Family+ & ファミリの宣言\\
 % +\DeclareKanjiSubstitution+ & 和文の代用フォントの宣言\\
 % +\DeclareErrorKanjiFont+ & 和文のエラーフォントの宣言 \\
@@ -474,16 +485,32 @@
 %
 %
 % \begin{macro}{\DeclareKanjiEncoding}
-% \begin{macro}{\DeclareKanjiEncoding@}
+% \begin{macro}{\DeclareYokoKanjiEncoding}
+% \begin{macro}{\DeclareYokoKanjiEncoding@}
+% \begin{macro}{\DeclareTateKanjiEncoding}
+% \begin{macro}{\DeclareTateKanjiEncoding@}
 % 和文エンコードの宣言をするコマンドです。
+% \changes{v1.3c}{1997/04/08}{和文エンコード宣言コマンドを縦組用と横組用で
+%     分けるようにした。}
 %    \begin{macrocode}
-\def\DeclareKanjiEncoding{%
+\def\DeclareKanjiEncoding#1{%
+  \@latex@warning{%
+     The \string\DeclareKanjiEncoding\space is obsoleted command.  Please use
+     \MessageBreak
+     the \string\DeclareTateKanjiEncoding\space for `Tate-kumi' encoding, and
+     \MessageBreak
+     the \string\DeclareYokoKanjiEncoding\space for `Yoko-kumi' encoding.
+     \MessageBreak
+     I treat the `#1' encoding as `Yoko-kumi'.}
+  \DeclareYokoKanjiEncoding{#1}%
+}
+\def\DeclareYokoKanjiEncoding{%
   \begingroup
   \nfss@catcodes
   \expandafter\endgroup
-  \DeclareKanjiEncoding@}
+  \DeclareYokoKanjiEncoding@}
 %
-\def\DeclareKanjiEncoding@#1#2#3{%
+\def\DeclareYokoKanjiEncoding@#1#2#3{%
   \expandafter
   \ifx\csname T@#1\endcsname\relax
     \def\cdp@elt{\noexpand\cdp@elt}%
@@ -492,6 +519,7 @@
                     {\default@k@shape}}%
     \expandafter\let\csname#1-cmd\endcsname\@changed@cmd
     \def\enc@elt{\noexpand\enc@elt}%
+    \xdef\kyenc@list{\kyenc@list\enc@elt<#1>}%
     \xdef\kenc@list{\kenc@list\enc@elt<#1>}%
   \else
     \@font@info{Redeclaring KANJI (yoko) font encoding #1}%
@@ -500,9 +528,39 @@
   \global\@namedef{M@#1}{\default@KM#3}%
   }
 %
+\def\DeclareTateKanjiEncoding{%
+  \begingroup
+  \nfss@catcodes
+  \expandafter\endgroup
+  \DeclareTateKanjiEncoding@}
+%
+\def\DeclareTateKanjiEncoding@#1#2#3{%
+  \expandafter
+  \ifx\csname T@#1\endcsname\relax
+    \def\cdp@elt{\noexpand\cdp@elt}%
+    \xdef\cdp@list{\cdp@list\cdp@elt{#1}%
+                    {\default@k@family}{\default@k@series}%
+                    {\default@k@shape}}%
+    \expandafter\let\csname#1-cmd\endcsname\@changed@cmd
+    \def\enc@elt{\noexpand\enc@elt}%
+    \xdef\ktenc@list{\ktenc@list\enc@elt<#1>}%
+    \xdef\kenc@list{\kenc@list\enc@elt<#1>}%
+  \else
+    \@font@info{Redeclaring KANJI (tate) font encoding #1}%
+  \fi
+  \global\@namedef{T@#1}{#2}%
+  \global\@namedef{M@#1}{\default@KM#3}%
+  }
+%
 \@onlypreamble\DeclareKanjiEncoding
-\@onlypreamble\DeclareKanjiEncoding@
+\@onlypreamble\DeclareYokoKanjiEncoding
+\@onlypreamble\DeclareYokoKanjiEncoding@
+\@onlypreamble\DeclareTateKanjiEncoding
+\@onlypreamble\DeclareTateKanjiEncoding@
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -536,7 +594,7 @@
 %    \begin{macrocode}
 \def\DeclareFontFamily#1#2#3{%
  \@ifundefined{T@#1}%
-    {\@latex@error{Encoding scheme  `#1' unknown}\@eha}%
+    {\@latex@error{Encoding scheme `#1' unknown}\@eha}%
     {\edef\tmp@item{{#2}}%
      \expandafter\expandafter\expandafter
      \inlist@\expandafter\tmp@item\expandafter{\ffam@list}%
@@ -561,7 +619,7 @@
 %    \begin{macrocode}
 \def\DeclareKanjiFamily#1#2#3{%
  \@ifundefined{T@#1}%
-    {\@latex@error{KANJI Encoding scheme  `#1' unknown}\@eha}%
+    {\@latex@error{KANJI Encoding scheme `#1' unknown}\@eha}%
     {\edef\tmp@item{{#2}}%
      \expandafter\expandafter\expandafter
      \inlist@\expandafter\tmp@item\expandafter{\kfam@list}%
@@ -590,7 +648,7 @@
 %    \begin{macrocode}
 \def\DeclareKanjiSubstitution#1#2#3#4{%
   \expandafter\ifx\csname T@#1\endcsname\relax
-    \@latex@error{KANJI Encoding scheme  `#1' unknown}\@eha
+    \@latex@error{KANJI Encoding scheme `#1' unknown}\@eha
   \else
     \begingroup
        \def\reserved@a{#1}%
@@ -635,6 +693,7 @@
 % フォント名を宣言するコマンドです。
 %
 % \changes{v1.2}{1995/11/09}{\cs{DeclareFixedFont}の日本語化}
+% \changes{v1.3c}{1997/04/09}{縦横エンコード・リストの分離による拡張}
 %    \begin{macrocode}
 \def\DeclareFixedFont#1#2#3#4#5#6{%
    \begingroup
@@ -644,18 +703,20 @@
       \fontsize{#6}\z@
       \edef\tmp@item{{#2}}%
       \expandafter\expandafter\expandafter
-      \inlist@\expandafter\tmp@item\expandafter{\kenc@list}%
+      \inlist@\expandafter\tmp@item\expandafter{\kyenc@list}%
       \ifin@
-        \edef\tmpa@encoding{\k@encoding}%
         \usekanji{#2}{#3}{#4}{#5}%
-        \edef\tmpb@encoding{\k@encoding}%
-        \ifx\tmpa@encoding\tmpb@encoding
-          \let\font\jfont
-        \else
-          \let\font\tfont
-        \fi
+        \let\font\jfont
       \else
-        \useroman{#2}{#3}{#4}{#5}%
+        \expandafter\expandafter\expandafter
+        \inlist@\expandafter\tmp@item\expandafter{\ktenc@list}%
+        \ifin@
+          \usekanji{#2}{#3}{#4}{#5}%
+          \let\font\tfont
+        \else
+          \useroman{#2}{#3}{#4}{#5}%
+          \let\font\afont
+        \fi
       \fi
       \global\expandafter\let\expandafter#1\the\font
       \let\font\afont
@@ -799,14 +860,14 @@
   \let\error@fontshape\error@kfontshape
   \let\tmp@encoding\k@encoding
   \let\font\jfont
-  \ifx\k@encoding\cy@encoding\else\let\k@encoding\cy@encoding\fi
+  \edef\k@encoding{\cy@encoding}%
   \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
   \pickup@font
   \font@name
 %<trace>\ifnum \tracingfonts>\tw@
 %<trace>  \@font@info{Kanji(yoko):Switching to \font@name}\fi
   \let\font\tfont
-  \ifx\k@encoding\ct@encoding\else\let\k@encoding\ct@encoding\fi
+  \edef\k@encoding{\ct@encoding}%
   \xdef\font@name{\csname\curr@kfontshape/\f@size\endcsname}%
   \pickup@font
   \font@name
@@ -938,8 +999,8 @@
 % \begin{eqnarray*}
 % \textmc{ベースラインシフト量} &=&
 %   \{ (\textmc{全角空白の深さ}) - (\textmc{/の深さ}) \} \\
-%       &&- \frac{(\textmc{全角空白の高さ}+\textmc{深さ})
-%              - (\textmc{/の高さ}+\textmc{深さ})}{2}
+%       &&- \frac{(\textmc{全角空白の高さ$+$深さ})
+%              - (\textmc{/の高さ$+$深さ})}{2}
 % \end{eqnarray*}
 %
 %    \begin{macrocode}
@@ -999,7 +1060,8 @@
       \fi
     \fi
 }
-\DeclareRobustCommand\fontencoding[1]{\edef\tmp@item{{#1}}%
+\DeclareRobustCommand\fontencoding[1]{%
+  \edef\tmp@item{{#1}}%
   \expandafter\expandafter\expandafter
   \inlist@\expandafter\tmp@item\expandafter{\kenc@list}%
   \ifin@ \kanjiencoding{#1}\else\romanencoding{#1}\fi}
@@ -1009,7 +1071,8 @@
 % \end{macro}
 %
 % \begin{macro}{\@@kenc@update}
-% 上記のコードからもわかるように、|\ck@encoding|と|\k@encoding|が異なる場合、
+% |\kanjiencoding|コマンドのコードからもわかるように、
+% |\ck@encoding|と|\k@encoding|が異なる場合、
 % |\kenc@update|コマンドは|\@@kenc@update|コマンドと等しくなります。
 %
 % |\@@kenc@update|コマンドは、そのエンコードでのデフォルト値を設定するための
@@ -1031,8 +1094,19 @@
   \csname D@\k@encoding\endcsname
   \let\kenc@update\relax
   \let\ck@encoding\k@encoding
-  \ifydir\let\cy@encoding\k@encoding
-  \else\let\ct@encoding\k@encoding\fi}
+  \edef\tmp@item{{\k@encoding}}%
+  \expandafter\expandafter\expandafter
+  \inlist@\expandafter\tmp@item\expandafter{\kyenc@list}%
+  \ifin@ \let\cy@encoding\k@encoding
+  \else
+    \expandafter\expandafter\expandafter
+    \inlist@\expandafter\tmp@item\expandafter{\ktenc@list}%
+    \ifin@ \let\ct@encoding\k@encoding
+    \else
+      \@latex@error{KANJI Encoding scheme `\k@encoding' unknown}\@eha
+    \fi
+  \fi
+}
 \let\kenc@update\relax
 %    \end{macrocode}
 % \end{macro}
@@ -1080,7 +1154,8 @@
 %
 % \changes{v1.2}{1995/11/21}{代用フォントが使われないバグを修正}
 %    \begin{macrocode}
-\def\fontfamily#1{\edef\tmp@item{{#1}}%
+\def\fontfamily#1{%
+  \edef\tmp@item{{#1}}%
   \@notkfamfalse
   \@notffamfalse
 %    \end{macrocode}
@@ -1118,12 +1193,16 @@
 % |\kenc@list|に登録されているエンコードと、指定された和文ファミリの
 % 組合せのフォント定義ファイルが存在する場合は、|\k@family|に指定された
 % 値を入れます。
+% \changes{v1.3c}{1997/04/24}%
+%    {フォント定義ファイル名を小文字に変換してから探すようにした。}
 %    \begin{macrocode}
     \else
       \@tempswafalse
       \def\fam@elt{\noexpand\fam@elt}%
-      \message{(I search ##1#1.fd :}%
-      \def\enc@elt<##1>{\message{.}\IfFileExists{##1#1.fd}{\@tempswatrue}{}}%
+      \message{(I search kanjifont definition file:}%
+      \def\enc@elt<##1>{\message{.}%
+         \edef\@temptokena{\expandafter\string\lowercase{##1#1.fd}}%
+         \IfFileExists{\@temptokena}{\@tempswatrue}{}}%
       \kenc@list
       \message{)}%
       \if@tempswa
@@ -1131,7 +1210,6 @@
 %    \end{macrocode}
 % つぎの部分が実行されるのは、和文ファミリとして認識できなかった場合です。
 % この場合は、|\@notkfam|フラグを真にして、|\notkfam@list|に登録します。
-%
 % \changes{v1.1b}{1995/05/10}{\cs{notkfam@list}に、
 %   エンコードごとに登録されてしまうのを修正した。欧文についても同様。}
 %    \begin{macrocode}
@@ -1156,7 +1234,9 @@
       \@tempswafalse
       \def\fam@elt{\noexpand\fam@elt}%
       \message{(I search font definition file:}%
-      \def\enc@elt<##1>{\message{.}\IfFileExists{##1#1.fd}{\@tempswatrue}{}}%
+      \def\enc@elt<##1>{\message{.}%
+         \edef\@temptokena{\expandafter\string\lowercase{##1#1.fd}}%
+         \IfFileExists{\@temptokena}{\@tempswatrue}{}}%
       \fenc@list
       \message{)}%
       \if@tempswa
@@ -1228,7 +1308,8 @@
 \def\useroman#1#2#3#4{%
     \romanencoding{#1}\romanfamily{#2}\romanseries{#3}\romanshape{#4}%
     \selectfont\ignorespaces}
-\def\usefont#1#2#3#4{\edef\tmp@item{{#1}}%
+\def\usefont#1#2#3#4{%
+  \edef\tmp@item{{#1}}%
   \expandafter\expandafter\expandafter
   \inlist@\expandafter\tmp@item\expandafter{\kenc@list}%
   \ifin@ \usekanji{#1}{#2}{#3}{#4}%
@@ -1342,12 +1423,12 @@
 %    \end{macrocode}
 % 横組エンコード：
 %    \begin{macrocode}
-\DeclareKanjiEncoding{JY1}{}{}
+\DeclareYokoKanjiEncoding{JY1}{}{}
 \DeclareKanjiSubstitution{JY1}{mc}{m}{n}
 %    \end{macrocode}
 % 縦組エンコード：
 %    \begin{macrocode}
-\DeclareKanjiEncoding{JT1}{}{}
+\DeclareTateKanjiEncoding{JT1}{}{}
 \DeclareKanjiSubstitution{JT1}{mc}{m}{n}
 %    \end{macrocode}
 % フォント属性のデフォルト値：
@@ -1386,6 +1467,19 @@
 %    \begin{macrocode}
 \DeclareTextFontCommand{\textmc}{\mcfamily}
 \DeclareTextFontCommand{\textgt}{\gtfamily}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\em}
+% \begin{macro}{\emph}
+% \changes{v1.3d}{1997/06/25}{\cs{em},\cs{emph}で和文を強調書体に}
+% 従来は|\em|, |\emph|で和文フォントの切り替えは行っていませんでしたが、
+% 和文フォントも|\gtfamily|に切り替えるようにしました．
+%    \begin{macrocode}
+\DeclareRobustCommand\em
+        {\@nomath\em \ifdim \fontdimen\@ne\font >\z@ 
+                       \mcfamily \upshape \else \gtfamily \itshape \fi}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1502,6 +1596,7 @@
 % 明朝体のシリーズ|bx|がゴシック体となるように宣言しています。
 % \changes{v1.2}{1995/11/24}{it, sl, sc の宣言を外した}
 % \changes{v1.3b}{1997/01/29}{フォント定義ファイルのサイズ指定の調整}
+% \changes{v1.3b}{1997/03/11}{すべてのサイズをロード可能にした}
 %    \begin{macrocode}
 %<*JY1mc>
 \DeclareKanjiFamily{JY1}{mc}{}
@@ -1509,6 +1604,7 @@
 \DeclareRelationFont{JY1}{mc}{bx}{}{OT1}{cmr}{bx}{}
 \DeclareFontShape{JY1}{mc}{m}{n}{<5> <6> <7> <8> <9> <10> sgen*min
     <10.95><12><14.4><17.28><20.74><24.88> min10
+    <-> min10
     }{}
 \DeclareFontShape{JY1}{mc}{bx}{n}{<->ssub*gt/m/n}{}
 %</JY1mc>
@@ -1518,6 +1614,7 @@
 \DeclareRelationFont{JT1}{mc}{bx}{}{OT1}{cmr}{bx}{}
 \DeclareFontShape{JT1}{mc}{m}{n}{<5> <6> <7> <8> <9> <10> sgen*tmin
     <10.95><12><14.4><17.28><20.74><24.88> tmin10
+    <-> tmin10
     }{}
 \DeclareFontShape{JT1}{mc}{bx}{n}{<->ssub*gt/m/n}{}
 %</JT1mc>
@@ -1526,6 +1623,7 @@
 \DeclareRelationFont{JY1}{gt}{m}{}{OT1}{cmr}{bx}{}
 \DeclareFontShape{JY1}{gt}{m}{n}{<5> <6> <7> <8> <9> <10> sgen*goth
     <10.95><12><14.4><17.28><20.74><24.88> goth10
+    <-> goth10
     }{}
 \DeclareFontShape{JY1}{gt}{bx}{n}{<->ssub*gt/m/n}{}
 %</JY1gt>
@@ -1534,6 +1632,7 @@
 \DeclareRelationFont{JT1}{gt}{m}{}{OT1}{cmr}{bx}{}
 \DeclareFontShape{JT1}{gt}{m}{n}{<5> <6> <7> <8> <9> <10> sgen*tgoth
     <10.95><12><14.4><17.28><20.74><24.88> tgoth10
+    <-> tgoth10
     }{}
 \DeclareFontShape{JT1}{gt}{bx}{n}{<->ssub*gt/m/n}{}
 %</JT1gt>

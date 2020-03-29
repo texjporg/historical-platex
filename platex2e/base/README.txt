@@ -1,15 +1,15 @@
 ===========================================================================
-                         pLaTeX2e <1997/02/01>
+                         pLaTeX2e <1997/07/02>
 
                 Copyright 1995,1996,1997 ASCII Corporation
 ===========================================================================
 
 ● pLaTeX2e について
 
- * pLaTeX2e <1997/02/01> 版は LaTeX2e <1996/12/01> 版に対応しています。
+ * pLaTeX2e <1997/07/02> 版は LaTeX2e <1996/06/01> 版に対応しています。
 
- * pLaTeX2e は、TeX バージョン 3.1415 以降をベースにした pTeXで動作します。
-   それ以外の TeX では動作しませんので、ご注意ください。
+ * pLaTeX2e は、 TeX バージョン 3.1415 以降をベースにした pTeX で動作をし
+   ます。それ以外の TeX では動作しませんので、ご注意ください。
 
  * pLaTeX2e は、LaTeX2e に日本語の組版機能を追加したものです。
    LaTeX2e は、LaTeXの新しいバージョンであり、 従来の LaTeXバージョン2.09
@@ -59,7 +59,7 @@
 pLaTeX2e をインストールするには、pTeX や LaTeX2e のファイルが必要です。
 このドキュメントでは、すでに pTeX がインストールされているものとして説
 明します。pTeX のインストールについては、pTeX に付属のドキュメントを参
-照してください。pTeX は以下のサイトから入手することができます。
+照してください。pTeX は以下のサイトなどから入手することができます。
 
     * ftp://ftp.ascii.co.jp/pub/TeX/ascii-ptex
     * ftp://ftp.kuis.kyoto-u.ac.jp/TeX/ASCII-pTeX
@@ -74,9 +74,8 @@ LaTeX2e は、CTAN サイトの macros/latex/base ディレクトリから入手するこ
     * ftp://ftp.dante.de/tex-archive
     * ftp://ftp.tex.ac.uk/tex-archive
 
-LaTeX2e では、デフォルトで用いるフォントとして EC エンコードのフォント
-が推奨されています。EC エンコードのフォントは、CTAN サイトの fonts/ec
-ディレクトリにあります。
+LaTeX2e では、デフォルトで EC エンコードのフォントが用いられています。
+EC エンコードのフォントは、CTAN サイトの fonts/ec ディレクトリにあります。
 
 インストールは、つぎの順序で進めていきます。
 
@@ -91,12 +90,12 @@ LaTeX2e では、デフォルトで用いるフォントとして EC エンコードのフォント
 数を設定します。
 
   * TEXBIN --- pTeX や TeX の実行ファイルがインストールされているディ
-               レクトリを設定します。次に、一例を示します。
+               レクトリを設定します。次に、csh 環境での例を示します。
 
                   setenv TEXBIN /usr/local/bin
 
   * TEXMF  --- TeX のライブラリファイルのあるディレクトリを設定します。
-               次に、一例を示します。
+               次に、csh 環境での例を示します。
 
                   setenv TEXMF /usr/local/lib/texmf
 
@@ -107,19 +106,27 @@ LaTeX2e のインストールについての詳細は LaTeX2e に付属の install.txt を
 参照してください。LaTeX 2.09 のシステムの保存方法なども述べられています。
 
 (1) $TEXMF/fonts/public/ec ディレクトリに EC フォントのファイル置きます。
+    DC フォントは削除してください。
 
 (2) $TEXMF/tex/latex2e/base ディレクトリに LaTeX2e のファイルを置きます。
     ここで、各ファイルに書き込み許可があるかどうかを確認してください。
     ない場合は、chmod コマンドなどで、書き込み許可を与えてください。
 
-(3) unpack.ins と ec.ins を処理します。
+(3) unpack.ins を処理します。
 
         initex unpack.ins
-        initex ec.ins
+
+    ※ TeX Version 3.14159 (Web2c 7.0) では、つぎのようにします。
+
+        tex -ini unpack.ins
 
 (4) フォーマットファイルを作成します。
 
         initex latex.ltx
+
+    ※ TeX Version 3.14159 (Web2c 7.0) では、つぎのようにします。
+
+        tex -ini latex.ltx
 
 (5) フォーマットファイルを移動します。
 
@@ -151,9 +158,17 @@ LaTeX2e のインストールについての詳細は LaTeX2e に付属の install.txt を
 
         iniptex plcore.ins
 
+    ※ TeX Version 3.14159 (Web2c 7.0) 対応の pTeX では、つぎのようにします。
+
+        ptex -ini plcore.ins
+
 (3) フォーマットファイルを作成します。
 
         iniptex platex.ltx
+
+    ※ TeX Version 3.14159 (Web2c 7.0) 対応の pTeX では、つぎのようにします。
+
+        ptex -ini platex.ltx
 
 (4) フォーマットファイルを移動します。
 
@@ -193,9 +208,9 @@ pldoc.tex から pldoc.dvi を作成する手順は、platex.dtx ファイルで説明をして
 ---------------------------------------------------------------------------
 ● その他
 
-pLaTeX2e で拡張された機能については、platex.dtx を参照してください。
-LaTeX2e で拡張された機能については LaTeX2e の usrguid.tex を参照してくだ
-さい。
+pLaTeX2e で拡張された機能については platex.dtx を参照してください。
+LaTeX2e で拡張された機能については LaTeX2e の usrguid.tex を参照してください。
+前回の版からの修正は、plnews*.tex や ltnews*.tex を参照してください。
 
 pTeX と pLaTeX2e の最新情報は、
     pTeX ホームページ（http://www.ascii.co.jp/pb/ptex）
@@ -205,5 +220,6 @@ pTeX と pLaTeX2e の最新情報は、
 にお願いします。
 
 ---------------------------------------------------------------------------
-中野 賢 (ken-na@ascii.co.jp)   株式会社 アスキー 出版技術部
+中野 賢   (ken-na@ascii.co.jp)
+富樫 秀昭 (hideak-t@ascii.co.jp)              株式会社 アスキー 出版技術部
 === EOT ===================================================================

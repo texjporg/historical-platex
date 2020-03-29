@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{245}
+% \CheckSum{260}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -35,18 +35,19 @@
 % \changes{v1.0c}{1995/11/21}{Add footnote relatex commands.}
 % \changes{v1.0d}{1997/01/17}{Only define for p\LaTeXe relatex codes.}
 % \changes{v1.0e}{1997/01/28}{書体変更の二文字コマンドを旧版互換にした。}
+% \changes{v1.0f}{1997/06/25}{\cs{em}で和文を強調書体に}
 % \fi
 %
 % \iffalse
 %<*package>
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesFile{pl209.dtx}[1997/01/29 v1.0e Standard pLaTeX file]
+\ProvidesFile{pl209.dtx}[1997/06/25 v1.0f Standard pLaTeX file]
 %</package>
 %<*driver>
 \documentclass{jltxdoc}
 \GetFileInfo{pl209.dtx}
 \title{p\LaTeXe\\2.09互換モード用マクロ\space\fileversion}
-\author{Ken Nakano}
+\author{Ken Nakano \& Hideaki Togashi}
 \date{作成日：\filedate}
 \begin{document}
    \maketitle
@@ -86,8 +87,9 @@
 %</pl209>
 %    \end{macrocode}
 % フォント選択コマンドのトレースのために\file{ptrace}パッケージをロードします。
+% \changes{v1.0e}{1997/02/20}{Typemiss:oldlfont from oldlfonts}
 %    \begin{macrocode}
-%<oldfonts>\RequirePackage{oldlfonts}
+%<oldfonts>\RequirePackage{oldlfont}
 %<pl209|oldfonts>\RequirePackage{ptrace}
 %    \end{macrocode}
 %
@@ -176,8 +178,18 @@
 \DeclareRobustCommand\sc{\roman@normal\scshape\mathgroup\symsmallcaps}
 \DeclareRobustCommand\it{\roman@normal\itshape\mathgroup\symitalic}
 \DeclareRobustCommand\tt{\roman@normal\ttfamily\mathgroup\symtypewriter}
+%    \end{macrocode}
+%
+% \begin{macro}{\em}
+% \changes{v1.0f}{1997/06/25}{\cs{em}で和文を強調書体に}
+% |\em|コマンドで、和文フォントも|\gt|に切り替えるようにしました。
+%    \begin{macrocode}
+\DeclareRobustCommand\em{%
+  \@nomath\em
+  \ifdim \fontdimen\@ne\font>\z@\mc\rm\else\gt\it\fi}
 %</pl209|oldfonts>
 %    \end{macrocode}
+% \end{macro}
 %
 %    \begin{macrocode}
 %<*pl209>

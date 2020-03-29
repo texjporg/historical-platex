@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{4289}
+% \CheckSum{4279}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -44,12 +44,13 @@
 %      用紙オプションに対応}
 % \changes{v1.1b}{1997/01/28}{日本語ファミリの宣言を再度、実装}
 % \changes{v1.1d}{1997/01/29}{2eモードでa4jなどのオプションに対応}
+% \changes{v1.1e}{1997/04/08}{トップマージンの値を修正}
 % \fi
 %
 % \iffalse
 \NeedsTeXFormat{pLaTeX2e}
 %<*driver>
-\ProvidesFile{jclasses.dtx}[1997/02/05 v1.1d Standard pLaTeX class]
+\ProvidesFile{jclasses.dtx}[1997/04/08 v1.1e Standard pLaTeX class]
 %</driver>
 %<*yoko>
 %<article>\ProvidesClass{jarticle}
@@ -73,8 +74,8 @@
 %<11pt&bk>\ProvidesFile{tbk11.clo}
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
-%<article|report|book>  [1997/02/05 v1.1d Standard pLaTeX class]
-%<10pt|11pt|12pt>  [1997/02/05 v1.1d Standard pLaTeX file (size option)]
+%<article|report|book>  [1997/04/08 v1.1e Standard pLaTeX class]
+%<10pt|11pt|12pt>  [1997/04/08 v1.1e Standard pLaTeX file (size option)]
 %<*driver>
 \documentclass{jltxdoc}
 \GetFileInfo{jclasses.dtx}
@@ -303,13 +304,13 @@
 % 位置に文章を出力します。作成したDVIをフィルムに面付け出力する場合など
 % に指定をします。
 % \changes{v1.0f}{1996/07/10}{面付けオプションを追加}
-% \begin{macrocode}
+%    \begin{macrocode}
 \DeclareOption{mentuke}{%
   \tombowtrue
   \setlength{\@tombowwidth}{\z@}%
   \@bannertoken\@empty
   \maketombowbox}
-% \end{macrocode}
+%    \end{macrocode}
 %
 % \subsection{組方向オプション}
 % このオプションが指定されると、縦組で組版をします。
@@ -1015,7 +1016,7 @@
   \if@stysize
 %<tate&bk>    \setlength\textheight{.75\paperwidth}
 %<tate&!bk>    \setlength\textheight{.78\paperwidth}
-%<yoko&bk>    \setlength\textheight{.7\paperheight}
+%<yoko&bk>    \setlength\textheight{.70\paperheight}
 %<yoko&!bk>    \setlength\textheight{.75\paperheight}
 %    \end{macrocode}
 % 2eモード：デフォルト値
@@ -1082,13 +1083,17 @@
 %<yoko>  \addtolength\topmargin{-\textheight}
   \addtolength\topmargin{-\footskip}
   \if@stysize
-    \addtolength\topmargin{-2.4in}
+%    \end{macrocode}
+% \changes{v1.1e}{1997/04/08}{横組クラスでの調整量を
+%      -2.4インチから-2.0インチにした。}
+%    \begin{macrocode}
+    \addtolength\topmargin{-2.0in}
   \else
-%<yoko>    \addtolength\topmargin{-2in}
+%<yoko>    \addtolength\topmargin{-2.0in}
 %<tate>    \addtolength\topmargin{-2.8in}
-%    \begin{macros}
+%    \end{macrocode}
 % \changes{v1.1d}{1997/02/05}{\cs{tompargin}を半分にするのはアキ領域の計算後}
-%    \end{macros}
+%    \begin{macrocode}
   \addtolength\topmargin{-.5\topmargin}
   \fi
 \fi
@@ -1898,7 +1903,10 @@
   \let\footnoterule\relax
 %<tate>  \let\thanks\p@thanks
   \let\footnote\thanks
-%<tate>  \vbox to\textwidth\bgroup\yoko\hsize\textheight
+%    \end{macrocode}
+% \changes{v1.1d}{1997/02/12}{縦組クラスの表紙を縦書きにするようにした}
+%    \begin{macrocode}
+%<tate>  \vbox to\textheight\bgroup\tate\hsize\textwidth
   \null\vfil
   \vskip 60\p@
   \begin{center}%
@@ -3018,9 +3026,12 @@
 %<report|book>\newcounter{figure}[chapter]
 %<*tate>
 %<article>\renewcommand{\thefigure}{\rensuji{\@arabic\c@figure}}
+%    \end{macrocode}
+% \changes{v1.1d}{1997/02/14}{\cs{ifnum}文の構文エラーを訂正。}
+%    \begin{macrocode}
 %<*report|book>
 \renewcommand{\thefigure}{%
-  \ifnum\c@chapter\z@>\thechapter・\fi\rensuji{\@arabic\c@figure}}
+  \ifnum\c@chapter>\z@\thechapter{}・\fi\rensuji{\@arabic\c@figure}}
 %</report|book>
 %</tate>
 %<*yoko>
@@ -3800,7 +3811,7 @@
   \noindent\hbox to 2zw{\hss\@makefnmark}#1}
 %</tate>
 %<*yoko>
-\newcommand\@makefntext[1]{\parindent 1em%
+\newcommand\@makefntext[1]{\parindent 1em
   \noindent\hbox to 1.8em{\hss\@makefnmark}#1}
 %</yoko>
 %    \end{macrocode}

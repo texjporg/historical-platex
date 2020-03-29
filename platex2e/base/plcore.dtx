@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{891}
+% \CheckSum{892}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -41,18 +41,19 @@
 % \changes{v1.1e}{1996/03/12}{tabbing環境での和欧文間スペース}
 % \changes{v1.1f}{1996/07/10}{トンボまわりを修正}
 % \changes{v1.1g}{1997/01/16}{\LaTeX\ \textt{!<1996/06/01!>}に対応}
+% \changes{v1.1h}{1997/06/25}{\LaTeX\ の改行マクロの変更に対応}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plcore.dtx}[1997/01/29 v1.1g pLaTeX core file]
+\ProvidesFile{plcore.dtx}[1997/06/25 v1.1h pLaTeX core file]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plcore.dtx}
 \title{p\LaTeXe{}の拡張\space\fileversion}
-\author{Ken Nakano}
+\author{Ken Nakano \& Hidaki Togashi}
 \date{作成日：\filedate}
 \begin{document}
    \maketitle
@@ -191,9 +192,18 @@
 % 加算されないようにします。|\\|は|\newline|マクロを呼び出しています。
 %
 % なお、|\newline|マクロは\file{ltspaces.dtx}で定義されています。
+%
+% \changes{v1.1h}{1997/06/25}{\LaTeX\ の改行マクロの変更に対応}
+% \LaTeX\ \texttt{!<1996/12/01!>}で改行マクロが変更され、|\\|が
+% |\newline|を呼び出さなくなったため、変更された改行マクロに対応しまし
+% た。|\mbox{}|の挿入位置は同じです。
 %    \begin{macrocode}
-\def\newline{\ifvmode \@nolnerr \else \unskip\nobreak\hfil
-  \penalty -\@M\mbox{}\fi}
+\def\@gnewline #1{%
+  \ifvmode
+    \@nolnerr
+  \else 
+    \unskip \reserved@e {\reserved@f#1}\nobreak \hfil \break \null
+  \fi}
 %    \end{macrocode}
 %
 % \subsection{オブジェクトの出力順序}
@@ -658,10 +668,11 @@
 %
 % \changes{v1.0a}{1995/04/12}{縦組でも上付き数字を使うように修正}
 % \changes{v1.1b}{1996/01/26}{脚注マークの後ろに余計なスペースが入るのを修正}
+% \changes{v1.1g}{1997/02/14}{縦組時に脚注マークの書体が正しくないのを修正}
 %    \begin{macrocode}
 \renewcommand\@makefnmark{\hbox{%
   \ifydir \@textsuperscript{\normalfont\@thefnmark}%
-  \else\hbox{\yoko\@textsuperscript{\@thefnmark}}\fi}}
+  \else\hbox{\yoko\@textsuperscript{\normalfont\@thefnmark}}\fi}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -689,14 +700,14 @@
 % \end{macro}
 %
 % \begin{macro}{\@footnotemark}
-% 脚注記号を出力します。
-%
 % \changes{v1.0a}{1995/04/12}{脚注記号の出力位置の調整}
+% \changes{v1.1g}{1997/02/14}{縦組時の位置調整を2\cs{ch}から.9zhに変更}
+% 脚注記号を出力します。
 %    \begin{macrocode}
 \def\@footnotemark{\leavevmode
   \ifhmode\edef\@x@sf{\the\spacefactor}\nobreak\fi
   \ifydir\@makefnmark
-  \else\hbox to\z@{\hskip-.25zw\raise2\cht\@makefnmark\hss}\fi
+  \else\hbox to\z@{\hskip-.25zw\raise.9zh\@makefnmark\hss}\fi
   \ifhmode\spacefactor\@x@sf\fi\relax}
 %    \end{macrocode}
 % \end{macro}

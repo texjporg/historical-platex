@@ -37,7 +37,9 @@
          \@titlefont\@title\hspace{3mm}%
          \normalsize 第{\@issue}号\\[\medskipamount]
          \normalfont{\@year}年{\@month}月~発行\\
-         作成者：\@author
+         作成者：\begin{tabular}[t]{l}
+                 \@author
+                 \end{tabular}%
       }%
    }]%
 }
@@ -59,9 +61,19 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page Layout
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\topmargin}{0pt}
+\setlength{\headheight}{0pt}
+\setlength{\headsep}{0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % misc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \def\file#1{\textsf{#1}}
 \def\option#1{\texttt{#1}}
+\xspcode"5C=3  % \
+\xspcode"3C=3  % <
+\xspcode"3E=3  % >
 
 \endinput
