@@ -54,12 +54,13 @@
 % \changes{v1.1j}{1998/02/03}{互換モード時のa5pのトップマージンを0.7in増加}
 % \changes{v1.1k}{1998/03/23}{reportとbookクラスで番号を付けない見出しの
 %   ペナルティが\cs{M@}だったのを\cs{@M}に修正}
+% \changes{v1.1m}{1998/04/07}{\cs{today}の計算手順を変更}
 % \fi
 %
 % \iffalse
 \NeedsTeXFormat{pLaTeX2e}
 %<*driver>
-\ProvidesFile{jclasses.dtx}[1998/03/23 v1.1k Standard pLaTeX class]
+\ProvidesFile{jclasses.dtx}[1998/04/07 v1.1m Standard pLaTeX class]
 %</driver>
 %<*yoko>
 %<article>\ProvidesClass{jarticle}
@@ -83,8 +84,8 @@
 %<11pt&bk>\ProvidesFile{tbk11.clo}
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
-%<article|report|book>  [1998/03/23 v1.1k Standard pLaTeX class]
-%<10pt|11pt|12pt>  [1998/03/23 v1.1k Standard pLaTeX file (size option)]
+%<article|report|book>  [1998/04/07 v1.1m Standard pLaTeX class]
+%<10pt|11pt|12pt>  [1998/04/07 v1.1m Standard pLaTeX file (size option)]
 %<*driver>
 \documentclass{jltxdoc}
 \GetFileInfo{jclasses.dtx}
@@ -3916,6 +3917,16 @@
 % \end{macro}
 % \EnableCrossrefs
 %
+% \begin{macro}{\heisei}
+% \changes{v1.1m}{1998/04/07}{\cs{today}の計算手順を変更}
+% |\today|コマンドを|\rightmark|で指定したとき、|\rightmark|を出力する部分
+% で和暦のための計算ができないので、クラスファイルを読み込む時点で計算して
+% おきます。
+%    \begin{macrocode}
+\newcount\heisei \heisei\year \advance\heisei-1988\relax
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\today}
 % 縦組の場合は、漢数字で出力します。
 %    \begin{macrocode}
@@ -3925,21 +3936,20 @@
       \kansuji\number\year 年
       \kansuji\number\month 月
       \kansuji\number\day 日
-    \else \@tempcnta\year
-      \advance\@tempcnta-1988 平成
-      \ifnum \@tempcnta =1 元\else\kansuji\number\@tempcnta\fi 年
-      \kansuji\number\month 月\kansuji\number\day 日
+    \else
+      平成\ifnum\heisei=1 元年\else\kansuji\number\heisei 年\fi
+      \kansuji\number\month 月
+      \kansuji\number\day 日
     \fi
   \else
     \if西暦
-      \number\year\, 年\hspace{.5em}\nobreak
-      \number\month\, 月\hspace{.5em}\nobreak
-      \number\day\, 日
-    \else \@tempcnta\year
-      \advance\@tempcnta-1988 平成
-      \ifnum \@tempcnta =1 元\else\number\@tempcnta\fi
-        \, 年\hspace{.5em}\nobreak
-      \number\month\, 月\hspace{.5em}\nobreak\number\day\, 日
+      \number\year~年
+      \number\month~月
+      \number\day~日
+    \else
+      平成\ifnum\heisei=1 元年\else\number\heisei~年\fi
+      \number\month~月
+      \number\day~日
     \fi
   \fi}}
 %    \end{macrocode}
