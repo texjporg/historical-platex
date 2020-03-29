@@ -2,6 +2,7 @@
 %
 % Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
 %
+% 2002/04/01 (KN): ASCII logo macros
 % 1998/11/27 (KN and FTEXers): itembox
 % 1998/02/27 (KN): set \tbaselineshift in minipage environment.
 %
@@ -11,13 +12,14 @@
 \newdimen\@saveybaselineshift
 %
 %% ASCII logo
-\def\@@ASCII#1#2#3{\shortstack{#1 ASCII \\[#3] #2 ASCII CORPORATION}}
+\def\@@ASCII#1#2#3{\shortstack{#1 ASCII \\[#3]
+  \fontsize{#2}{\z@}\usefont{OT1}{cmss}{m}{n}ASCII CORPORATION}}
 \def\ascii{\@ifundefined{@ascii}{\font\@ascii=ascii10 scaled \magstep4}{}%
-\@@ASCII\@ascii{\vpt\bk}{-6pt}}
+\@@ASCII\@ascii{5pt}{-6pt}}
 \def\Ascii{\@ifundefined{@Ascii}{\font\@Ascii=ascii10 scaled \magstep5}{}%
-\@@ASCII\@Ascii{\vipt\bk}{-7pt}}
+\@@ASCII\@Ascii{6pt}{-7pt}}
 \def\ASCII{\@ifundefined{@ASCII}{\font\@ASCII=ascii36}{}%
-\@@ASCII\@ASCII{\ixpt\bk}{-9pt}}
+\@@ASCII\@ASCII{9pt}{-9pt}}
 %%
 %% boxnote environment
 \font\@ascgrp=ascgrp
