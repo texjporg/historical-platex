@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{1450}
+% \CheckSum{1499}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -1413,6 +1413,7 @@
 % \end{macro}
 %
 %
+%
 % \subsection{デフォルト設定ファイルの読み込み}
 % 最後に、デフォルト設定ファイルである、\file{pldefs.ltx}を読み込みます。
 % このファイルについての詳細は、第\ref{plfonts:pldefs}節を参照してください。
@@ -1444,8 +1445,38 @@
 %    \begin{macrocode}
 %<*pldefs>
 \ProvidesFile{pldefs.ltx}
-      [1995/04/01 v1.1b pLaTeX Kernel (Default settings)] 
+      [2000/07/13 v1.2 pLaTeX Kernel (Default settings)] 
 %    \end{macrocode}
+%
+% \subsection{イタリック補正}
+% \changes{v1.2}{2000/07/13}{\cs{text..}コマンドの左側に\cs{xkanjiskip}が
+%    入らないのを修正（ありがとう、乙部＠東大さん）}
+% \begin{macro}{\check@nocorr@}
+% 「\verb|あ\texttt{abc}い|」としたとき、書体の変更を指定された欧文の左側に
+% 和欧文間スペースが入らないのを修正します。
+%    \begin{macrocode}
+\def \check@nocorr@ #1#2\nocorr#3\@nil {%
+  \let \check@icl \relax% \maybe@ic から変更
+  \def \check@icr {\ifvmode \else \aftergroup \maybe@ic \fi}%
+  \def \reserved@a {\nocorr}%
+  \def \reserved@b {#1}%
+  \def \reserved@c {#3}%
+  \ifx \reserved@a \reserved@b
+    \ifx \reserved@c \@empty
+      \let \check@icl \@empty
+    \else
+      \let \check@icl \@empty
+      \let \check@icr \@empty
+    \fi
+  \else
+    \ifx \reserved@c \@empty
+    \else
+      \let \check@icr \@empty
+    \fi
+  \fi
+}
+%    \end{macrocode}
+% \end{macro}
 %
 %
 % \subsection{テキストフォント}

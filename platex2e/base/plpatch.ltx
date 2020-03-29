@@ -1,12 +1,21 @@
 %%%%
 %%%% Patch file for the pLaTeX2e kernel dated 2000/02/29
-%%%% (2000/02/29)
+%%%% (2000/07/14)
 %%%%
 
 % This patch will not work with  any other release.
 \def\pfmtversion@topatch{2000/02/29}
 
 % This denotes minor level.
-\def\ppatch@level{0}
+\def\ppatch@level{2}
+
+% 2000/07/13
+% \textbf などの書体変更コマンドの左側に \xkanjiskip が入らないのを修正。
+% たとえば、つぎの例で「げ」と「f」の間に入らない。
+%    ほげほげ\textbf{foo}ふがふが
+% 副作用：行頭のイタリック補正がされなくなる。
+%
+% 2000/07/14
+% pldefs.ltx に移動。
 
 \endinput
