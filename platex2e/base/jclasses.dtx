@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{4389}
+% \CheckSum{4399}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -55,12 +55,17 @@
 % \changes{v1.1k}{1998/03/23}{reportとbookクラスで番号を付けない見出しの
 %   ペナルティが\cs{M@}だったのを\cs{@M}に修正}
 % \changes{v1.1m}{1998/04/07}{\cs{today}の計算手順を変更}
+% \changes{v1.1n}{1998/10/13}{report,bookクラスの表番号が
+%   見出しレベルに関係なくchapter番号が出力されてしまうのを修正}
+% \changes{v1.1n}{1998/10/13}{mentukeオプションがエラーになっていたのを修正}
+% \changes{v1.1o}{1998/12/24}{secnumdepthカウンタを$-1$以下にすると、
+%   見出し文字列も消えてしまうのを修正}
 % \fi
 %
 % \iffalse
 \NeedsTeXFormat{pLaTeX2e}
 %<*driver>
-\ProvidesFile{jclasses.dtx}[1998/04/07 v1.1m Standard pLaTeX class]
+\ProvidesFile{jclasses.dtx}
 %</driver>
 %<*yoko>
 %<article>\ProvidesClass{jarticle}
@@ -84,8 +89,10 @@
 %<11pt&bk>\ProvidesFile{tbk11.clo}
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
-%<article|report|book>  [1998/04/07 v1.1m Standard pLaTeX class]
-%<10pt|11pt|12pt>  [1998/04/07 v1.1m Standard pLaTeX file (size option)]
+%<*article|report|book|driver>
+  [1998/12/24 v1.1o Standard pLaTeX class]
+%</article|report|book|driver>
+%<10pt|11pt|12pt>  [1998/12/24 v1.1o Standard pLaTeX file (size option)]
 %<*driver>
 \documentclass{jltxdoc}
 \GetFileInfo{jclasses.dtx}
@@ -315,11 +322,12 @@
 % 位置に文章を出力します。作成したDVIをフィルムに面付け出力する場合など
 % に指定をします。
 % \changes{v1.0f}{1996/07/10}{面付けオプションを追加}
+% \changes{v1.1n}{1998/10/13}
+%     {動作していなかったのを修正。ありがとう、刀祢さん}
 %    \begin{macrocode}
 \DeclareOption{mentuke}{%
-  \tombowtrue
+  \tombowtrue \tombowdatefalse
   \setlength{\@tombowwidth}{\z@}%
-  \@bannertoken\@empty
   \maketombowbox}
 %    \end{macrocode}
 %
@@ -2532,6 +2540,8 @@
 %
 % \begin{macro}{\@makechapterhead}
 % このマクロが実際に章見出しを組み立てます。
+% \changes{v1.1o}{1998/12/24}{secnumdepthカウンタを$-1$以下にすると、
+%   見出し文字列も消えてしまうのを修正}
 %    \begin{macrocode}
 \def\@makechapterhead#1{\hbox{}%
   \vskip2\Cvs
@@ -2546,7 +2556,9 @@
      \unhbox\z@\nobreak
 %<book>    \fi
      \vtop{\hsize\@tempdima#1}%
-   \fi}\vskip3\Cvs}
+   \else
+     #1\relax
+   \fi}\nobreak\vskip3\Cvs}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -3156,6 +3168,9 @@
 %
 % \begin{macro}{\c@table}
 % \begin{macro}{\thetable}
+% \changes{v1.1n}{1998/10/13}
+%    {report, bookクラスでchapterカウンタを考慮していなかったのを修正。
+%     ありがとう、平川＠慶應大さん。}
 % 表番号です。
 %    \begin{macrocode}
 %<article>\newcounter{table}
@@ -3163,13 +3178,15 @@
 %<*tate>
 %<article>\renewcommand{\thetable}{\rensuji{\@arabic\c@table}}
 %<*report|book>
-\renewcommand{\thetable}{\thechapter・\rensuji{\@arabic\c@table}}
+\renewcommand{\thetable}{%
+  \ifnum\c@chapter>\z@\thechapter{}・\fi\rensuji{\@arabic\c@table}}
 %</report|book>
 %</tate>
 %<*yoko>
 %<article>\renewcommand{\thetable}{\@arabic\c@table}
 %<*report|book>
-\renewcommand{\thetable}{\thechapter.\@arabic\c@table}
+\renewcommand{\thetable}{%
+  \ifnum\c@chapter>\z@\thechapter.\fi\@arabic\c@table}
 %</report|book>
 %</yoko>
 %    \end{macrocode}
