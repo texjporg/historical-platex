@@ -1,0 +1,91 @@
+% "b5p" document style option for tate gumi.
+%
+% Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
+
+\@ifundefined{@twoc}{%
+\ifydir
+  \topmargin-.3in
+  \oddsidemargin0pt
+  \evensidemargin0pt
+\else
+  \oddsidemargin0pt
+  \evensidemargin0pt
+  \headheight=12pt
+  \headsep=6mm
+  \dimen0=\headheight\advance\dimen0\headsep
+  \topmargin=32mm\advance\topmargin-1in
+  \advance\topmargin-\dimen0\relax
+  \footheight=12pt
+  \footskip=15mm
+  \columnsep=3\Cwd
+\fi
+\parindent1\Cwd
+\@ifundefined{@lands}{%
+\ifcase \@ptsize
+    % mods for 10 pt
+    \ifydir
+      \textheight35\Cvs
+      \textwidth37\Cwd
+    \else
+      \textwidth55\Cwd
+      \textheight21\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 11 pt 
+    \ifydir
+      \textheight34\Cvs
+      \textwidth34\Cwd
+    \else
+      \textwidth51\Cwd
+      \textheight21\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 12 pt
+    \ifydir
+      \textheight32\Cvs
+      \textwidth31\Cwd
+    \else
+      \textwidth47\Cwd
+      \textheight20\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\fi}{%
+\ifcase \@ptsize
+    % mods for 10 pt
+    \ifydir
+      \textheight22\Cvs
+      \textwidth60\Cwd
+    \else
+      \textwidth34\Cwd
+      \textheight34\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 11 pt 
+    \ifydir
+      \textheight21\Cvs
+      \textwidth55\Cwd
+    \else
+      \textwidth31\Cwd
+      \textheight34\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 12 pt
+    \ifydir
+      \textheight20\Cvs
+      \textwidth50\Cwd
+    \else
+      \textwidth28\Cwd
+      \textheight32\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\fi}
+\ifydir
+  \advance\textheight\topskip
+\fi
+\def\@ps@{4}}{\@warning{Sorry, I igunored `b5p' style}}

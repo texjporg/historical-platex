@@ -1,0 +1,1006 @@
+% Addendum to `latex.tex' for Tategumi LaTeX.
+%
+% Copyright (C) 1993 by ASCII Corporatioin & Impress Corporation.
+
+
+\message{tate:output,}
+
+%
+% redefined output routine
+
+\def\@specialoutput{\ifnum\outputpenalty > -\@Mii
+    \@doclearpage
+  \else
+    \ifnum \outputpenalty <-\@Miii
+       \ifnum\outputpenalty<-\@MM \deadcycles\z@\fi
+       \global\setbox\@holdpg\vbox{\unvbox\@cclv}%
+    \else \setbox\@tempboxa\box\@cclv
+        \@pagedp\dp\@holdpg \@pageht\ht\@holdpg
+        \unvbox\@holdpg
+        \@next\@currbox\@currlist{\ifnum\count\@currbox >\z@
+           \ifvoid\footins\else\advance\@pageht\ht\footins
+             \advance\@pageht\skip\footins \advance\@pagedp\dp\footins
+             \insert\footins{\iftbox\footins\tate\else\yoko\fi\unvbox\footins}\fi
+            \@addtocurcol\else
+           \ifvoid\footins\else\insert\footins{%
+	     \iftbox\footins\tate\else\yoko\fi\unvbox\footins}\fi
+            \@addmarginpar\fi}\@latexbug
+    \ifnum \outputpenalty <\z@ \penalty\interlinepenalty\fi
+  \fi\fi}
+
+\def\@makecol{\ifvoid\footins \setbox\@outputbox\box\@cclv
+   \else\setbox\@outputbox
+     \vbox{%
+     \iftbox\footins\tate\else\yoko\fi
+     \boxmaxdepth \maxdepth
+     \unvbox\@cclv\vskip\skip\footins\footnoterule\unvbox\footins}\fi
+     \xdef\@freelist{\@freelist\@midlist}\gdef\@midlist{}\@combinefloats
+     \setbox\@outputbox\vbox to\@colht{\boxmaxdepth\maxdepth
+        \@texttop\dimen128=\dp\@outputbox\unvbox\@outputbox
+        \vskip-\dimen128\@textbottom}%
+     \global\maxdepth\@maxdepth}
+
+%
+% delete code: \global\@colht\textheight
+%
+\def\@outputpage{\begingroup\catcode`\ =10 
+     \let\-\@dischyph \let\'\@acci \let\`\@accii \let\=\@acciii
+     \if@specialpage 
+     \global\@specialpagefalse\@nameuse{ps@\@specialstyle}\fi
+     \if@twoside 
+       \ifodd\count\z@ \let\@thehead\@oddhead \let\@thefoot\@oddfoot
+            \let\@themargin\oddsidemargin
+          \else \let\@thehead\@evenhead
+          \let\@thefoot\@evenfoot \let\@themargin\evensidemargin
+     \fi\fi
+     \iftdir\dimen0\textwidth \textwidth\textheight \textheight\dimen0\fi
+     \shipout
+     \vbox{\yoko\normalsize \baselineskip\z@ \lineskip\z@ 
+           \let\par\@@par %% 15 Sep 87
+           \vskip \topmargin \moveright\@themargin
+           \vbox{\setbox\@tempboxa
+                   \vbox to\headheight{\vfil \hbox to\textwidth
+                                       {\let\label\@gobble \let\index\@gobble
+                                         \@thehead}} %% 22 Feb 87
+                 \dp\@tempboxa\z@
+                 \box\@tempboxa
+                 \vskip \headsep
+                 \box\@outputbox
+                 \baselineskip\footskip
+                 \hbox to\textwidth{\let\label\@gobble 
+                           \let\index\@gobble  %% 22 Feb 87
+                           \@thefoot}}}%\global\@colht\textheight % pLaTeX change:
+           \endgroup\stepcounter{page}\let\firstmark\botmark}%
+
+
+\message{tate:tabular,}
+%
+% \tabular<dir>[pos]{col}
+%  dir: t ... force tate mode.
+%       y ... force yoko mode.
+%       z ... rotate yoko tabular to tate in tate mode.
+
+\newif\if@tbdir \@tbdirfalse
+\newif\if@tbbot \@tbbotfalse
+\newif\if@tbtop \@tbtopfalse
+\newif\if@tbrot \@tbrotfalse
+
+\def\array{\let\@acol\@arrayacol \let\@classz\@arrayclassz
+  \let\@classiv\@arrayclassiv \let\\\@arraycr\def\@halignto{}%
+  \iftdir\def\@tmp{\@ttabarray<t>}\else\def\@tmp{\@ttabarray<y>}\fi\@tmp}
+% \@ifnextchar<{\@ttabarray}{\@tmp}}
+
+\def\tabular{\def\@halignto{}%
+  \iftdir\def\@tmp{\@tabular<t>}\else\def\@tmp{\@tabular<y>}\fi
+  \@ifnextchar<{\@tabular}{\@tmp}}
+
+\expandafter\def\csname tabular*\endcsname #1{\def\@halignto{to #1}%
+  \iftdir\def\@tmp{\@tabular<t>}\else\def\@tmp{\@tabular<y>}\fi
+  \@ifnextchar<{\@tabular}{\@tmp}}
+
+\def\@tabular<#1>{%
+  \leavevmode\hbox\bgroup
+   $\let\@acol\@tabacol \let\@classz\@tabclassz
+   \let\@classiv\@tabclassiv \let\\\@tabularcr\@ttabarray<#1>}
+
+\def\@tabarray{\@ifnextchar[{\@array}{\@array[c]}}
+
+\def\@ttabarray<#1>{\@ifnextchar[{\@tarray<#1>}{\@tarray<#1>[c]}}
+
+\newcount\t@level \t@level=0
+
+\def\@tarray<#1>[#2]#3{%
+  \@tbdirfalse \@tbbotfalse \@tbtopfalse \@tbrotfalse
+%
+  \setbox\@arstrutbox=\hbox{%
+    \if #1t\ifydir\hbox{\tate
+	\vrule height\arraystretch\ht\tstrutbox depth\arraystretch\dp\tstrutbox width\z@}%
+      \else
+        \vrule height\arraystretch\ht\tstrutbox depth\arraystretch\dp\tstrutbox width\z@
+      \fi
+    \else\if #1z\ifydir
+        \vrule height\arraystretch\ht\strutbox depth\arraystretch\dp\strutbox width\z@
+      \else
+        \vrule height\arraystretch\ht\zstrutbox depth\arraystretch\dp\zstrutbox width\z@
+      \fi
+    \else\yoko\vrule 
+      height\arraystretch \ht\strutbox
+      depth\arraystretch  \dp\strutbox
+      width\z@\fi\fi}\@mkpream{#3}\edef\@preamble{\halign \noexpand\@halignto
+\bgroup \tabskip\z@ \@arstrut \@preamble \tabskip\z@ \cr}%
+\let\@startpbox\@@startpbox \let\@endpbox\@@endpbox
+%
+  \iftdir
+    \if #1y\@tbdirfalse
+      \if #2b\@tbbottrue
+      \vbox\bgroup\vbox
+        \else\if #2t\@tbtoptrue
+	\vtop\bgroup\kern0pt\vbox
+          \else\vcenter
+      \fi\fi
+    \else\if #1t\@tbdirtrue
+      \if #2b\vbox
+        \else\if #2t\vtop
+          \else\vcenter
+      \fi\fi
+    \else\if #1z\@tbrottrue\iftdir\@tbdirtrue\fi
+      \if #2b\@tbbottrue
+      \vbox\bgroup\vbox
+        \else\if #2t\@tbtoptrue
+	\vtop\bgroup\kern0pt\vbox
+          \else\vcenter
+      \fi\fi
+    \else
+      \@latexerr{unknown options}\@ehc
+    \fi\fi\fi
+  \else
+    \if #1y\@tbdirfalse
+      \if #2b\vbox
+        \else\if #2t\vtop
+          \else\vcenter
+      \fi\fi
+    \else\if #1t\@tbdirtrue
+      \if #2b\@tbbottrue
+      \vbox\bgroup\vbox
+        \else\if #2t\@tbtoptrue
+	\vtop\bgroup\kern0pt\vbox 
+          \else\vcenter
+      \fi\fi
+    \else
+      \if #2b\vbox
+        \else\if #2t\vtop
+          \else\vcenter
+      \fi\fi
+    \fi\fi
+  \fi
+  \bgroup
+  \if@tbrot\else\if@tbdir\tate\else\yoko\fi\fi
+  \let\par\relax
+  \let\@sharp##\let\protect\relax \lineskip\z@\baselineskip\z@\@preamble}
+
+\def\@arstrut{\relax\ifmmode\copy\@arstrutbox\else\unhcopy\@arstrutbox\fi}
+
+\def\endtabular{%
+  \crcr\egroup
+  \egroup
+  \if@tbtop\egroup\fi
+  \if@tbbot\kern0pt\egroup\fi$\egroup}
+
+\def\endarray{%
+  \crcr\egroup\egroup
+  \if@tbtop\egroup\fi
+  \if@tbbot\kern0pt\egroup\fi}
+
+
+\message{tate:boxing,}
+
+% \parbox<dir>[pos]{....}
+%  dir: t ... force tate mode.
+%       y ... force yoko mode.
+
+\newif\if@pdir \@pdirfalse % ture = tate, false = yoko
+\newif\if@ptop \@ptopfalse % make vtop
+\newif\if@pbot \@pbotfalse % make vbox
+
+\def\parbox{%
+  \iftdir\def\@tmp{\@xparbox<t>}\else\def\@tmp{\@xparbox<y>}\fi
+  \@ifnextchar<{\@xparbox}{\@tmp}}
+
+\def\@xparbox<#1>{%
+  \@ifnextchar[{\@iparbox<#1>}{\@iparbox<#1>[c]}}
+
+\long\def\@iparbox<#1>[#2]#3#4{%
+  \leavevmode
+  \@pboxswfalse \@pdirfalse \@ptopfalse \@pbotfalse
+  \iftdir
+    \if #1y\@pdirfalse
+      \if #2b\@pbottrue\raise-.5zw\vbox\bgroup\vbox
+        \else\if #2t\@ptoptrue\raise.5zw\vtop\bgroup\kern0pt\vbox
+          \else\ifmmode\vcenter 
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \else\if #1t\@pdirtrue
+      \if #2b\vbox 
+        \else\if #2t\vtop 
+          \else\ifmmode\vcenter 
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \fi\fi
+  \else
+    \if #1y\@pdirfalse
+      \if #2b\vbox 
+        \else\if #2t\vtop 
+          \else\ifmmode\vcenter 
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \else\if #1t\@pdirtrue
+      \if #2b\@pbottrue\vbox\bgroup\vbox
+        \else\if #2t\@ptoptrue\vtop\bgroup\kern0pt\vbox 
+          \else\ifmmode\vcenter 
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \fi\fi
+  \fi
+  \bgroup\if@pdir\tate\else\yoko\fi
+    \hsize #3\@parboxrestore #4\egroup
+  \if@ptop\egroup\fi
+  \if@pbot\kern0pt\egroup\fi
+  \if@pboxsw $\fi}
+
+% \begin{minipage}<dir>[pos]{width}...\end{minipage}
+%  dir: t ... force tate mode.
+%       y ... force yoko mode.
+%       z ... rotate 90 degree (ignored at yoko mode).
+
+\newif\if@mprot \@mprotfalse % z-rotate option
+\newif\if@mpdir \@mpdirfalse % ture = tate, false = yoko
+\newif\if@mptop \@mptopfalse % make vtop
+\newif\if@mpbot \@mpbotfalse % make vbox
+
+\def\minipage{%
+   \iftdir\def\@tmp{\@xminipage<t>}\else\def\@tmp{\@xminipage<y>}\fi
+   \@ifnextchar<{\@xminipage}{\@tmp}}
+
+\def\@xminipage<#1>{%
+   \@ifnextchar[{\@iminipage<#1>}{\@iminipage<#1>[c]}}
+
+\def\@iminipage<#1>[#2]#3{%
+  \leavevmode
+  \@pboxswfalse \@mprotfalse \@mpdirfalse \@mptopfalse \@mpbotfalse
+  \iftdir
+    \if #1y\@mpdirfalse
+      \if #2b\@mpbottrue\raise-.5zw\vbox\bgroup\vbox
+        \else\if #2t\@mptoptrue\raise.5zw\vtop\bgroup\kern0pt\vbox
+          \else\ifmmode\vcenter
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \else\if #1t\@mpdirtrue
+      \if #2b\raise-.5zw\vbox
+        \else\if #2t\vtop
+          \else\ifmmode\vcenter
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \else\if #1z\@mprottrue
+      \if #2b\@mpbottrue\raise-.5zw\vbox\bgroup\vbox
+        \else\if #2t\@mptoptrue\raise.5zw\vtop\bgroup\kern0pt\vbox
+          \else\ifmmode\vcenter
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \else
+      \@latexerr{unknown options}\@ehc
+    \fi\fi\fi
+  \else
+    \if #1y\@mpdirfalse
+      \if #2b\vbox
+        \else\if #2t\vtop
+          \else\ifmmode\vcenter
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \else\if #1t\@mpdirtrue
+      \if #2b\@mpbottrue\vbox\bgroup\vbox
+        \else\if #2t\@mptoptrue\vtop\bgroup\kern0pt\vbox 
+          \else\ifmmode\vcenter 
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \else
+      \if #2b\vbox
+        \else\if #2t\vtop
+          \else\ifmmode\vcenter
+            \else\@pboxswtrue$\vcenter
+      \fi\fi\fi
+    \fi\fi
+  \fi
+  \bgroup
+  \if@mpdir\tate\else\yoko\fi
+  \if #1z
+    \iftdir\yoko\else\tate\fi
+  \fi
+  \hsize #3\textwidth\hsize \columnwidth\hsize
+%
+  \@parboxrestore 
+  \def\@mpfn{mpfootnote}\def\thempfn{\thempfootnote}\c@mpfootnote\z@
+  \let\@footnotetext\@mpfootnotetext
+  \let\@listdepth\@mplistdepth \@mplistdepth\z@
+  \@minipagerestore\global\@minipagetrue %% \global added 24 May 89
+  \if #1z\@mprottrue$\vbox\bgroup\fi
+  \everypar{\global\@minipagefalse\everypar{}}}%
+%
+\def\endminipage{%%
+  \par\vskip-\lastskip
+  \ifvoid\@mpfootins
+    \else\vskip\skip\@mpfootins\footnoterule\unvbox\@mpfootins\fi
+  \if@mprot\egroup$\fi
+  \egroup\global\@minipagefalse
+  \if@mptop\egroup\fi\if@mpbot\kern0pt\egroup\fi
+  \if@pboxsw$\fi}
+
+\def\@endpbox{ifhmode\unskip\strut\par\egroup\hfil}
+
+
+\message{tate:footnote.}
+%
+
+\def\footnote{\@ifnextchar[{\@xfootnote}{\stepcounter
+   {\@mpfn}\xdef\@thefnmark{\thempfn}\@footnotemark\@footnotetext}}
+
+\def\@xfootnote[#1]{\begingroup\csname c@\@mpfn\endcsname #1\relax
+   \xdef\@thefnmark{\thempfn}\endgroup
+   \@footnotemark\@footnotetext}
+
+\def\footnotemark{%
+  \@ifnextchar[{\@xfootnotemark}{%
+    \stepcounter{footnote}\xdef\@thefnmark{\thefootnote}\@footnotemark}}
+
+\def\@xfootnotemark[#1]{%
+  \begingroup\c@footnote #1\relax
+  \xdef\@thefnmark{\thefootnote}\endgroup\@footnotemark}
+
+\def\@footnotemark{\leavevmode\ifhmode
+  \edef\@x@sf{\the\spacefactor}\fi\@makefnmark 
+  \ifhmode\spacefactor\@x@sf\fi\relax}
+
+\def\footnotetext{%
+  \@ifnextchar[{\@xfootnotenext}{\xdef\@thefnmark{\thempfn}\@footnotetext}}
+
+\def\@xfootnotenext[#1]{\begingroup \csname c@\@mpfn\endcsname #1\relax
+   \xdef\@thefnmark{\thempfn}\endgroup \@footnotetext}
+
+\long\def\@footnotetext#1{%
+  \iftdir\edef\@tmp{\insert\footins\bgroup\tate}\else
+         \edef\@tmp{\insert\footins\bgroup\yoko}\fi\@tmp
+  \footnotesize
+  \interlinepenalty\interfootnotelinepenalty 
+  \splittopskip\footnotesep
+  \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+  \hsize\columnwidth \@parboxrestore
+  \edef\@currentlabel{\csname p@footnote\endcsname\@thefnmark}
+  \@makefntext{\rule{\z@}{\footnotesep}\ignorespaces
+    #1\strut}\egroup}
+
+\def\@mpfn{footnote}
+\def\thempfn{\iftdir\hbox{\yoko\thefootnote}\else\thefootnote\fi}
+\def\thempfootnote{\iftdir\hbox{\yoko\alph{mpfootnote}}\else\alph{mpfootnote}\fi}
+
+\long\def\footnoterule{\kern-3\p@ 
+ \hrule width .4\columnwidth 
+ \kern 2.6\p@} 
+
+\long\def\@makefnmark{%
+  \iftdir\hbox to0pt{\vbox to0pt{\boxmaxdepth\maxdimen
+    \vss\moveleft0.3zw\hbox{\yoko\footnotesize$\@thefnmark$}\nointerlineskip
+    \hrule width0pt height.525zh}\hss}\else
+  \hbox{$^{\@thefnmark}$}\fi}
+
+
+\long\def\@makefntext#1{\parindent 1em\noindent 
+  \hbox to1.8em{\hss$
+  \iftdir\raise.25zh\hbox{\@thefnmark}\else^{\@thefnmark}\fi$\hss}#1}
+
+
+\message{tate:picture.}
+
+% \begin{picture}<dir>(x,y)(x,y)
+% dir: t ... tate
+%      y ... yoko
+
+\newdimen\savetshift
+\newdimen\saveyshift
+
+\def\picture{%
+  \iftdir\def\@tmp{\@picture<t>}\else\def\@tmp{\@picture<y>}\fi
+  \@ifnextchar<{\@picture}{\@tmp}}
+
+\def\@picture<#1>(#2,#3){%
+  \@ifnextchar({\@@picture<#1>(#2,#3)}{\@@picture<#1>(#2,#3)(0,0)}}
+
+%\def\@@picture<#1>(#2,#3)(#4,#5){%
+%  \@picht #3\unitlength
+%  \global\savetshift\tbaselineshift
+%  \global\saveyshift\ybaselineshift
+%  \setbox\@picbox\hbox to#2\unitlength\bgroup 
+%    \if#1y\yoko\else\tate\fi
+%    \hskip-#4\unitlength\lower#5\unitlength\hbox\bgroup
+%      \ignorespaces}
+
+\newif\if@pictdir
+\newdimen\@picwd
+
+\def\@@picture<#1>(#2,#3)(#4,#5){%
+  \global\@pictdirfalse
+  \global\savetshift\tbaselineshift
+  \global\saveyshift\ybaselineshift
+  \iftdir\if#1y
+       \global\@pictdirtrue
+       \@picht #2\unitlength
+       \@picwd #3\unitlength
+       \setbox\@picbox\hbox to#3\unitlength\bgroup\yoko
+       \hskip-#4\unitlength\lower#5\unitlength\hbox\bgroup
+     \else
+       \@picht #2\unitlength
+       \@picwd #3\unitlength
+       \setbox\@picbox\hbox to#3\unitlength\bgroup\tate
+       \hskip-#5\unitlength\lower#4\unitlength\hbox\bgroup\fi
+  \else\if#1y
+       \@picht #3\unitlength
+       \setbox\@picbox\hbox to#2\unitlength\bgroup\yoko
+       \hskip-#4\unitlength\lower#5\unitlength\hbox\bgroup
+     \else
+       \global\@pictdirtrue
+       \@picht #3\unitlength
+       \setbox\@picbox\hbox to#2\unitlength\bgroup\tate
+       \hskip-#5\unitlength\lower#4\unitlength\hbox\bgroup
+     \fi
+  \fi\ignorespaces}
+
+\def\endpicture{%
+\egroup\hss\egroup
+\iftdir
+  \if@pictdir
+    \ht\@picbox\@picht
+    \wd\@picbox\@picwd
+  \else
+    \ht\@picbox\@picwd
+    \wd\@picbox\@picht\fi
+\else\if@pictdir
+  \wd\@picbox\@picht
+  \else
+  \ht\@picbox\@picht
+\fi\fi
+\dp\@picbox\z@\leavevmode\box\@picbox}
+
+
+
+%\def\@getcirc#1{\@tempdima #1\relax \@tempcnta\@tempdima
+%  \@tempdima 4pt\relax \divide\@tempcnta\@tempdima
+%  \ifnum \@tempcnta > 10\relax \@tempcnta 10\relax\fi
+%  \ifnum \@tempcnta >\z@ \advance\@tempcnta\m@ne
+%    \else \@warning{Oval too small}\fi
+%  \multiply\@tempcnta 4\relax
+%  \setbox \@tempboxa \hbox{\tbaselineshift\z@\ybaselineshift\z@\@circlefnt
+%  \char \@tempcnta}\@tempdima \wd \@tempboxa}
+
+
+\long\def\put(#1,#2)#3{%
+  \tbaselineshift\z@\ybaselineshift\z@
+  \@killglue\raise#2\unitlength
+  \hbox to \z@{\kern#1\unitlength\tbaselineshift\savetshift\ybaselineshift\saveyshift #3\hss}\ignorespaces}
+
+
+\def\line(#1,#2)#3{%
+  \@xarg #1\relax \@yarg #2\relax
+  \@linelen=#3\unitlength
+  \tbaselineshift\z@\ybaselineshift\z@
+  \ifnum\@xarg =0 \@vline 
+    \else \ifnum\@yarg =0 \@hline \else \@sline\fi
+  \fi}
+
+
+\def\@circle#1{%
+  \begingroup
+  \tbaselineshift\z@\ybaselineshift\z@
+  \boxmaxdepth \maxdimen \@tempdimb #1\unitlength
+  \ifdim \@tempdimb >15.5pt\relax \@getcirc\@tempdimb
+    \@ovro\ht\@tempboxa 
+    \setbox\@tempboxa\hbox{\@circlefnt
+    \advance\@tempcnta\tw@ \char \@tempcnta
+    \advance\@tempcnta\m@ne \char \@tempcnta \kern -2\@tempdima
+    \advance\@tempcnta\tw@
+    \raise \@tempdima \hbox{\char\@tempcnta}\raise \@tempdima
+      \box\@tempboxa}\ht\@tempboxa\z@ \dp\@tempboxa\z@
+      \@put{-\@ovro}{-\@ovro}{\box\@tempboxa}%
+   \else  \@circ\@tempdimb{96}\fi\endgroup}
+
+
+
+\def\@dot#1{%
+  \tbaselineshift\z@\ybaselineshift\z@
+  \@tempdimb #1\unitlength \@circ\@tempdimb{112}}
+
+
+\def\vector(#1,#2)#3{%
+  \@xarg #1\relax \@yarg #2\relax
+  \tbaselineshift\z@\ybaselineshift\z@
+  \@tempcnta \ifnum\@xarg<0 -\@xarg\else\@xarg\fi
+  \ifnum\@tempcnta<5\relax
+  \@linelen=#3\unitlength
+  \ifnum\@xarg =0 \@vvector 
+    \else \ifnum\@yarg =0 \@hvector \else \@svector\fi
+  \fi
+  \else\@badlinearg\fi}
+
+
+\def\@oval(#1,#2)[#3]{\begingroup
+  \tbaselineshift\z@\ybaselineshift\z@
+  \boxmaxdepth \maxdimen
+  \@ovttrue \@ovbtrue \@ovltrue \@ovrtrue
+  \@tfor\@tempa :=#3\do{\csname @ov\@tempa false\endcsname}\@ovxx
+  #1\unitlength \@ovyy #2\unitlength
+  \@tempdimb \ifdim \@ovyy >\@ovxx \@ovxx\else \@ovyy \fi
+  \advance \@tempdimb -2pt\relax  %%%% added 7 Dec 89
+  \@getcirc \@tempdimb
+  \@ovro \ht\@tempboxa \@ovri \dp\@tempboxa
+  \@ovdx\@ovxx \advance\@ovdx -\@tempdima \divide\@ovdx \tw@
+  \@ovdy\@ovyy \advance\@ovdy -\@tempdima \divide\@ovdy \tw@
+  \@circlefnt \setbox\@tempboxa
+  \hbox{\if@ovr \@ovvert32\kern -\@tempdima \fi
+  \if@ovl \kern \@ovxx \@ovvert01\kern -\@tempdima \kern -\@ovxx \fi
+  \if@ovt \@ovhorz \kern -\@ovxx \fi
+  \if@ovb \raise \@ovyy \@ovhorz \fi}\advance\@ovdx\@ovro
+  \advance\@ovdy\@ovro \ht\@tempboxa\z@ \dp\@tempboxa\z@
+  \@put{-\@ovdx}{-\@ovdy}{\box\@tempboxa}%
+  \endgroup}
+
+%
+
+\message{tate:misc,}
+
+%
+% adjust baseline offset
+\newdimen\cht \newdimen\Cht  % base height, current height
+\newdimen\cwd \newdimen\Cwd  % base width, current width
+\newdimen\cdp \newdimen\Cdp  % base depth, current depth
+\newdimen\cvs \newdimen\Cvs  % base gyo-okuri, current gyo-okuri
+\newdimen\chs \newdimen\Chs  % base ji-okuri, current ji-okuri
+
+\def\adjustbaseline{%
+  \tbaselineshift=0pt
+  \setbox0\hbox{\char\sjis"8140}%
+  \cht=\ht0\relax \cwd=\wd0\relax
+  \cdp=\dp0\relax \chs=\wd0\relax
+  \let\cvs=\normalbaselineskip\relax
+  \rensujiskip=0.25\chs
+  \dimen0\ht0\advance\dimen0\dp0\relax
+  \setbox1\hbox{0}\dimen1\ht1\advance\dimen1\dp1\relax
+  \advance\dimen0-\dimen1 \divide\dimen0 by 2\relax
+  \dimen1\dp0\advance\dimen1-\dimen0\advance\dimen1-\dp1\relax
+  \iftdir
+    \tbaselineshift=\dimen1\relax
+  \else
+    \ybaselineshift=\dimen1\relax
+  \fi}
+
+\gdef\normalsize{%
+  \ifx\@currsize\normalsize \rm \else \@normalsize\fi
+  \setbox0\hbox{\char\sjis"8140}%
+  \Cht=\ht0\relax \Cwd=\wd0\relax \Cvs=\baselineskip\relax
+  \Cdp=\dp0\relax \Chs=\wd0\relax}
+
+
+%
+% bouten 
+% redefine \boutenchar, if you want to change bouten character.
+
+\def\boutenchar{\char\sjis"8141}
+
+\def\bou{\protect\@bou}
+\def\@bou#1{\ifvmode\leavevmode\fi\@@bou#1\end}
+\def\@@bou#1{%
+  \ifx#1\end
+    \let\next=\relax
+  \else
+    \iftdir\hbox to0pt{\vbox to0pt{\boxmaxdepth\maxdimen
+%	\vss\moveleft0.2zw\hbox to0pt{\yoko\hss\boutenchar\hss}\nointerlineskip
+  	\vss\moveleft0.2zw\hbox{\yoko\boutenchar}\nointerlineskip
+        \hbox{\char\sjis"8140}}\hss}\nobreak#1\else
+    \hbox to0pt{\vbox to0pt{%
+%	\vss\moveleft-0.2zw\hbox to0pt{\yoko\hss\boutenchar\hss}\nointerlineskip
+ 	\vss\moveleft-0.2zw\hbox{\yoko\boutenchar}\nointerlineskip
+        \hbox{\char\sjis"8140}}\hss}\nobreak#1\fi
+    \let\next=\@@bou
+  \fi\next}
+
+%
+% rensuji
+% NOTE:
+%       \Rensuji       ignore interlineskip, span between lines.
+%       \rensuji       ignore interlineskip, span between lines. this is fragile
+%       \rensuji*      ignore interlineskip, don't span between lines.
+%       \prensuji[pos] ignore interlineskip, span between lines.
+%                      pos:   c  center
+%                             r  rightflush
+%                             l  leftflush
+
+\newdimen\rensujiskip
+
+\def\Rensuji#1{%
+  \ifvmode\leavevmode\fi\kern0pt\hskip\rensujiskip\hbox{\yoko#1}\hskip\rensujiskip}
+
+\def\rensuji{\protect\x@rensuji}
+
+\def\x@rensuji{%
+  \@ifstar{\@rensuji}{\@@rensuji}}
+
+\def\@rensuji#1{%
+  \ifvmode\leavevmode\fi\kern\rensujiskip\hbox to1zw{\yoko\hss#1\hss}\kern\rensujiskip}
+
+\def\@@rensuji#1{%
+  \ifvmode\leavevmode\fi\hskip\rensujiskip\hbox{\yoko#1}\hskip\rensujiskip}
+
+\def\prensuji{%
+  \@ifnextchar[{\p@rensuji}{\p@rensuji[c]}}
+\def\p@rensuji[#1]#2{%
+  \kern.25zw
+    \ifx#1c\hbox{\yoko#2}\else
+    \ifx#1r\raise-.5zw\vbox{\hbox{\yoko#2}\kern0pt}\else
+    \raise.5zw\vtop{\kern0pt\hbox{\yoko#2}}\fi\fi
+  \kern.25zw}
+
+%
+% \kasen
+%
+
+\def\kasen#1{%
+  \iftdir
+    \setbox0\hbox{#1}\leavevmode
+    \raise0.7zw\hbox to0pt{\vrule width\wd0 depth0pt height0.4pt\hss}\box0%
+  \else\underline{#1}\fi}
+
+
+%
+% contents
+%
+
+\def\@dottedtocline#1#2#3#4#5{\ifnum #1>\c@tocdepth \else
+  \vskip \z@ plus .2pt
+  {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
+    \parindent #2\relax\@afterindenttrue
+   \interlinepenalty\@M
+   \leavevmode 
+   \@tempdima #3\relax \advance\leftskip \@tempdima \hbox{}\hskip -\leftskip
+    #4\nobreak\leaders\hbox{\raise.25zh\hbox{$\m@th \mkern \@dotsep mu.\mkern \@dotsep 
+       mu$}}\hfill \nobreak
+       \iftdir\hbox to\@pnumwidth{\yoko\hfil\rm #5\hfil}%
+       \else\hbox to\@pnumwidth{\hfil\rm #5}\fi
+       \par}\fi}
+
+\def\addcontentsline#1#2#3{\if@filesw \begingroup
+\let\label\@gobble \let\index\@gobble \let\glossary\@gobble
+\def\protect##1{\string\string\string##1\string\space
+   \space}\@temptokena{\Rensuji{\thepage}}%
+\edef\@tempa{\write \@auxout{\string\@writefile{#1}{\protect
+     \contentsline{#2}{#3}{\the\@temptokena}}}}\@tempa
+   \if@nobreak \ifvmode\nobreak\fi\fi\endgroup\fi}
+
+%
+% mark
+%
+
+\def\leftmark{\expandafter\@leftmark\firstmark}
+\def\rightmark{\expandafter\@rightmark\botmark}
+
+\def\cleardoublepage{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+  \fi\fi}
+
+
+%
+% bib
+%
+
+\newif\if@restonecol
+
+\def\bibitem{\@ifnextchar[{\@lbibitem}{\@bibitem}}
+
+\def\@lbibitem[#1]#2{%
+  \item[\@biblabel{#1}]\if@filesw 
+   { \def\protect##1{\string ##1\space}\immediate
+     \write\@auxout{\string\bibcite{#2}{#1}}}\fi\ignorespaces}
+
+\def\@bibitem#1{%
+  \item\if@filesw
+    \immediate\write\@auxout{\string\bibcite{#1}{\the\c@enumi}}\fi
+  \ignorespaces}
+
+%\def\bibcite#1#2{\global\@namedef{b@#1}{\Rensuji{#2}}}
+\def\bibcite#1#2{\global\@namedef{b@#1}{#2}}
+
+\let\citation\@gobble
+
+\def\cite{\@ifnextchar[{\@tempswatrue\@citex}{\@tempswafalse\@citex[]}}
+
+\def\@citex[#1]#2{\if@filesw\immediate\write\@auxout{\string\citation{#2}}\fi
+  \def\@citea{}\@cite{\@for\@citeb:=#2\do
+    {\@citea\def\@citea{,\penalty\@m\ }%
+    \@ifundefined{b@\@citeb}{%
+       {\bf ?}\@warning{Citation `\@citeb' on page \thepage \space undefined}}%
+\hbox{\csname b@\@citeb\endcsname}}}{#1}}
+
+\let\bibdata=\@gobble
+\let\bibstyle=\@gobble
+
+\def\bibliography#1{%
+  \if@filesw\immediate\write\@auxout{\string\bibdata{#1}}\fi
+  \@input{\jobname.bbl}}
+
+\def\bibliographystyle#1{%
+  \if@filesw\immediate\write\@auxout{\string\bibstyle{#1}}\fi}
+
+\def\nocite#1{\@bsphack
+  \if@filesw\immediate\write\@auxout{\string\citation{#1}}\fi
+  \@esphack}
+
+%\def\@cite#1#2{[{#1\if@tempswa , \hbox{\yoko#2}\fi}]}
+\def\@cite#1#2{[{#1\if@tempswa  , #2\fi}]}
+%\def\@biblabel#1{[\Rensuji{#1}]\hfill}
+\def\@biblabel#1{[#1]\hfill}
+
+%\def\pageref#1{\@ifundefined{r@#1}{{\bf ??}\@warning
+%   {Reference `#1' on page \thepage \space undefined}}%
+%   {\edef\@tempa{\@nameuse{r@#1}}
+%   \iftdir\hbox{\yoko\expandafter\@cdr\@tempa\@nil\null}
+%   \else\expandafter\@cdr\@tempa\@nil\null\fi}}
+%
+%\def\ref#1{\@ifundefined{r@#1}{{\bf ??}%
+%  \@warning{Reference `#1' on page \thepage \space undefined}}{%
+%    \edef\@tempa{\@nameuse{r@#1}}
+%    \iftdir\hbox{\yoko\expandafter\@car\@tempa\@nil\null}
+%    \else\expandafter\@car\@tempa\@nil\null\fi}}
+
+\def\pageref#1{\@ifundefined{r@#1}{{\bf ??}\@warning
+   {Reference `#1' on page \thepage \space undefined}}%
+   {\edef\@tempa{\@nameuse{r@#1}}\expandafter\@cdr\@tempa\@nil\null}}
+
+\def\ref#1{\@ifundefined{r@#1}{{\bf ??}%
+  \@warning{Reference `#1' on page \thepage \space undefined}}{%
+    \edef\@tempa{\@nameuse{r@#1}}\expandafter\@car\@tempa\@nil\null}}
+
+\def\newlabel#1#2{%
+  \@ifundefined{r@#1}{}{%
+    \@warning{Label `#1' multiply defined}}\global\@namedef{r@#1}{#2}}
+
+\def\label#1{%
+  \@bsphack\if@filesw{%
+    \let\thepage\relax
+    \def\protect{\noexpand\noexpand\noexpand}%
+    \xdef\@gtempa{\write\@auxout{\string
+      \newlabel{#1}{{\@currentlabel}{\thepage}}}}}\@gtempa
+   \if@nobreak \ifvmode\nobreak\fi\fi\fi\@esphack}
+
+\def\refstepcounter#1{%
+  \stepcounter{#1}\let\@tempa\protect
+  \def\protect{\noexpand\protect\noexpand}%
+  \edef\@currentlabel{\csname p@#1\endcsname\csname the#1\endcsname}%
+  \let\protect\@tempa}
+
+\def\@currentlabel{} % For \label commands that come before any environment
+
+\def\thebibliography#1{%
+  \chapter{参考文献}
+  \markboth{参考文献}{参考文献}
+% \list{[\Rensuji{\arabic{enumi}}]}{%
+  \list{[\arabic{enumi}]}{%
+    \settowidth\labelwidth{[#1]}
+    \leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+    \usecounter{enumi}}
+  \def\newblock{\hskip .11em plus .33em minus .07em}
+  \sloppy
+  \sfcode`\.=1000\relax}
+
+\message{tate:Index, Glossary,}
+
+%\def\@wrindex#1{%
+%   \let\thepage\relax
+%   \xdef\@gtempa{\write\@indexfile{\string
+%      \indexentry{#1}{\thepage}}}\endgroup\@gtempa
+%   \if@nobreak \ifvmode\nobreak\fi\fi\@esphack}
+%
+%\def\@wrglossary#1{\let\thepage\relax
+%   \xdef\@gtempa{\write\@glossaryfile{\string
+%      \glossaryentry{#1}{\thepage}}}\endgroup\@gtempa
+%   \if@nobreak \ifvmode\nobreak\fi\fi\@esphack}
+
+
+\def\@eqnnum{{\rm\iftdir\raise.25zh\hbox{\yoko(\theequation)}\else(\theequation)\fi}} 
+
+\def\@thmcounter#1{\noexpand\Rensuji{\noexpand\arabic{#1}}}
+
+\def\dash{\vbox{\hrule width 1.6mm height 0.3pt depth 0.3pt}}
+
+%
+% plain.tex : proclaim
+%
+
+\outer\def\proclaim #1. #2\par{\medbreak
+  \noindent{\bf#1\hbox to1zw{\yoko\hss.}\enspace}{\sl#2}\par
+  \ifdim\lastskip<\medskipamount \removelastskip\penalty55\medskip\fi}
+
+%
+% Convert to Kanji numeral
+% We have to change the following codes to primitive in near future.
+%
+
+\def\Kanji#1{\@Kanji{\@nameuse{c@#1}}}
+\def\@Kanji#1{%
+  \protect\noexpand\protect\@@Kanji{\number #1}}
+
+\def\@@Kanji#1{%
+  \edef\tmp{#1}\expandafter\@toKanji\tmp\end}
+
+\def\@toKanji#1{%
+  \ifx#1\end\let\next=\relax\else\@aKanji#1\let\next=\@toKanji\fi\next}
+
+\def\@aKanji#1{%
+\ifcase#1\char\sjis"815A\or\char\sjis"88EA\or\char\sjis"93F1\or
+\char\sjis"8E4F\or\char\sjis"8E6C\or\char\sjis"8CDC\or\char\sjis"985A\or
+\char\sjis"8EB5\or\char\sjis"94AA\or\char\sjis"8BE3\else\@ctrerr\fi}
+
+%
+\message{tate:caption.}
+
+% tate/yoko caption floating macro
+%
+% parameter:
+%   \captionfloatsep           skip between caption and float
+%   \captionwidth              DEFAULT caption width
+%   \floatruletick             thickness of surrounding rule
+%   \def\captionfontsetup{\mc\rm}  define caption font info
+%
+% \layoutfloat(width,height)[pos]{floating}
+%  () is omittable, floaing body size
+%  pos : l, r, c
+% \layoutcaption(width)[pos1pos2]
+%  () is omittable, caption width
+%  pos1 : t, b, c
+%  pos2 : u, d, l, r
+% \pcaption[short-caption]{long-caption}
+
+\newdimen\captionwidth
+\newdimen\captionfloatsep
+\newdimen\floatruletick
+
+\newdimen\caption@width
+\newdimen\float@width
+\newdimen\float@height
+\newbox\@captionbox
+\newbox\@floaterbox
+
+\def\caption@setup{\captiondir
+  \hsize=\caption@width
+  \parindent0pt\inhibitglue}
+
+
+\def\layoutfloat{%
+  \@ifnextchar({\@layoutfloat}{\@layoutfloat(0pt,0pt)}}
+
+\def\@layoutfloat(#1,#2)[#3]#4{%
+  \float@width=#1 \float@height=#2 \edef\flot@pos{#3}
+  \setbox0=\hbox{#4}
+  \ifdim\wd0>\float@width
+     \ifdim\float@width=0pt
+      \setbox\@floaterbox=\vbox{\parindent=0pt\hbox{#4}}\else
+      \@makefloatbox{#4}\fi
+  \else
+    \ifdim\wd0=0pt
+      \ifdim\float@width=0pt
+        \setbox\@floaterbox=\hbox{#4}\else
+        \@makefloatbox{#4}\fi
+    \else
+        \setbox\@floaterbox=\hbox{#4}\fi
+  \fi}
+
+\def\@makefloatbox#1{%
+  \setbox\@floaterbox=\vbox to\float@height{\offinterlineskip
+    \@tempdima\float@height \advance\@tempdima by-2\floatruletick
+    \hrule width\float@width height\floatruletick depth0pt
+    \vss\hbox to\float@width{%
+    \vrule height\@tempdima width\floatruletick depth0pt
+    \hss\vbox to\float@height{\hsize=\float@width\vss #1\vss}\hss
+    \vrule height\@tempdima width\floatruletick depth0pt}%
+    \hrule width\float@width height\floatruletick depth0pt}}
+
+
+\def\layoutcaption{%
+  \@ifnextchar({\@layoutcaption}{\@layoutcaption(\captionwidth)}}
+
+\def\@layoutcaption(#1)[#2#3]{%
+  \caption@width=#1 \edef\capx@pos{#2}\edef\capy@pos{#3}}
+
+
+\def\pcaption{%
+  \refstepcounter\@captype \@dblarg{\@pcaption\@captype}}
+
+\long\def\@pcaption#1[#2]#3{%
+  \addcontentsline{\csname ext@#1\endcsname}{#1}{%
+    \protect\numberline{\csname the#1\endcsname}{\ignorespaces #2}}%
+%
+  \setbox0=\hbox{\captionfontsetup
+    \csname fnum@\@captype\endcsname 　#3}%
+  \ifdim\wd0>\caption@width
+    \setbox\@captionbox=\vbox{\caption@setup\captionfontsetup
+      \csname fnum@\@captype\endcsname 　#3}\else
+    \setbox\@captionbox=\hbox{\caption@setup\captionfontsetup
+      \csname fnum@\@captype\endcsname 　#3}\fi
+  \edef\ipos{c}\edef\iipos{r}\edef\iiipos{l}\relax
+  \setbox\@tempboxa=\hbox to\linewidth{%
+    \if\flot@pos\ipos
+      \hss\@layoutcap[\capx@pos\capy@pos]{\@captionbox}{\@floaterbox}\hss\relax
+    \else\if\flot@pos\iipos
+      \hss\@layoutcap[\capx@pos\capy@pos]{\@captionbox}{\@floaterbox}\relax
+    \else\if\flot@pos\iiipos
+      \@layoutcap[\capx@pos\capy@pos]{\@captionbox}{\@floaterbox}\hss\relax
+  \fi\fi\fi}\par
+  \vskip.25\baselineskip
+  \box\@tempboxa}
+
+
+\def\@layoutcap[#1#2]#3#4{\par
+  \if#2r
+    \if#1t
+      \hbox{\vtop{\kern0pt\box#4}\kern\captionfloatsep\vtop{\kern0pt\box#3}}\else
+    \if#1c
+      \hbox{$\vcenter{\box#4}$\kern\captionfloatsep$\vcenter{\box#3}$}\else
+    \if#1b
+      \hbox{\vbox{\box#4\kern0pt}\kern\captionfloatsep\vbox{\box#3\kern0pt}}\fi
+    \fi\fi
+  \else\if#2l
+    \if#1t
+      \hbox{\vtop{\kern0pt\box#3}\kern\captionfloatsep\vtop{\kern0pt\box#4}}\else
+    \if#1c
+      \hbox{$\vcenter{\box#3}$\kern\captionfloatsep$\vcenter{\box#4}$}\else
+    \if#1b
+      \hbox{\vbox{\box#3\kern0pt}\kern\captionfloatsep\vbox{\box#4\kern0pt}}\fi
+    \fi\fi
+  \else\if#2u
+    \vbox{\offinterlineskip
+      \@tempdima=\wd#3 \ifdim\@tempdima<\wd#4 \@tempdima=\wd#4\fi
+      \if#1t
+        \hbox to\@tempdima{\box#3\hss}\vskip\captionfloatsep\hbox to\@tempdima{\box#4\hss}\else
+      \if#1c
+        \hbox to\@tempdima{\hss\box#3\hss}\vskip\captionfloatsep\hbox to\@tempdima{\hss\box#4\hss}\else
+      \if#1b
+        \hbox to\@tempdima{\hss\box#3}\vskip\captionfloatsep\hbox to\@tempdima{\hss\box#4}\fi
+      \fi\fi}%
+  \else\if#2d
+    \vbox{\offinterlineskip
+      \@tempdima=\wd#3 \ifdim\@tempdima<\wd#4 \@tempdima=\wd#4\fi
+      \if#1t
+        \hbox to\@tempdima{\box#4\hss}\vskip\captionfloatsep\hbox to\@tempdima{\box#3\hss}\else
+      \if#1c
+        \hbox to\@tempdima{\hss\box#4\hss}\vskip\captionfloatsep\hbox to\@tempdima{\hss\box#3\hss}\else
+      \if#1b
+        \hbox to\@tempdima{\hss\box#4}\vskip\captionfloatsep\hbox to\@tempdima{\hss\box#3}\fi
+      \fi\fi}%
+  \fi\fi\fi\fi}
+
+
+\floatruletick=0.4pt
+\captionwidth=100pt
+\captionfloatsep=10pt
+\def\captiondir{\tate}
+\def\captionfontsetup{\rm\mc}
+
+
+% pLaTeX change:
+% add opening version message here,
+% because we can't put these in latex.tex.
+
+\newlinechar=`\^^J
+\everyjob{\typeout{LaTeX Version 2.09 <7 Dec 1989>^^J%
+Tate Version 1.0 <24 Dec 1993> Copyright (C) by ASCII Corp & Impress Corp.}}
+\immediate\write10{LaTeX Version 2.09 <7 Dec 1989>^^J%
+Tate Version 1.0 <24 Dec 1993> Copyright (C) by ASCII Corp & Impress Corp.}

@@ -1,0 +1,617 @@
+% "newbook" style file for tate gumi.
+%
+% Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
+
+\typeout{Document Style `newbook'. <24 Dec 93>}
+
+\def\@ptsize{0} \@namedef{ds@11pt}{\def\@ptsize{1}}
+\@namedef{ds@12pt}{\def\@ptsize{2}} 
+\@twosidetrue \@mparswitchtrue \def\ds@draft{\overfullrule 5pt} 
+
+\newif\if@av
+
+\expandafter\def\csname ds@A5\endcsname {
+\gdef\psize{
+  \oddsidemargin-1in
+  \evensidemargin-1in
+  \advance\oddsidemargin 18mm
+  \advance\evensidemargin 19mm
+%
+  \headheight=12pt
+  \headsep=4mm
+  \dimen0=\headheight\advance\dimen0\headsep
+  \topmargin=20mm\advance\topmargin-1in
+  \advance\topmargin-\dimen0\relax
+%
+  \footheight=12pt
+  \footskip=10mm
+%
+  \parindent1\Cwd
+%
+  \textwidth48\Cwd
+  \textheight18\Cvs
+  \advance\textheight\Cht\advance\textheight\Cdp\relax
+  \topskip\Cht\relax%
+  \@avtrue
+}}
+
+\expandafter\def\csname ds@B5\endcsname {
+\gdef\psize{
+  \oddsidemargin-1in
+  \evensidemargin-1in
+  \advance\oddsidemargin 23mm
+  \advance\evensidemargin 24mm
+%
+  \headheight=12pt
+  \headsep=8mm
+  \dimen0=\headheight\advance\dimen0\headsep
+  \topmargin=32mm\advance\topmargin-1in
+  \advance\topmargin-\dimen0\relax
+%
+  \footheight=12pt
+  \footskip=10mm
+%
+  \columnsep=3\Cwd
+%
+  \parindent1\Cwd
+%
+  \textwidth55\Cwd
+  \textheight22\Cvs
+  \advance\textheight\Cht\advance\textheight\Cdp\relax
+  \topskip\Cht\relax%
+  \@avfalse
+}}
+
+\tate
+
+\csname ds@A5\endcsname
+
+\@options
+
+\input nbksize.sty
+
+
+\def\labelenumi{\theenumi} 
+\def\theenumi{\Rensuji{\arabic{enumi}}}
+\def\labelenumii{\theenumii}
+\def\theenumii{\Rensuji{(\alph{enumii})}}
+\def\p@enumii{\theenumi}
+\def\labelenumiii{\theenumiii}
+\def\theenumiii{\Rensuji{\roman{enumiii}}}
+\def\p@enumiii{\theenumi(\theenumii)}
+\def\labelenumiv{\theenumiv}
+\def\theenumiv{\Rensuji{\Alph{enumiv}}}
+\def\p@enumiv{\p@enumiii\theenumiii}
+
+\def\labelitemi{$\bullet$}
+\def\labelitemii{$\circ$}
+\def\labelitemiii{$\ast$}
+\def\labelitemiv{$\cdot$}
+
+\def\enumerate{%
+  \ifnum \@enumdepth >3\relax
+    \@toodeep
+  \else
+    \advance\@enumdepth\@ne
+    \ifnum\@enumdepth=\@ne  
+      \vskip.5\normalbaselineskip
+    \fi
+    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
+    \list{\csname label\@enumctr\endcsname}{%
+      \topsep\z@
+      \ifnum\@enumdepth=\@ne    
+        \partopsep.5\normalbaselineskip
+      \else
+        \partopsep\z@
+      \fi
+      \parskip\z@
+      \itemsep\z@
+      \parsep\z@
+      \listparindent\z@
+      \itemindent\listparindent
+      \labelwidth1zw
+      \labelsep\z@
+      \ifnum\@enumdepth=\@ne
+        \leftmargin1zw
+      \else
+        \leftmargin\leftskip
+      \fi
+      \advance\leftmargin by 1zw
+      \usecounter{\@enumctr}
+      \def\makelabel##1{\hss\llap{##1}}}
+    \fi}
+
+\let\endenumerate =\endlist
+
+\def\itemize{%
+  \ifnum \@itemdepth >3\relax
+    \@toodeep
+  \else
+    \advance\@itemdepth\@ne
+    \ifnum\@itemdepth=\@ne  
+      \vskip.5\normalbaselineskip
+    \fi
+    \edef\@itemitem{%
+      labelitem\romannumeral\the\@itemdepth}%
+    \list{\csname\@itemitem\endcsname}{%
+      \topsep\z@
+      \ifnum\@itemdepth=\@ne    
+        \partopsep.5\normalbaselineskip
+      \else
+        \partopsep\z@
+      \fi
+      \parskip\z@
+      \itemsep\z@
+      \parsep\z@
+      \listparindent\z@
+      \itemindent\listparindent
+      \labelwidth1zw
+      \labelsep\z@
+      \ifnum\@itemdepth=\@ne
+        \leftmargin1zw
+      \else
+        \leftmargin\leftskip
+      \fi
+      \advance\leftmargin by 1zw
+    \def\makelabel##1{\hss\llap{##1}}}
+  \fi}
+
+\let\enditemize=\endlist
+
+\def\descriptionlabel#1{\hspace\labelsep \bf #1}
+\def\description{%
+  \list{}{%
+  \leftmargin=\leftskip
+  \advance\leftmargin by 3\cwd
+  \rightmargin=\rightskip
+  \labelwidth\z@
+  \labelsep=\cwd
+  \itemindent-\leftmargin
+  \listparindent\z@
+  \topsep\z@
+  \parskip\z@
+  \partopsep\z@
+  \itemsep\z@
+  \let\makelabel\descriptionlabel}}
+
+\let\enddescription\endlist
+
+\def\verse{\let\\=\@centercr 
+ \list{}{\itemsep\z@ \itemindent -1.5em\listparindent \itemindent 
+ \rightmargin\leftmargin\advance\leftmargin 1.5em}\item[]}
+\let\endverse\endlist
+\def\quotation{\list{}{\listparindent 1zw
+ \itemindent\listparindent
+ \rightmargin\leftmargin\parsep 0pt plus 1pt}\item[]}
+\let\endquotation=\endlist
+\def\quote{\list{}{\rightmargin\leftmargin}\item[]}
+\let\endquote=\endlist
+
+\def\descriptionlabel#1{\hspace\labelsep \bf #1}
+\def\description{\list{}{\labelwidth\z@ \itemindent-\leftmargin
+ \let\makelabel\descriptionlabel}}
+\let\enddescription\endlist
+\newdimen\descriptionmargin
+\descriptionmargin=3em
+
+
+\def\titlepage{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+ \else \newpage \fi \thispagestyle{empty}\c@page\z@}
+\def\endtitlepage{\if@restonecol\twocolumn \else \newpage \fi}
+
+\arraycolsep 5pt \tabcolsep 6pt \arrayrulewidth .4pt \doublerulesep 2pt 
+\tabbingsep \labelsep 
+\skip\@mpfootins = \skip\footins
+\fboxsep = 3pt \fboxrule = .4pt 
+
+\newcounter{part}
+\newcounter {chapter}
+\newcounter {section}[chapter]
+\newcounter {subsection}[section]
+\newcounter {subsubsection}[subsection]
+\newcounter {paragraph}[subsubsection]
+\newcounter {subparagraph}[paragraph]
+
+\def\thepart{\Rensuji{\Roman{part}}}
+\def\t@thechapter {\arabic{chapter}}
+\def\thechapter {\Rensuji{\arabic{chapter}}}
+\def\thesection {\thechapter・\Rensuji{\arabic{section}}}
+\def\thesubsection {\thesection・\Rensuji{\arabic{subsection}}}
+\def\thesubsubsection {\thesubsection・\Rensuji{\arabic{subsubsection}}}
+\def\theparagraph {\thesubsubsection・\Rensuji{\arabic{paragraph}}}
+\def\thesubparagraph {\theparagraph・\Rensuji{\arabic{subparagraph}}}
+\def\@chapapp{第}
+\def\@chappos{章}
+
+\def\part{%
+  \cleardoublepage
+  \thispagestyle{empty}
+  \if@twocolumn
+    \onecolumn
+    \@tempswatrue
+  \else
+    \@tempswafalse
+  \fi
+  \hbox{}\vfil\secdef\@part\@spart}
+
+\def\@part[#1]#2{%
+  \ifnum \c@secnumdepth >-2\relax
+    \refstepcounter{part}
+    \addcontentsline{toc}{part}{第\thepart 部}{#1}
+  \else
+    \addcontentsline{toc}{part}{}{#1}
+  \fi
+  \markboth{}{}
+  \null
+  \if@av
+    \vskip8\normalbaselineskip
+    \hbox to \textwidth{\hskip5\Cwd\Huge\gt\bf%
+    \ifnum \c@secnumdepth >-2\relax%
+      第\thepart 部\hskip1zw
+    \fi
+    #1\hss}%
+  \else
+    \vskip10\normalbaselineskip
+    \hbox to \textwidth{\hskip8\Cwd\Huge\gt\bf%
+    \ifnum \c@secnumdepth >-2\relax%
+      第\thepart 部\hskip1zw
+    \fi
+    #1\hss}%
+  \fi
+  \@endpart}
+
+\def\@endpart{%
+  \vfill\newpage
+  \if@twoside
+    \hbox{} \thispagestyle{empty}\newpage 
+  \fi
+  \if@tempswa \twocolumn \fi} 
+
+\def\@spart#1{{\centering \Huge \bf #1\par}\@endpart}
+
+\def\@pnumwidth{1.55em}
+\def\@tocrmarg {2.55em}
+\def\@dotsep{4.5}
+\setcounter{tocdepth}{2}
+
+
+\def\tableofcontents{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+ \fi\chapter*{目 次\@mkboth{目 次}{目 次}}
+ \@starttoc{toc}\if@restonecol\twocolumn\fi}
+
+\def\l@part#1#2#3{%
+  \addpenalty{-\@highpenalty}\addvspace{2.25em plus 1pt}
+  \begingroup
+    \@tempdima 3em \parindent \z@
+    \if@av
+        \rightskip5\Cwd\advance\rightskip\@pnumwidth
+    \else
+        \rightskip8\Cwd\advance\rightskip\@pnumwidth
+    \fi
+    \parfillskip-\@pnumwidth 
+    \setbox0=\hbox{\large\gt\bf #1\hskip1zw}
+    \advance\leftskip\wd0\hskip-\wd0\relax
+    {\leavevmode\box0\large\gt\bf#2\hfil #3}\par
+    \nobreak
+  \endgroup}
+
+\def\l@chapter#1#2#3{%
+  \pagebreak[3] 
+  \vskip 1.0em plus 1pt
+  \begingroup
+    \parindent\z@
+    \if@av
+        \rightskip5\Cwd\advance\rightskip\@pnumwidth
+    \else
+        \rightskip8\Cwd\advance\rightskip\@pnumwidth
+    \fi
+    \parfillskip-\@pnumwidth 
+    \setbox0=\hbox{\gt\bf #1\hskip1zw}
+    \advance\leftskip\wd0\hskip-\wd0\relax
+    \leavevmode
+    \gt\bf
+    \leavevmode\box0\gt\gt\bf#2\hfil #3\par
+  \endgroup}
+
+\def\l@section{\@dottedtocline{1}{2zw}{0zw}}
+\def\l@subsection{\@dottedtocline{2}{4zw}{0zw}}
+\def\l@subsubsection{\@dottedtocline{3}{6zw}{0zw}}
+\def\l@paragraph{\@dottedtocline{4}{8zw}{0zw}}
+\def\l@subparagraph{\@dottedtocline{5}{10zw}{0zw}}
+
+\def\listoffigures{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+ \fi\chapter*{図 目 次\@mkboth
+ {図 目 次}{図 目 次}}\@starttoc{lof}\if@restonecol
+ \twocolumn\fi}
+\def\l@figure{\@dottedtocline{1}{2zw}{0zw}}
+\def\listoftables{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+ \fi\chapter*{表 目 次\@mkboth
+ {表 目 次}{表 目 次}}\@starttoc{lot}\if@restonecol
+ \twocolumn\fi}
+\def\l@table{\@dottedtocline{1}{2zw}{0zw}}
+
+\def\@dottedtocline#1#2#3#4#5#6{%
+  \ifnum #1>\c@tocdepth\else
+    \vskip \z@ plus .2pt
+    {%
+      \leftskip #2\relax
+      \setbox0=\hbox{\normalsize\char\sjis"8140}\dimen0=\wd0
+      \if@av
+        \rightskip5\Cwd\advance\rightskip\@pnumwidth
+      \else
+        \rightskip8\Cwd\advance\rightskip\@pnumwidth
+      \fi
+      \parfillskip -\@pnumwidth
+      \parindent #2\relax\@afterindenttrue
+      \interlinepenalty\@M
+      \leavevmode
+      \@tempdima #3\relax \advance\leftskip \@tempdima
+      \hbox{}\hskip -\leftskip\hbox to 0pt{\hss #4\hskip\Cwd}#5\nobreak%
+      \leaders\hbox{%
+        \raise.25zh\hbox{$\m@th \mkern \@dotsep mu.\mkern \@dotsep mu$}}%
+      \hfill\nobreak%
+      \iftdir\hbox to\@pnumwidth{\yoko\hfil\rm #6\hfil}%
+      \else\hbox to\@pnumwidth{\hfil\rm #6}\fi
+    \par}
+\fi}
+
+\def\addcontentsline#1#2#3#4{\if@filesw \begingroup
+\let\label\@gobble \let\index\@gobble \let\glossary\@gobble
+\def\protect##1{\string\string\string##1\string\space
+   \space}\@temptokena{\Rensuji{\thepage}}%
+\edef\@tempa{\write \@auxout{\string\@writefile{#1}{\protect
+     \contentsline{#2}{#3}{#4}{\the\@temptokena}}}}\@tempa
+   \if@nobreak \ifvmode\nobreak\fi\fi\endgroup\fi}
+
+
+%
+% \footnote redefine
+%
+
+\long\def\@makefnmark{%
+  \hbox to 0pt{\hss\footnotesize%
+  \iftdir
+    $\hbox{\vbox to 0pt{\vss\hbox{\raise1.4zh\hbox{\yoko\@thefnmark}}}}$
+  \else
+    $^\@fnmark$
+  \fi}}%
+
+\long\def\@makefntext#1{%
+  \parindent\z@
+  \leftskip=6.5zw
+  \hskip-1.5zw
+  \hbox to 1.5zw{$\raise.25zh\hbox{\@thefnmark}$\hss}#1\par}
+
+\newbox\lpfn@box
+
+\long\def\@footnotetext#1{%
+  \setbox\lpfn@box\vbox{\unvbox\lpfn@box%
+    \footnotesize
+    \interlinepenalty\interfootnotelinepenalty 
+    \splittopskip\footnotesep
+    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+    \hsize\textwidth \@parboxrestore
+    \edef\@currentlabel{\csname p@footnote\endcsname\@thefnmark}
+    \@makefntext{\rule{\z@}{\footnotesep}\ignorespaces
+      #1\strut}\penalty\z@\relax}}
+
+\let\clearpagex=\clearpage
+\def\clearpage{%
+  \ifvoid\lpfn@box\else
+    \clearpagex\unvbox\lpfn@box\fi
+  \clearpagex}
+
+
+\def\thebibliography#1{\chapter*{Bibliography\@mkboth
+ {関 連 書 籍}{関 連 書 籍}}\list
+ {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+ \advance\leftmargin\labelsep
+ \usecounter{enumi}}
+ \def\newblock{\hskip .11em plus .33em minus .07em}
+ \sloppy
+ \sfcode`\.=1000\relax}
+\let\endthebibliography=\endlist
+ 
+
+\newif\if@restonecol
+\def\theindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{索 引}]
+ \@mkboth{索 引}{索 引}\thispagestyle{plain}\parindent\z@
+ \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+\def\@idxitem{\par\hangindent 40pt}
+\def\subitem{\par\hangindent 40pt \hspace*{20pt}}
+\def\subsubitem{\par\hangindent 40pt \hspace*{30pt}}
+\def\endtheindex{\if@restonecol\onecolumn\else\clearpage\fi}
+\def\indexspace{\par \vskip 10pt plus 5pt minus 3pt\relax}
+
+\def\footnoterule{\kern-3\p@ 
+ \hrule width .4\columnwidth 
+ \kern 2.6\p@} 
+\@addtoreset{footnote}{chapter} 
+% \long\def\@makefntext#1{\parindent 1em\noindent 
+% \hbox to 1.8em{\hss$^{\@thefnmark}$}#1}
+
+
+\setcounter{topnumber}{2}
+\def\topfraction{.7}
+\setcounter{bottomnumber}{1}
+\def\bottomfraction{.3}
+\setcounter{totalnumber}{3}
+\def\textfraction{.2}
+\def\floatpagefraction{.5}
+\setcounter{dbltopnumber}{2}
+\def\dbltopfraction{.7}
+\def\dblfloatpagefraction{.5}
+
+\long\def\@makecaption#1#2{
+  \vskip 10pt 
+  \setbox\@tempboxa\hbox{#1\hskip1\cwd #2}
+  \ifdim \wd\@tempboxa >\hsize
+    \unhbox\@tempboxa\par
+  \else
+    \hbox to\hsize{\hfil\box\@tempboxa\hfil}
+  \fi}
+
+
+\long\def\@caption#1[#2]#3{\par
+  \addcontentsline{\csname ext@#1\endcsname}{#1}%
+  % {\protect\numberline{\csname fnum@#1\endcsname}}{\ignorespaces #2}
+  {\csname fnum@#1\endcsname}{\ignorespaces #2}
+  \begingroup
+    \@parboxrestore
+    \normalsize
+    \@makecaption{\csname fnum@#1\endcsname}{\ignorespaces #3}\par
+  \endgroup}
+
+\long\def\@pcaption#1[#2]#3{%
+  \addcontentsline{\csname ext@#1\endcsname}{#1}
+    {\csname fnum@#1\endcsname}{\ignorespaces #2}%
+%
+  \setbox0=\hbox{\captionfontsetup
+    \csname fnum@\@captype\endcsname 　#3}%
+  \ifdim\wd0>\caption@width
+    \setbox\@captionbox=\vbox{\caption@setup\captionfontsetup
+      \csname fnum@\@captype\endcsname 　#3}\else
+    \setbox\@captionbox=\hbox{\caption@setup\captionfontsetup
+      \csname fnum@\@captype\endcsname 　#3}\fi
+  \edef\ipos{c}\edef\iipos{r}\edef\iiipos{l}\relax
+  \setbox\@tempboxa=\hbox to\linewidth{%
+    \if\flot@pos\ipos
+      \hss\@layoutcap[\capx@pos\capy@pos]{\@captionbox}{\@floaterbox}\hss\relax
+    \else\if\flot@pos\iipos
+      \hss\@layoutcap[\capx@pos\capy@pos]{\@captionbox}{\@floaterbox}\relax
+    \else\if\flot@pos\iiipos
+      \@layoutcap[\capx@pos\capy@pos]{\@captionbox}{\@floaterbox}\hss\relax
+  \fi\fi\fi}\par
+  \vskip.25\baselineskip
+  \box\@tempboxa}
+
+\newcounter{figure}[chapter]
+\def\thefigure{\thechapter・\Rensuji{\@arabic\c@figure}}
+\def\fps@figure{tbp}
+\def\ftype@figure{1}
+\def\ext@figure{lof}
+\def\fnum@figure{図\thefigure}
+\def\figure{\@float{figure}}
+\let\endfigure\end@float
+\@namedef{figure*}{\@dblfloat{figure}}
+\@namedef{endfigure*}{\end@dblfloat}
+\newcounter{table}[chapter]
+\def\thetable{\thechapter・\Rensuji{\@arabic\c@table}}
+\def\fps@table{tbp}
+\def\ftype@table{2}
+\def\ext@table{lot}
+\def\fnum@table{表\thetable}
+\def\table{\@float{table}}
+\let\endtable\end@float
+\@namedef{table*}{\@dblfloat{table}}
+\@namedef{endtable*}{\end@dblfloat}
+
+\def\maketitle{%
+  \begin{titlepage}
+  \if@av
+    \dimen0=8\Cvs
+    \dimen1=8\Cwd
+    \dimen2=18\Cwd
+  \else
+    \dimen0=10\Cvs
+    \dimen1=10\Cwd
+    \dimen2=15\Cwd
+  \fi
+  \let\footnotesize\small \let\footnoterule\relax \setcounter{page}{0}
+  \null \vskip\dimen0
+  \hbox{\hskip\dimen1\LARGE \@title}
+  \vskip\normalbaselineskip
+  \hbox{\kern\dimen2\large\vbox{\parindent\z@\@author}}
+  \vskip\normalbaselineskip
+  \hbox{\kern\dimen2\large \@date}
+  \@thanks
+  \end{titlepage}
+  \setcounter{footnote}{0} \let\thanks\relax
+  \gdef\@thanks{}\gdef\@author{}\gdef\@title{}\let\maketitle\relax
+}
+
+\def\thanks#1{}
+\def\@thanks{}
+\def\and{\\ }
+
+
+\mark{{}{}} 
+
+\def\ps@headings{%
+  \let\@mkboth\markboth
+  \def\@oddfoot{\small\rm\thepage\hfil}
+  \def\@evenfoot{\hbox{}\hfil\small\rm\thepage}
+  \def\@evenhead{\hbox{}\hfil\footnotesize\rm\rightmark}
+  \def\@oddhead{\footnotesize\rm\leftmark\hfil}
+  \def\chaptermark##1{%
+    \markboth{%
+      \ifnum \c@secnumdepth>\m@ne
+        \@chapapp\arabic{chapter}\@chappos\hskip1zw\relax \fi ##1}{}}
+  \def\sectionmark##1{%
+    \markright{%
+      \ifnum \c@secnumdepth>\z@
+        \fi ##1}}}
+
+\def\ps@nohead{%
+  \let\@mkboth\markboth
+  \def\@oddfoot{\small\rm\thepage\hfil}
+  \def\@evenfoot{\hbox{}\hfil\small\rm\thepage}
+  \def\@evenhead{}
+  \def\@oddhead{}
+  \def\chaptermark##1{%
+    \markboth{%
+      \ifnum \c@secnumdepth>\m@ne
+        \@chapapp\arabic{chapter}\@chappos\hskip1zw\relax \fi ##1}{}}
+  \def\sectionmark##1{%
+    \markright{%
+      \ifnum \c@secnumdepth>\z@
+        \fi ##1}}}
+
+\def\ps@myheadings{\let\@mkboth\@gobbletwo
+\def\@oddhead{\hbox{}\sl\rightmark \hfil
+\rm\thepage}\def\@oddfoot{}\def\@evenhead{\rm \thepage\hfil\sl\leftmark\hbox
+{}}\def\@evenfoot{}\def\chaptermark##1{}%
+\def\sectionmark##1{}\def\subsectionmark##1{}}
+
+
+\newif\if西暦\let\if西暦=\iffalse \def\西暦{\let\if西暦=\iftrue}
+\newcount\ye@r
+
+\def\today{%
+  \if西暦
+    \ye@r=\year
+  \else%
+    \ye@r=\year\advance\ye@r-1988 平成
+  \fi%
+  \ifnum\ye@r=1 元\else\iftdir\Rensuji{\number\ye@r}\else\number\ye@r\fi\fi%
+  \iftdir
+    年\Rensuji{\number\month}月\Rensuji{\number\day}日
+  \else
+    年\number\month 月\number\day 日
+  \fi}
+
+\@addtoreset{equation}{chapter} 
+\def\theequation{\thechapter.\arabic{equation}}
+
+
+\input ttombow.sty
+
+\psize
+
+\if@av
+  \onecolumn
+  \pagewidth=148mm
+  \pageheight=210mm
+\else
+  \twocolumn
+  \pagewidth=182mm
+  \pageheight=257mm
+\fi
+
+\ps@headings \pagenumbering{arabic}
+\raggedbottom
+\starttombow
+
+\endinput

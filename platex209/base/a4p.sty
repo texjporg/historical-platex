@@ -1,0 +1,93 @@
+% "a4p" document style option for tate gumi.
+%
+% Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
+
+\@ifundefined{@twoc}{%
+\ifydir
+  \topmargin-.3in
+  \oddsidemargin0pt
+  \evensidemargin0pt
+\else
+  \oddsidemargin0pt
+  \evensidemargin0pt
+  \headheight=12pt
+  \headsep=6mm
+  \dimen0=\headheight\advance\dimen0\headsep
+  \topmargin=32mm\advance\topmargin-1in
+  \advance\topmargin-\dimen0\relax
+  \footheight=12pt
+  \footskip=14mm
+  \columnsep=3\Cwd
+\fi
+\parindent1\Cwd
+\@ifundefined{@lands}{%
+\ifcase \@ptsize
+    % mods for 10 pt
+    \ifydir
+      \textheight43\Cvs
+      \textwidth47\Cwd
+    \else
+      \textwidth67\Cwd
+      \textheight26\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 11 pt 
+    \ifydir
+      \textheight42\Cvs
+      \textwidth43\Cwd
+    \else
+      \textwidth61\Cwd
+      \textheight26\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 12 pt
+    \ifydir
+      \textheight39\Cvs
+      \textwidth40\Cwd
+    \else
+      \textwidth57\Cwd
+      \textheight24\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\fi
+}{%
+\ifcase\@ptsize
+    % mods for 10 pt, landscap
+    \ifydir
+      \textheight27\Cvs
+      \textwidth73\Cwd
+    \else
+      \textwidth41\Cwd
+      \textheight41\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 11 pt, landscap
+    \ifydir
+      \textheight26\Cvs
+      \textwidth68\Cwd
+    \else
+      \textwidth38\Cwd
+      \textheight41\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 12 pt, landscap
+    \ifydir
+      \textheight25\Cvs
+      \textwidth61\Cwd
+    \else
+      \textwidth35\Cwd
+      \textheight38\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\fi
+}
+\ifydir
+  \advance\textheight\topskip
+\fi
+\def\@ps@{1}}{\@warning{Sorry, I igunored `a4p' style}}

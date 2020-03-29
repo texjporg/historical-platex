@@ -1,0 +1,138 @@
+\documentstyle{jarticle}
+
+%
+% パラメータ設定
+%
+
+\setlength{\voffset}{-.5in}
+\setlength{\topmargin}{-.3in}
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\parindent}{1zw}
+\setlength{\textheight}{43\baselineskip}
+\setlength{\textwidth}{42zw}
+\advance\textheight\topskip
+
+\pagestyle{empty}
+
+%
+% マクロ定義
+%
+
+\gdef\seprule{%
+  \noindent
+  \hrule width\textwidth depth0pt height1mm}
+
+\gdef\four{%
+  \vskip.5\baselineskip
+  \noindent
+  \hbox to\textwidth{\hss\vrule width4truemm depth2truemm height2truemm\hss}
+  \vskip.5\baselineskip}
+
+\nofiles
+
+%
+% サンプル
+%
+
+\begin{document}
+
+
+\begin{center}
+\huge\bf アスキー日本語\LaTeX サンプル出力
+\end{center}
+
+\seprule
+\four
+
+これは{\bf\TeX}のほんの一例です。
+ちょっと洒落た文書を作ってみたい時や、
+人とは一味違う文書を作ってみたいといった要求に
+答えてくれるだけの能力を十分に\.秘\.め\.ています。
+``人の目を引き付ける美しい文書''を作るための機能は十二分に持っています。
+フォントも欧文ならば、Roman、{\it Italic}、{\sc Small Caps}、
+{\tt Typewriter}、{\bf Bold}、{\sl Slanted}、
+{\sf Sans Serif}など多様です。
+アスキー日本語\LaTeX はたった一枚の手紙から、
+数百ページにおよぶ論文や技術文書まで、
+それらすべてを完全に
+カバーいたします。\par
+
+\bigskip
+\hrule
+\begin{center}
+\begin{minipage}<t>{12zw}\tbaselineshift=0.225zw
+同じものを縦書きにして出力してみましょう。\par
+これは{\bf\TeX}のほんの一例です。
+ちょっと洒落た文書を作ってみたい時や、
+人とは一味違う文書を作ってみたいといった要求に
+答えてくれるだけの能力を十分に\bou{秘}\bou{め}\bou{て}います。
+「人の目を引き付ける美しい文書」を
+作るための機能は十二分に持っています。
+フォントも欧文ならば、Roman、{\it Italic}、{\sc Small Caps}、
+{\tt Typewriter}、{\bf Bold}、{\sl Slanted}、
+{\sf Sans Serif}など多様です。
+アスキー日本語\LaTeX はたった一枚の手紙から、
+数百ページにおよぶ論文や技術文書まで、
+それらすべてを完全に
+カバーいたします。
+\end{minipage}
+\end{center}
+\bigskip
+\hrule
+
+\typeout{★ ダイアグラム ★}
+
+\begin{center}
+\setlength{\unitlength}{1mm}
+\begin{minipage}[b]{3.2in}
+\begin{picture}(80,55)(100,35)
+\footnotesize                  % ethernet
+\linethickness{1mm}
+\put(95,50){\line(1,0){75}}
+\put(136,52){\makebox(0,0){\it network}}
+\linethickness{0.2mm}          % tcb
+\put(107,50){\line(0,1){7}}
+\put(128,50){\line(0,1){7}}
+\put(145,50){\line(0,1){7}}
+\put(163,50){\line(0,1){7}}
+\put(136,43){\line(0,1){7}}
+\put(96,57){\framebox(22,8){X Library}}
+\put(95,65){                                    % stack 1
+        \framebox(22,16){\shortstack{Graphic\\ Function\\ Library }}}
+\put(96,81){\framebox(22,6){Application}}
+\put(119,57){                                   % stack 2
+        \framebox(15,8){X Library}}
+\put(120,65){\framebox(15,8){XTERM}}
+\put(128,73){\line(0,1){7}}
+\put(135,76){\makebox(0,0){{\it\shortstack[l]{pseudo\\ tty}}}}
+\put(120,80){\framebox(15,7){Application}}
+\put(137,57){\framebox(15,8){X Library}}
+\put(137,65){\framebox(15,8){\shortstack{Window\\Manager}}}
+\put(154,57){\framebox(19,8){X Library}}
+\put(154,65){\framebox(19,8){Text Library}}
+\put(154,73){\framebox(19,8){Text Editor}}
+\put(126,35){\framebox(20,8){X Server}}
+\end{picture}
+\end{minipage}
+\end{center}
+
+\typeout{★ 数式 ★}
+
+{\large
+\[ u(x, t) = {2\over L} \sum_1^{\infty}exp\,
+        \biggl(- {{u^2\pi^2kt}\over {L^2}}\biggr)
+                \sin {{n\pi x}\over L} \times \int_0^L
+                        f(x') \sin {{n\pi x'} \over L}\,dx' \]}
+
+\typeout{★ ロゴ ★}
+
+\begin{center}
+\large\bf アスキー      \\
+\Large\bf 日本語\LaTeX  \\
+\vskip.5\baselineskip
+\footnotesize\copyright\ Copyright 1994 by ASCII corporation
+\end{center}
+\four
+
+\end{document}

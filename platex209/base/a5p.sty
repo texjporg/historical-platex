@@ -1,0 +1,95 @@
+% "a5p" document style option for tate gumi.
+%
+% Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
+
+\@ifundefined{@twoc}{%
+\ifydir
+  \topmargin-.3in
+  \oddsidemargin0pt
+  \evensidemargin0pt
+\else
+  \oddsidemargin0pt
+  \evensidemargin0pt
+  \headheight=12pt
+  \headsep=4mm
+  \dimen0=\headheight\advance\dimen0\headsep
+  \topmargin=0mm
+  \advance\topmargin-\dimen0\relax
+  \footheight=12pt
+  \footskip=10mm
+  \columnsep=2\Cwd
+\fi
+\parindent1\Cwd
+\@ifundefined{@lands}{%
+\ifcase \@ptsize
+    % mods for 10 pt
+    \ifydir
+      \textheight26\Cvs
+      \textwidth28\Cwd
+    \else
+      \textwidth46\Cwd
+      \textheight16\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 11 pt 
+    \ifydir
+      \textheight26\Cvs
+      \textwidth25\Cwd
+    \else
+      \textwidth42\Cwd
+      \textheight16\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 12 pt
+    \ifydir
+      \textheight25\Cvs
+      \textwidth24\Cwd
+    \else
+      \textwidth38\Cwd
+      \textheight15\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\fi
+}{
+\ifydir
+  \topmargin-.6in
+\fi
+\ifcase\@ptsize
+    % mods for 10 pt
+    \ifydir
+      \textheight17\Cvs
+      \textwidth47\Cwd
+    \else
+      \textwidth27\Cwd
+      \textheight26\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 11 pt 
+    \ifydir
+      \textheight17\Cvs
+      \textwidth42\Cwd
+    \else
+      \textwidth25\Cwd
+      \textheight26\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\or % mods for 12 pt
+    \ifydir
+      \textheight16\Cvs
+      \textwidth40\Cwd
+    \else
+      \textwidth23\Cwd
+      \textheight25\Cvs
+      \advance\textheight\Cht\advance\textheight\Cdp\relax
+      \topskip\Cht\relax
+    \fi
+\fi}
+\ifydir
+  \advance\textheight\topskip
+\fi
+\def\@ps@{2}}{\@warning{Sorry, I igunored `a5p' style}}

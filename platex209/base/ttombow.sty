@@ -1,0 +1,108 @@
+% "ttombow" document style option for tate gumi.
+%
+% Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
+
+\newbox\@RH\newbox\@LH\newbox\@RB\newbox\@LB
+\newbox\@Rh\newbox\@Lh\newbox\@Rb\newbox\@Lb
+\newbox\@HC\newbox\@LC\newbox\@RC\newbox\@BC
+\newdimen\pagewidth \newdimen\pageheight 
+\newdimen\@pph \newdimen\@ppw
+
+\setbox\@RH\hbox to0pt{\yoko\vrule height10mm width.1pt
+                       \vrule width13mm height.1pt\hss}
+\setbox\@Rh\hbox to0pt{\yoko\vrule height13mm width .1pt
+                       \vrule width10mm height.1pt\hss}
+\setbox\@LH\hbox to0pt{\yoko\hss\vrule width13mm height.1pt
+                       \vrule height10mm width.1pt}
+\setbox\@Lh\hbox to0pt{\yoko\hss\vrule width10mm height.1pt
+                       \vrule height13mm width.1pt}
+\setbox\@RB\hbox to0pt{\yoko\vrule depth10mm  width.1pt
+		       \vrule width13mm depth.1pt\hss}
+\setbox\@Rb\hbox to0pt{\yoko\vrule depth13mm  width.1pt
+                       \vrule width10mm depth.1pt\hss}
+\setbox\@LB\hbox to0pt{\yoko\hss\vrule width13mm depth.1pt
+                       \vrule depth10mm width.1pt}
+\setbox\@Lb\hbox to0pt{\yoko\hss\vrule width10mm depth.1pt
+                       \vrule depth13mm width.1pt}
+\setbox\@HC\hbox {\yoko\vrule width10mm height.1pt
+                  \vrule height10mm  width .1pt
+                  \vrule width10mm height.1pt}
+\setbox\@BC\hbox {\yoko\vrule width10mm depth.1pt
+                  \vrule depth10mm width.1pt
+                  \vrule width10mm depth.1pt}
+\setbox\@LC\hbox to0pt{\yoko\hss\vrule width10mm height.05pt depth.05pt
+                       \vrule height10mm depth10mm width .1pt}
+\setbox\@RC\hbox to0pt{\yoko\vrule height10mm depth10mm width.1pt
+                       \vrule height.05pt depth.05pt width10mm\hss}
+
+\def\starttombow{%
+\@starttombow}
+
+\def\@starttombow{
+\def\@outputpage{\begingroup\catcode`\ =10 \if@specialpage 
+     \global\@specialpagefalse\@nameuse{ps@\@specialstyle}\fi
+     \if@twoside 
+       \ifodd\count\z@ \let\@thehead\@oddhead \let\@thefoot\@oddfoot
+            \iftdir\let\@themargin\oddsidemargin\else\let\@themargin\evensidemargin\fi
+          \else \let\@thehead\@evenhead
+          \let\@thefoot\@evenfoot
+			\iftdir\let\@themargin\evensidemargin\else\let\@themargin\oddsidemargin\fi
+     \fi\fi
+     \advance\@themargin 1in \@pph\topmargin \advance\@pph 1in
+     \@ppw\pagewidth \advance\@ppw 6mm
+     \iftdir\dimen0\textwidth \textwidth\textheight \textheight\dimen0\fi
+     \shipout
+     \vbox{\yoko\normalsize \baselineskip\z@ \lineskip\z@ \vss
+	   \hbox to\@ppw{\hskip3mm\copy\@LH\hfill\copy\@HC\hfill
+	   \copy\@RH\hskip3mm} \kern-10mm
+	   \hbox to\@ppw{\copy\@Lh\hfill\copy\@Rh}
+           \vbox to\pageheight{\vfill{\hbox to\@ppw{\copy\@LC\hfill
+                 \copy\@RC}}\vfill}
+	   \vskip-\pageheight 
+           \vbox to\pageheight{\vskip \@pph
+	   \hbox to\@ppw{\hfil\hbox to\pagewidth{\kern\@themargin \vbox{
+		 \setbox\@tempboxa \vbox to\headheight{
+		 	\vfil \hbox to\textwidth{\@thehead}}
+                 \dp\@tempboxa\z@
+                 \box\@tempboxa
+                 \vskip \headsep
+                 \box\@outputbox
+                 \baselineskip\footskip
+                 \hbox to\textwidth{\@thefoot}
+		 }\hfil}\hfil}\vfil}
+	   \hbox to\@ppw{\copy\@Lb\hfill\copy\@Rb} \kern-10mm
+	   \hbox to\@ppw{\hskip3mm\copy\@LB\hfill
+	        \copy\@BC\hfill\copy\@RB\hskip3mm}
+	   }
+           \endgroup\stepcounter{page}\let\firstmark\botmark}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\resettombow{
+\def\@outputpage{\begingroup\catcode`\ =10 \if@specialpage
+     \global\@specialpagefalse\@nameuse{ps@\@specialstyle}\fi
+     \if@twoside 
+       \ifodd\count\z@ \let\@thehead\@oddhead \let\@thefoot\@oddfoot
+            \let\@themargin\oddsidemargin
+          \else \let\@thehead\@evenhead
+          \let\@thefoot\@evenfoot \let\@themargin\evensidemargin
+     \fi\fi
+     \iftdir\dimen0\textwidth \textwidth\textheight \textheight\dimen0\fi
+     \shipout
+     \vbox{\yoko\normalsize \baselineskip\z@ \lineskip\z@
+           \let\par\@@par
+           \vskip \topmargin \moveright\@themargin
+           \vbox{\setbox\@tempboxa
+                   \vbox to\headheight{\vfil
+				\hbox to\textwidth
+                               {\let\label\@gobble \let\index\@gobble
+                                         \@thehead}}
+                 \dp\@tempboxa\z@
+                 \box\@tempboxa
+                 \vskip \headsep
+                 \vbox to\textheight{\box\@outputbox\vss}
+                 \baselineskip\footskip
+                 \hbox to\textwidth{\let\label\@gobble 
+                           \let\index\@gobble
+                           \@thefoot}}}
+           \endgroup\stepcounter{page}\let\firstmark\botmark}}

@@ -1,0 +1,27 @@
+% "shift" document style option for tate gumi.
+%
+% Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
+%
+
+%
+%  \shiftwidth{紙の幅}
+%
+%  出力を右(から1in)に揃える。
+%
+%  このファイルをスタイルオプションに指定して、プリアンブルに書く
+%
+
+\newdimen\shift@pw
+
+\def\shiftwidth#1{%
+  \shift@pw=#1
+  \ifydir
+    \advance\shift@pw-\textwidth
+  \else
+    \advance\shift@pw-\textheight
+  \fi
+  \advance\shift@pw\oddsidemargin
+  \advance\shift@pw-2in
+  \advance\oddsidemargin\shift@pw
+  \advance\evensidemargin\shift@pw
+}

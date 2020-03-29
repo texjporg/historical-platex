@@ -1,0 +1,292 @@
+% "nbksize"
+%
+% Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
+
+\lineskip 1pt \normallineskip 1pt
+\def\baselinestretch{1}
+
+\def\@normalsize{\@setsize\normalsize{17pt}\xpt\@xpt
+\abovedisplayskip 10pt plus2pt minus5pt\belowdisplayskip \abovedisplayskip
+\abovedisplayshortskip \z@ plus3pt\belowdisplayshortskip 6pt plus3pt
+minus3pt\let\@listi\@listI} 
+\def\small{\@setsize\small{11pt}\ixpt\@ixpt
+\abovedisplayskip 8.5pt plus 3pt minus 4pt\belowdisplayskip \abovedisplayskip
+\abovedisplayshortskip \z@ plus2pt\belowdisplayshortskip 4pt plus2pt minus 2pt
+\def\@listi{\leftmargin\leftmargini \topsep 4pt plus 2pt minus 2pt\parsep 2pt
+plus 1pt minus 1pt
+\itemsep \parsep}}
+\def\footnotesize{\@setsize\footnotesize{11pt}\viiipt\@viiipt
+\abovedisplayskip 6pt plus 2pt minus 4pt\belowdisplayskip \abovedisplayskip
+\abovedisplayshortskip \z@ plus 1pt\belowdisplayshortskip 3pt plus 1pt minus
+2pt
+\def\@listi{\leftmargin\leftmargini \topsep 3pt plus 1pt minus 1pt\parsep 2pt
+plus 1pt minus 1pt
+\itemsep \parsep}}
+\def\scriptsize{\@setsize\scriptsize{8pt}\viipt\@viipt}
+\def\tiny{\@setsize\tiny{6pt}\vpt\@vpt}
+\def\large{\@setsize\large{17pt}\xiipt\@xiipt}
+\def\Large{\@setsize\Large{21pt}\xivpt\@xivpt}
+\def\LARGE{\@setsize\LARGE{25pt}\xviipt\@xviipt}
+\def\huge{\@setsize\huge{28pt}\xxpt\@xxpt}
+\def\Huge{\@setsize\Huge{33pt}\xxvpt\@xxvpt}
+\normalsize 
+
+\oddsidemargin .5in \evensidemargin 1.5in 
+\marginparwidth .75in \marginparsep 7pt 
+ \topmargin .75in \headheight 12pt \headsep .25in \footheight 12pt \footskip
+.35in 
+
+\textheight 554pt \textwidth 4.3in \columnsep 10pt \columnseprule 0pt 
+
+\footnotesep 6.65pt 
+\skip\footins 9pt plus 4pt minus 2pt 
+\floatsep 12pt plus 2pt minus 2pt \textfloatsep 20pt plus 2pt minus 4pt
+\intextsep 12pt plus 2pt minus 2pt \@maxsep 20pt \dblfloatsep 12pt plus 2pt
+minus 2pt \dbltextfloatsep 20pt plus 2pt minus 4pt \@dblmaxsep 20pt 
+\@fptop 0pt plus 1fil \@fpsep 8pt plus 2fil \@fpbot 0pt plus 1fil 
+\@dblfptop 0pt plus 1fil \@dblfpsep 8pt plus 2fil \@dblfpbot 0pt plus 1fil
+\marginparpush 5pt 
+
+\parskip 0pt plus 1pt \parindent 15pt \partopsep 2pt plus 1pt minus 1pt 
+\@lowpenalty 51 \@medpenalty 151 \@highpenalty 301 
+\@beginparpenalty -\@lowpenalty \@endparpenalty -\@lowpenalty \@itempenalty
+-\@lowpenalty 
+
+
+%
+% \chapter,\section,...
+%
+
+\newdimen\gyo@ht
+\newdimen\gyo@dp
+
+\def\gyo#1{\par%
+  \bgroup
+  \global\gyo@ht\Cht\global\gyo@dp\Cdp\relax
+  \baselineskip=#1
+  \advance\baselineskip\gyo@dp
+  \dimen0\baselineskip
+  \advance\dimen0 by -\normalbaselineskip
+  \advance\dimen0\gyo@ht
+  \dimen1\normalbaselineskip
+  \advance\dimen1 by -\gyo@ht
+  \vbox to \dimen0 \bgroup%
+    \baselineskip=\normalbaselineskip
+    \boxmaxdepth=0pt\lineskiplimit=0pt\lineskip=0pt
+    \prevdepth=\dimen1
+    \futurelet\next\@gyo}
+
+\def\@gyo{%
+  \ifcat\bgroup\noexpand\next \let\next\@@gyo\else\let\next\@@@gyo\fi\next}
+\def\@@gyo{\bgroup\aftergroup\@gyoend\let\next}
+\def\@@@gyo#1{#1\@gyoend}
+\def\@gyoend{\par\kern0pt\egroup\egroup\prevdepth=\gyo@dp}
+
+\def\chapter{%
+  \cleardoublepage \thispagestyle{nohead} \global\@topnum\z@
+  \@afterindenttrue \secdef\@chapter\@schapter} 
+
+\def\@chapter[#1]#2{%
+  \ifnum \c@secnumdepth >\m@ne
+    \refstepcounter{chapter}
+    \typeout{\@chapapp\space\t@thechapter\space\@chappos}
+    \addcontentsline{toc}{chapter}{%
+      \@chapapp\thechapter\@chappos}{#1}
+  \else
+    \addcontentsline{toc}{chapter}{}{#1}
+  \fi
+  \chaptermark{#1}
+  \addtocontents{lof}{\protect\addvspace{10pt}}
+  \addtocontents{lot}{\protect\addvspace{10pt}}
+  \@makechapterhead{#2}
+  \if@twocolumn\else
+    \@afterheading
+  \fi} 
+
+\def\@schapter#1{%
+  \@makeschapterhead{#1} 
+  \if@twocolumn\else
+    \@afterheading
+  \fi}
+
+\def\@makechapterhead#1{%
+  \gyo{8\normalbaselineskip}{%
+    \parindent\z@
+    \vss
+    \if@av
+      \leftskip3zw
+      \setbox0=\hbox{\Huge\gt\bf\@chapapp\thechapter\@chappos\hskip1zw}
+      \advance\leftskip\wd0\hskip-\wd0\relax
+      {\Huge\gt\bf\global\dimen0=14zw}%
+      \rightskip\linewidth\advance\rightskip-\dimen0\advance\rightskip-\leftskip
+      \box0\Huge\gt\bf #1
+    \else
+      \leftskip1zw
+      \setbox0=\hbox{\huge\gt\bf\@chapapp\thechapter\@chappos\hskip1zw}
+      \advance\leftskip\wd0\hskip-\wd0\relax
+      {\huge\gt\bf\global\dimen0=8zw}%
+      \rightskip\linewidth\advance\rightskip-\dimen0\advance\rightskip-\leftskip
+      \box0\huge\gt\bf #1
+    \fi
+    \vss}}
+
+\def\@makeschapterhead#1{%
+  \gyo{8\normalbaselineskip}{%
+    \parindent\z@
+    \vss
+    \if@av
+      \hskip3zw
+      \Huge\gt\bf #1
+    \else
+      \huge\gt\bf #1
+    \fi
+    \vss}}
+
+\def\section{%
+  \@afterindenttrue
+  \secdef\@section\@ssection}
+
+\def\@section[#1]#2{%
+  \ifnum \c@secnumdepth >\m@ne
+    \refstepcounter{section}
+    \addcontentsline{toc}{section}{}{#1}
+  \else
+    \addcontentsline{toc}{section}{}{#1}
+  \fi
+  \sectionmark{#1}
+  \addtocontents{lof}{\protect\addvspace{10pt}}
+  \addtocontents{lot}{\protect\addvspace{10pt}}
+  \@makesectionhead{#2}
+  \if@twocolumn\else
+    \@afterheading
+  \fi} 
+
+\def\@ssection#1{%
+  \@makessectionhead{#1}
+  \if@twocolumn\else
+    \@afterheading
+  \fi}
+
+\def\@makesectionhead#1{%
+  \vskip2\normalbaselineskip
+  \gyo{2\normalbaselineskip}{%
+    \parindent\z@
+    \leftskip1zw
+    \Large\gt\bf #1
+    \vss}\nobreak}
+
+\let\@makessectionhead=\@makesectionhead
+
+\def\subsection{%
+  \@afterindenttrue
+  \secdef\@subsection\@subssection}
+
+\def\@subsection[#1]#2{%
+  \ifnum \c@secnumdepth >\m@ne
+    \refstepcounter{subsection}
+    \addcontentsline{toc}{subsection}{}{#1}
+  \else
+    \addcontentsline{toc}{subsection}{}{#1}
+  \fi
+  \addtocontents{lof}{\protect\addvspace{10pt}}
+  \addtocontents{lot}{\protect\addvspace{10pt}}
+  \@makesubsectionhead{#2}
+  \if@twocolumn\else
+    \@afterheading
+  \fi} 
+
+\def\@subssection#1{%
+  \@makesubssectionhead{#1}
+  \if@twocolumn\else
+    \@afterheading
+  \fi}
+
+\def\@makesubsectionhead#1{%
+  \gyo{2\normalbaselineskip}{%
+    \parindent\z@
+    \leftskip1zw
+    \vss
+    \large\gt\bf #1
+    \vss}\nobreak}
+
+\let\@makesubssectionhead=\@makesubsectionhead
+
+\def\subsubsection{%
+  \@afterindenttrue
+  \secdef\@subsubsection\@subsubssection}
+
+\def\@subsubsection[#1]#2{%
+  \ifnum \c@secnumdepth >\m@ne
+    \refstepcounter{subsubsection}
+    \addcontentsline{toc}{subsubsection}{}{#1}
+  \else
+    \addcontentsline{toc}{subsubsection}{}{#1}
+  \fi
+  \@makesubsubsectionhead{#2}
+  \if@twocolumn\else
+    \@afterheading
+  \fi} 
+
+\def\@subsubssection#1{%
+  \@makesubsubssectionhead{#1}
+  \if@twocolumn\else
+    \@afterheading
+  \fi}
+
+\def\@makesubsubsectionhead#1{%
+  \gyo{2\normalbaselineskip}{%
+    \parindent\z@
+    \leftskip1zw
+    \vskip\normalbaselineskip
+    \normalsize\gt\bf #1
+    \vss}\nobreak}
+
+\let\@makesubsubssectionhead=\@makesubsubsectionhead
+
+\def\paragraph{\@startsection
+ {paragraph}{4}{\z@}{3.25ex plus 1ex minus .2ex}{-1em}{\normalsize\bf}}
+\def\subparagraph{\@startsection
+ {subparagraph}{4}{\parindent}{3.25ex plus 1ex minus 
+ .2ex}{-1em}{\normalsize\bf}}
+
+\def\chaptermark#1{}
+
+\setcounter{secnumdepth}{2}
+
+\def\appendix{\par
+ \setcounter{chapter}{0}
+ \setcounter{section}{0}
+ \def\@chapapp{…’œø}
+ \def\@chappos{}
+ \def\t@thechapter{\Alph{chapter}}
+ \def\thechapter{\Rensuji{\Alph{chapter}}}}
+
+
+\leftmargini 25pt
+\leftmarginii 22pt \leftmarginiii 18.7pt \leftmarginiv 17pt \leftmarginv 10pt
+\leftmarginvi 10pt
+\leftmargin\leftmargini
+\labelwidth\leftmargini\advance\labelwidth-\labelsep
+\labelsep 5pt
+\def\@listI{\leftmargin\leftmargini \parsep 4pt plus 2pt minus 1pt\topsep 8pt
+plus 2pt minus 4pt\itemsep 4pt plus 2pt minus 1pt}
+\let\@listi\@listI
+\@listi 
+\def\@listii{\leftmargin\leftmarginii
+ \labelwidth\leftmarginii\advance\labelwidth-\labelsep
+ \topsep 4pt plus 2pt minus 1pt
+ \parsep 2pt plus 1pt minus 1pt
+ \itemsep \parsep}
+\def\@listiii{\leftmargin\leftmarginiii
+ \labelwidth\leftmarginiii\advance\labelwidth-\labelsep
+ \topsep 2pt plus 1pt minus 1pt 
+ \parsep \z@ \partopsep 1pt plus 0pt minus 1pt
+ \itemsep \topsep}
+\def\@listiv{\leftmargin\leftmarginiv
+ \labelwidth\leftmarginiv\advance\labelwidth-\labelsep}
+\def\@listv{\leftmargin\leftmarginv
+ \labelwidth\leftmarginv\advance\labelwidth-\labelsep}
+\def\@listvi{\leftmargin\leftmarginvi
+ \labelwidth\leftmarginvi\advance\labelwidth-\labelsep}
+
+\endinput
