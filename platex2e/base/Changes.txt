@@ -1,3 +1,8 @@
+<2004/01/04>
+  * plfonts.dtx: \fontfamily中のフラグを修正。
+      （ありがとうございます、角藤さん）
+  * plvers.dtx: バージョン番号更新(platex<2005/01/04>)
+----------------
 <2004/08/10>
   * plfonts.dtx: verbatim環境で余計な前後空きが発生しないように \fontfamily
       を修正。

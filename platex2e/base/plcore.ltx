@@ -41,7 +41,7 @@
 %%   Right brace   \}     Tilde         \~}
 %%
 \def\pfmtname{pLaTeX2e}
-\def\pfmtversion{2004/08/10}
+\def\pfmtversion{2005/01/04}
 %% File: plfonts.dtx
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -479,8 +479,6 @@
   \inlist@\expandafter\tmp@item\expandafter{\kenc@list}%
   \ifin@ \kanjiencoding{#1}\else\romanencoding{#1}\fi}
 \def\@@kenc@update{%
-  \expandafter\let\csname\ck@encoding -cmd\endcsname\@changed@kcmd
-  \expandafter\let\csname\k@encoding-cmd\endcsname\@current@cmd
   \default@KT
   \csname T@\k@encoding\endcsname
   \csname D@\k@encoding\endcsname
@@ -543,7 +541,7 @@
         \reserved@a{\@tempswztrue}{}\relax}%
       \kenc@list
       \message{)}%
-      \if@tempswa
+      \if@tempswz
         \edef\k@family{#1}%
       \else
         \@notkfamtrue
@@ -564,7 +562,7 @@
         \reserved@a{\@tempswztrue}{}\relax}%
       \fenc@list
       \message{)}%
-      \if@tempswa
+      \if@tempswz
         \edef\f@family{#1}%
       \else
         \@notffamtrue
@@ -603,7 +601,7 @@
     \romanseries{\seriesdefault}%
     \romanshape{\shapedefault}%
     \selectfont\ignorespaces}
-^^I\adjustbaseline
+\adjustbaseline
 \let\reset@font\normalfont
 \DeclareRobustCommand\mcfamily
         {\not@math@alphabet\mcfamily\mathmc
@@ -740,7 +738,7 @@
        \vskip \@tempdima
        \@textbottom
        \ifvoid\footins\else % for pLaTeX
-^^I^^I \vskip\skip\footins
+ \vskip\skip\footins
          \color@begingroup
             \normalcolor
             \footnoterule
@@ -755,7 +753,7 @@
          \unvbox\@outputbox
          \@textbottom
          \ifvoid\footins\else % for pLaTeX
-^^I^^I   \vskip\skip\footins
+   \vskip\skip\footins
            \color@begingroup
               \normalcolor
               \footnoterule

@@ -1,14 +1,14 @@
 % \iffalse meta-comment
 %% File: plfonts.dtx
 %
-%  Copyright 1994-2004 ASCII Corporation.
+%  Copyright 1994-2005 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
 %
-% \CheckSum{1500}
+% \CheckSum{1584}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -54,6 +54,7 @@
 %    以外では設定されないのを修正}
 % \changes{v1.3m}{2004/06/14}{\cs{fontfamily}コマンド内部フラグ変更}
 % \changes{v1.3n}{2004/08/10}{和文エンコーディングの切り替えを有効化}
+% \changes{v1.3o}{2005/01/04}{\cs{fontfamily}中のフラグ修正}
 % \fi
 %
 % \iffalse
@@ -949,8 +950,9 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% 和文の縦横のエンコーディングはそれぞれ対にして扱うため、セット化します
 %
+% \begin{macro}{\KanjiEncodingPair}
+% 和文の縦横のエンコーディングはそれぞれ対にして扱うため、セット化します
 % \changes{v1.3n}{2004/08/10}{和文エンコーディングの切り替えを有効化}
 %    \begin{macrocode}
 \def\KanjiEncodingPair#1#2{\@namedef{t@enc@#1}{#2}\@namedef{y@enc@#2}{#1}}
@@ -1233,6 +1235,7 @@
 %
 % \changes{v1.2}{1995/11/21}{代用フォントが使われないバグを修正}
 % \changes{v1.3m}{2004/06/14}{\cs{fontfamily}コマンド内部フラグ変更}
+% \changes{v1.3o}{2005/01/04}{\cs{fontfamily}中のフラグ修正}
 %    \begin{macrocode}
 \DeclareRobustCommand\fontfamily[1]{%
   \edef\tmp@item{{#1}}%
@@ -1287,7 +1290,7 @@
         \reserved@a{\@tempswztrue}{}\relax}%
       \kenc@list
       \message{)}%
-      \if@tempswa
+      \if@tempswz
         \edef\k@family{#1}%
 %    \end{macrocode}
 % つぎの部分が実行されるのは、和文ファミリとして認識できなかった場合です。
@@ -1322,7 +1325,7 @@
         \reserved@a{\@tempswztrue}{}\relax}%
       \fenc@list
       \message{)}%
-      \if@tempswa
+      \if@tempswz
         \edef\f@family{#1}%
       \else
         \@notffamtrue
