@@ -1,14 +1,14 @@
 % \iffalse meta-comment
 %% File: jclasses.dtx
 %
-%  Copyright 1995,1996,1997,1998 ASCII Corporation.
+%  Copyright 1995-1999 ASCII Corporation.
 %
 %  This file is part of the pLaTeX2e system.
 %  -----------------------------------------
 %
 % \fi
 %
-% \CheckSum{4399}
+% \CheckSum{4401}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -60,6 +60,9 @@
 % \changes{v1.1n}{1998/10/13}{mentukeオプションがエラーになっていたのを修正}
 % \changes{v1.1o}{1998/12/24}{secnumdepthカウンタを$-1$以下にすると、
 %   見出し文字列も消えてしまうのを修正}
+% \changes{v1.1p}{1999/1/6}{\cs{oddsidemargin}のポイントへの変換を後ろに}
+% \changes{v1.1q}{1999/05/18}{縦組時のみに設定するようにした}
+% \changes{v1.1r}{1999/08/09}{トップマージンの計算式を修正}
 % \fi
 %
 % \iffalse
@@ -90,9 +93,9 @@
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
 %<*article|report|book|driver>
-  [1998/12/24 v1.1o Standard pLaTeX class]
+  [1999/05/18 v1.1q Standard pLaTeX class]
 %</article|report|book|driver>
-%<10pt|11pt|12pt>  [1998/12/24 v1.1o Standard pLaTeX file (size option)]
+%<10pt|11pt|12pt>  [1999/05/18 v1.1q Standard pLaTeX file (size option)]
 %<*driver>
 \documentclass{jltxdoc}
 \GetFileInfo{jclasses.dtx}
@@ -1123,7 +1126,7 @@
 % |\topmargin|は、``印字可能領域''---用紙の上端から１インチ内側---%
 % の上端からヘッダ部分の上端までの距離です。
 %
-% 互換モードの場合：
+% 2.09互換モードの場合：
 %    \begin{macrocode}
 \if@compatibility
 %<*yoko>
@@ -1174,11 +1177,12 @@
   \else
 %<yoko>    \addtolength\topmargin{-2.0in}
 %<tate>    \addtolength\topmargin{-2.8in}
+  \fi
 %    \end{macrocode}
 % \changes{v1.1d}{1997/02/05}{\cs{tompargin}を半分にするのはアキ領域の計算後}
+% \changes{v1.1r}{1999/08/09}{\cs{if@stysize}フラグに限らず半分にする}
 %    \begin{macrocode}
   \addtolength\topmargin{-.5\topmargin}
-  \fi
 \fi
 \@settopoint\topmargin
 %    \end{macrocode}
@@ -1297,9 +1301,8 @@
     \setlength\oddsidemargin{.5\@tempdima}
   \fi
   \addtolength\oddsidemargin{-1in}
-  \@settopoint\oddsidemargin
 %    \end{macrocode}
-%
+% \changes{v1.1p}{1999/1/6}{\cs{oddsidemargin}のポイントへの変換を後ろに}
 % |\evensidemargin|を計算します。
 %    \begin{macrocode}
   \setlength\evensidemargin{\paperwidth}
@@ -1307,6 +1310,7 @@
 %<tate>  \addtolength\evensidemargin{-\textheight}
 %<yoko>  \addtolength\evensidemargin{-\textwidth}
   \addtolength\evensidemargin{-\oddsidemargin}
+  \@settopoint\oddsidemargin % 1999.1.6
   \@settopoint\evensidemargin
 %    \end{macrocode}
 % |\marginparwidth|を計算します。
@@ -2929,15 +2933,17 @@
 % \end{macro}
 %
 % \begin{environment}{enumerate}
+% \changes{v1.1q}{1999/05/18}{縦組時のみに設定するようにした}
 % トップレベルで使われたときに、最初と最後に半行分のスペースを開けるように、
 % 変更します。この環境は、\file{ltlists.dtx}で定義されています。
 %
 %    \begin{macrocode}
 \renewenvironment{enumerate}
-  {\ifnum \@enumdepth >3\relax\@toodeep\else
+  {\ifnum \@enumdepth >\thr@@\@toodeep\else
    \advance\@enumdepth\@ne
    \edef\@enumctr{enum\romannumeral\the\@enumdepth}%
    \list{\csname label\@enumctr\endcsname}{%
+      \iftdir
          \ifnum \@listdepth=\@ne \topsep.5\normalbaselineskip
            \else\topsep\z@\fi
          \parskip\z@ \itemsep\z@ \parsep\z@
@@ -2945,6 +2951,7 @@
          \ifnum \@enumdepth=\@ne \leftmargin1zw\relax
            \else\leftmargin\leftskip\fi
          \advance\leftmargin 1zw
+      \fi
          \usecounter{\@enumctr}%
          \def\makelabel##1{\hss\llap{##1}}}%
    \fi}{\endlist}
@@ -2984,7 +2991,7 @@
 % 変更します。この環境は、\file{ltlists.dtx}で定義されています。
 %    \begin{macrocode}
 \renewenvironment{itemize}
-  {\ifnum \@itemdepth >3\relax\@toodeep\else
+  {\ifnum \@itemdepth >\thr@@\@toodeep\else
    \advance\@itemdepth\@ne
    \edef\@itemitem{labelitem\romannumeral\the\@itemdepth}%
    \expandafter

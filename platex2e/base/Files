@@ -4,7 +4,6 @@ Files
 README.txt
 README2.txt
 ascmac.sty
-docstrip.cfg
 hyphen.cfg
 jclasses.dtx
 jltxdoc.dtx
@@ -24,6 +23,7 @@ plnews01.tex
 plnews02.tex
 plnews03.tex
 plnews04.tex
+plnews05.tex
 plpatch.ltx
 plvers.dtx
 tascmac.sty

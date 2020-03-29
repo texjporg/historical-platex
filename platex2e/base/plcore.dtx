@@ -1,14 +1,14 @@
 % \iffalse meta-comment
 %% File: plcore.dtx
 %
-%  Copyright 1994,1995,1996,1997 ASCII Corporation.
+%  Copyright 1994-1999 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
 %
-% \CheckSum{857}
+% \CheckSum{858}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -195,6 +195,8 @@
 %
 % なお、|\newline|マクロは\file{ltspaces.dtx}で定義されています。
 %
+% \changes{v1.1j}{1999/04/05}{オプションを付けた場合に、余計な空白
+%    が入ってしまうのを修正。ありがとう、鈴木隆志＠京都大学さん。}
 % \changes{v1.1h}{1997/06/25}{\LaTeX\ の改行マクロの変更に対応。
 %    ありがとう、奥村さん。}
 % \LaTeX\ \texttt{!<1996/12/01!>}で改行マクロが変更され、|\\|が
@@ -207,6 +209,7 @@
     \@nolnerr
   \else 
     \unskip \reserved@e {\reserved@f#1}\nobreak \hfil \break \null
+    \ignorespaces
   \fi}
 %    \end{macrocode}
 %
