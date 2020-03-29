@@ -174,19 +174,20 @@ etc.
 \generateFile{plcore.ltx}{t}{%
    \from{plvers.dtx}{plcore}
    \from{plfonts.dtx}{plcore}
-   \from{plcmds.dtx}{plcore}
-   \from{ploutput.dtx}{plcore}
+   \from{plcore.dtx}{plcore}
    \from{plvers.dtx}{plfinal}
 }
 
 \generateFile{kinsoku.tex}{t}{\from{kinsoku.dtx}{plcore}}
-
 \generateFile{pldefs.ltx}{t}{\from{plfonts.dtx}{pldefs,xpt}}
-\generateFile{ptrace.sty}{t}{\from{plfonts.dtx}{trace}}
+
 \generateFile{JY1mc.fd}{t}{\from{plfonts.dtx}{JY1mc}}
 \generateFile{JY1gt.fd}{t}{\from{plfonts.dtx}{JY1gt}}
 \generateFile{JT1mc.fd}{t}{\from{plfonts.dtx}{JT1mc}}
 \generateFile{JT1gt.fd}{t}{\from{plfonts.dtx}{JT1gt}}
+
+\generateFile{plext.sty}{t}{\from{plext.dtx}{plcore}}
+\generateFile{ptrace.sty}{t}{\from{plfonts.dtx}{trace}}
 
 \Lbatchinput{jclasses.ins}
 

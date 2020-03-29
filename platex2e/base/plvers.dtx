@@ -5,7 +5,7 @@
 %<*driver>
 % \fi
 \ProvidesFile{plvers.dtx}
-             [1995/08/30 v1.0b pLaTeX Kernel (Version Info)]
+             [1996/03/05 v1.0b pLaTeX Kernel (Version Info)]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plvers.dtx}
@@ -30,28 +30,32 @@
 %
 % \StopEventually{}
 %
-% \changes{v1.0a}{1995/08/30}{LaTeX <1995/06/01>用に修正}
 % \changes{v1.0}{1995/05/16}{pLaTeX用に\file{ltvers.dtx}を修正}
+% \changes{v1.0a}{1995/08/30}{LaTeX `1995/06/01'版用に修正}
+% \changes{v1.0b}{1996/01/31}{LaTeX `1995/12/01'版用に修正}
 %
 % このバージョンのp\LaTeX{}は、次のバージョンの\LaTeX{}をもとにしています。
 %    \begin{macrocode}
 %<*2ekernel>
 \def\fmtname{LaTeX2e}
-\def\fmtversion{1995/06/01}
+\def\fmtversion{1995/12/01}
 %</2ekernel>
 %    \end{macrocode}
 %
 % p\LaTeX{}のフォーマットファイル名とバージョンです。
+%
 %    \begin{macrocode}
 %<*plcore>
 \def\pfmtname{pLaTeX2e}
-\def\pfmtversion{1995/09/01}
+\def\pfmtversion{1996/03/05}
 %</plcore>
 %    \end{macrocode}
 %
 %
+% \subsection{パッチファイルのロード}
+%
 % 次の部分は、p\LaTeX{}のパッチファイルをロードするためのコードです。
-% とりあえずバグを修正するためのパッチを配布するかもしれません。
+% バグを修正するためのパッチを配布するかもしれません。
 % \file{ltfinal.dtx}の最後の部分の流用です。
 %    \begin{macrocode}
 %<*plfinal>

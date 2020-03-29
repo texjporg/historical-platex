@@ -1,11 +1,12 @@
 % \iffalse meta-comment
 %%% $Id: pl209.dtx,v 1.9 1995/04/26 13:30:54 ken-na Exp ken-na $
 %
-% Copyright 1993-1995 the LaTeX3 project and any individual authors
-% listed elsewhere in this file.  All rights reserved.
+% Copyright 1993 1994 1995 the LaTeX3 project and any individual
+% authors listed elsewhere in this file.
 % 
-% For further copyright information see the file legal.txt, and any
-% other copyright notices in this file.
+% For further copyright information and conditions for modification
+% and distribution, see the file legal.txt, and any other copyright
+% notices in this file.
 % 
 % This file is part of the LaTeX2e system.
 % ----------------------------------------
@@ -13,8 +14,8 @@
 %   but WITHOUT ANY WARRANTY; without even the implied warranty of
 %   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 % 
-%   For error reports concerning UNCHANGED versions of this file no more
-%   than one year old, see bugs.txt.
+%   For error reports concerning UNCHANGED versions of this file no
+%   more than one year old, see bugs.txt.
 % 
 %   Please do not request updates from us directly.  Primary
 %   distribution is through the CTAN archives.
@@ -24,15 +25,15 @@
 % 
 % You are NOT ALLOWED to distribute this file alone.
 % 
-% You are allowed to distribute this file under the condition that it is
-% distributed together with all the files listed in manifest.txt.
+% You are allowed to distribute this file under the condition that it
+% is distributed together with all the files listed in manifest.txt.
 % 
 % If you receive only some of these files from someone, complain!
 % 
-% Permission is granted to copy this file to another file with a clearly
-% different name and to customize the declarations in that copy to serve
-% the needs of your installation, provided that you comply with
-% the conditions in the file legal.txt.
+% Permission is granted to copy this file to another file with a
+% clearly different name and to customize the declarations in that
+% copy to serve the needs of your installation, provided that you
+% comply with the conditions in the file legal.txt.
 % 
 % However, NO PERMISSION is granted to produce or to distribute a
 % modified version of this file under its original name.
@@ -44,9 +45,9 @@
 %
 % \title{Compatibility mode for \LaTeXe{} emulating \LaTeX~2.09}
 % \author{Alan Jeffrey and Frank Mittelbach}
-% \date{1995/06/30}
+% \date{1995/12/08}
 %
-% \CheckSum{685}
+% \CheckSum{798}
 %
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -148,10 +149,17 @@
 % \changes{v0.37}{1994/10/20}{Corrected a typo.}
 % \changes{v0.38}{1994/11/16}{Removed \cs{LaTeXe} from this list}
 % \changes{v0.39}{1994/11/28}{Added old behaviour of floats and space.}
-% \changes{v0.39p}{1995/03/28}{1st Japanese edition}
+% \changes{v0.39-p0.1}{1995/03/28}{1st Japanese edition}
 % \changes{v0.40}{1995/05/05}{Make \cs{verb} use \cs{tt} font in
 %                             math mode.}
-% \changes{v0.46p}{1995/08/30}{2nd Japanese edition}
+% \changes{v0.46-p0.2}{1995/08/30}{2nd Japanese edition}
+% \changes{v0.46-p0.3}{1995/11/21}{Added footnote related command for
+%                                  p\cs{LaTeXe}}
+% \changes{v0.49}{1995/10/26}{Added code for fleqn.sty, leqno.sty,
+%                             openbib.sty.}
+% \changes{v0.50}{1995/12/08}{Switched of \cs{@inmathwarn}.}
+% \changes{v0.50-p0.1}{1995/12/25}{Based on v0.50}
+%
 %
 % \maketitle
 %
@@ -180,7 +188,11 @@
 %   report   & produce |report.sty| \\
 %   slides   & produce |slides.sty| \\
 %   letter   & produce |letter.sty| \\
-%   bezier   & produce |bezier.sty|
+%   bezier   & produce |bezier.sty| \\
+%   fleqn    & produce |fleqn.sty| \\
+%   leqno    & produce |leqno.sty| \\
+%   openbib  & produce |openbib.sty| \\
+%   platex   & produce for |pl209.def| \\
 % \end{tabular}
 % \end{center}
 % Between the |head| and |tail| of |latex209.def|, the code for
@@ -224,8 +236,8 @@
 %    \end{macrocode}
 % Describe the file.
 %    \begin{macrocode}
-%<!platex>\ProvidesFile{latex209.def}[1995/06/30 v0.46 Standard LaTeX file]
-%<platex>\ProvidesFile{platex209.def}[1995/03/28 v0.46-p Standard pLaTeX file]
+%<!platex>\ProvidesFile{latex209.def}[1995/12/08 v0.50 Standard LaTeX file]
+%<platex>\ProvidesFile{platex209.def}[1995/12/25 v0.50-p0.1 Standard pLaTeX file]
 %    \end{macrocode}
 % \changes{v0.24}{1994/05/14}{Removed date.}
 % \changes{v0.40}{1995/03/21}
@@ -556,13 +568,37 @@
 % \changes{v0.43}{1995/05/12}
 %         {macro added}
 % \LaTeXe\ version has |\nobreak| to allow hyphenation.
+% \changes{v0.46-p0.3}{1995/11/21}
+% p\LaTeXe\ version adjust position of footnotemark.
 %    \begin{macrocode}
+%<*!platex>
 \def\@footnotemark{%
   \leavevmode
   \ifhmode\edef\@x@sf{\the\spacefactor}\fi
   \@makefnmark
   \ifhmode\spacefactor\@x@sf\fi
   \relax}
+%</!platex>
+%<*platex>
+\def\@footnotemark{\leavevmode
+  \ifhmode\edef\@x@sf{\the\spacefactor}\fi
+  \ifydir\@makefnmark
+  \else\hbox to\z@{\hskip-.25zw\raise2\cht\@makefnmark\hss}\fi
+  \ifhmode\spacefactor\@x@sf\fi\relax}
+%</platex>
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@textsuperscript}
+% \changes{v0.48}{1995/07/07}
+%         {macro added for latex/1722}
+% Fudge this command to remove the text font command which
+% is always the first thing in the argument. This is needed
+% as in compatibility mode footnotes are processed in math mode,
+% but the standard classes call |\@textsuperscript| in the definition
+% of |\thanks|.
+%    \begin{macrocode}
+\def\@textsuperscript#1{$\m@th^{\@gobble#1}$}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -572,8 +608,16 @@
 % \changes{v0.44}{1995/05/20}{macro added}
 %    \LaTeXe\ version uses |\textsuperscript| rather than
 %    math mode.
+% \changes{v0.46-p0.3}{1995/11/21}{macro deleted}
+%    p\LaTeXe\ version changes typesetting direction whether tate or yoko. 
 %    \begin{macrocode}
+%<*!platex>
 \def\@makefnmark{\hbox{$^{\@thefnmark}\m@th$}}
+%</!platex>
+%<*platex>
+\def\@makefnmark{\hbox{\ifydir $\m@th^{\@thefnmark}$
+  \else\hbox{\yoko$\m@th^{\@thefnmark}$}\fi}}
+%</platex>
 %    \end{macrocode}
 %  \end{macro}
 %
@@ -595,6 +639,15 @@
     \or \ddagger\ddagger \else\@ctrerr\fi}
 %    \end{macrocode}
 %  \end{macro}
+%
+% \begin{macro}{\@inmathwarn}
+% \changes{v0.50}{1995/12/08}{Switched off \cs{@inmathwarn}}
+% \LaTeX\ (1995/12/01) checks for text commands being used in math
+% mode.  We switch this off in compatibility mode.
+%    \begin{macrocode}
+\let\@inmathwarn\@gobble
+%    \end{macrocode}
+% \end{macro}
 % 
 % \subsection{Verbatim}
 %
@@ -641,6 +694,22 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \subsection{Rensuji}
+%
+% \changes{v0.46-p0.3}{1995/11/21}{Added \cs{Rensuji} and \cs{prensuji}}
+%
+% \begin{macro}{\Rensuji}
+% \begin{macro}{\prensuji}
+% These commands have been defined in p\LaTeX209 version.
+% Now, these are unificated to \cs{rensuji}.
+%    \begin{macrocode}
+\let\Rensuji\rensuji
+\let\prensuji\rensuji
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+%
 % \subsection{Character codes}
 %
 % \changes{v0.18}{1994/03/11}{Added the catcode changes}
@@ -686,6 +755,59 @@
 \let\+\@empty
 %    \end{macrocode}
 % \end{macro}
+%
+% \begin{macro}{\@cla}
+% \begin{macro}{\@clb}
+% \changes{v0.47}{1995/09/25}
+%         {(DPC) Declare old \cs{cline} registers}
+% \begin{macro}{\mscount}
+% \LaTeX2.09 (and early versions of \LaTeXe) used these count registers
+% in the definition of |\cline| and |\multispan|.
+% Declare them here in case they were used for any other purposes.
+%    \begin{macrocode}
+\newcount\@cla
+\newcount\@clb
+\newcount\mscount
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@imakepicbox}
+% \changes{v0.48}{1995/10/16}
+%         {(DPC) emulate old behaviour of picture mode makebox}
+% picture mode version
+%    \begin{macrocode}
+\long\def\@imakepicbox(#1,#2)[#3]#4{%
+  \vbox to#2\unitlength
+   {\let\mb@b\vss \let\mb@l\hss\let\mb@r\hss
+    \let\mb@t\vss
+    \@tfor\reserved@a :=#3\do{%
+      \if s\reserved@a
+        \let\mb@l\relax\let\mb@r\relax
+      \else
+        \expandafter\let\csname mb@\reserved@a\endcsname\relax
+      \fi}%
+    \mb@t
+    \hb@xt@ #1\unitlength{\mb@l #4\mb@r}%
+    \mb@b
+%    \end{macrocode}
+% This kern ensures that a |b| option aligns on the bottom of the
+% text rather than the baseline. this is the documented behaviour in
+% the \LaTeX Book. The kern is removed in compatibility mode.
+%
+% Remove kern for bug compatibility with 2.09.
+%    \begin{macrocode}
+%    \kern\z@
+     }}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\supereject}
+%    \begin{macrocode}
+\def\supereject{\par\penalty-\@MM}
+%    \end{macrocode}
+%  \end{macro}
 %
 % \subsection{Packages and classes}
 %
@@ -1009,6 +1131,31 @@
 \@obsoletefile{slides.cls}{slides.sty}
 \LoadClass{slides}
 %</slides>
+% We also produce empty |fleqn.sty| and |leqno.sty| files in case
+% anyone has |\input| one of them.
+%    \begin{macrocode}
+%<*fleqn>
+\@obsoletefile{fleqn.clo}{fleqn.sty}
+\input{fleqn.clo}
+%</fleqn>
+%<*leqno>
+\@obsoletefile{leqno.clo}{leqno.sty}
+\input{leqno.clo}
+%</leqno>
+%    \end{macrocode}
+% We also produce an empty |openbib.sty| in case anyone has |\input|
+% |openbib.sty|.  The |openbib| class option is now part of the kernel.
+%    \begin{macrocode}
+%<*openbib>
+\iffalse
+
+The openbib option is now part of LaTeX thus this package is no
+longer necessary.  It is only retained for upward compatibility.
+See the 2nd edition of the LaTeX book, or the file usrguide.tex
+which comes with the LaTeX distribution, for more details.
+
+\fi
+%</openbib>
 %    \end{macrocode}
 % We also produce an empty |bezier.sty| in case anyone has |\input|
 % |bezier.sty|.  The |\bezier| command is now part of the kernel.

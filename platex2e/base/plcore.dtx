@@ -1,14 +1,13 @@
 % \iffalse meta-comment
-%% File: ploutput.dtx
-%%% $Id: ploutput.dtx,v 1.1 1995/04/26 13:30:54 ken-na Exp ken-na $
+%% File: plcore.dtx
 %
-%  Copyright 1994,1995 ASCII Corporation.
+%  Copyright 1994,1995,1996 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
-% \CheckSum{1172}
+% \CheckSum{823}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -30,43 +29,55 @@
 % \StopEventually{}
 %
 % \iffalse
-% \changes{v1.1}{1995/04/12}{脚注マクロ修正}
 % \changes{v1.0}{1994/09/16}{first edition}
+% \changes{v1.1}{1995/04/12}{脚注マクロ修正}
+% \changes{v1.1a}{1995/11/10}{\cs{topmargin}が反映されないバグを修正}
+% \changes{v1.1b}{1996/01/26}{脚注マークの後ろに余計なスペースが入るのを修正}
+% \changes{v1.1c}{1996/01/30}{ファイル名を\file{ploutput.dtx}から
+%    \file{plcore.dtx}とした。キャプション拡張を\file{plext.dtx}に移動。
+%    プリアンブルコマンドを追加}
+% \changes{v1.1d}{1996/02/17}{\cs{printglossary}を追加}
+% \changes{v1.1e}{1996/03/12}{tabbing環境での和欧文間スペース}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{ploutput.dtx}[1995/04/12 v1.1 pLaTeX core file]
+\ProvidesFile{plcore.dtx}[1996/01/30 v1.1c pLaTeX core file]
 % \iffalse
 \documentclass{jltxdoc}
-\GetFileInfo{ploutput.dtx}
+\GetFileInfo{plcore.dtx}
 %
-\title{出力ルーチンとフロートの拡張\space\fileversion}
+\title{p\LaTeXe の拡張\space\fileversion}
 \author{Ken Nakano}
 \date{作成日：\filedate}
 %
 \begin{document}
    \maketitle
-   \DocInput{ploutput.dtx}
+   \tableofcontents
+   \DocInput{plcore.dtx}
 \end{document}
 %</driver>
 % \fi
 %
 %
-% \section{概要}\label{ploutput:intro}
-% ここでは、p\LaTeX{}で拡張をしたマクロのうち、
-% ページ出力とフロートに関する、次の事柄について説明をしています。
+% \section{概要}\label{plcore:intro}
+% このファイルでは、つぎの機能の拡張や修正を行っています。
+% 詳細は、それぞれの項目の説明を参照してください。
 %
 % \begin{itemize}
+% \item プリアンブルコマンド
 % \item 改ページ
+% \item 改行
 % \item オブジェクトの出力順序
 % \item トンボ
-% \item フロートとキャプションの出力位置の指定
 % \item 脚注マクロ
+% \item 相互参照
+% \item 疑似タイプ入力
+% \item tabbing環境
+% \item 用語集の出力
 % \end{itemize}
-%
 %
 %
 % \section{コード}
@@ -76,10 +87,69 @@
 %<*plcore>
 %    \end{macrocode}
 %
+% \subsection{プリアンブルコマンド}
+% 文書ファイルが必要とするフォーマットファイルの指定をするコマンドを
+% 拡張子、p\LaTeXe フォーマットファイルも認識するようにします。
+%
+% \begin{macro}{\NeedsTeXFormat}
+% \begin{macro}{\@needsPformat}
+% \begin{macro}{\@needsPf@rmat}
+% |\NeedsTeXFormats|に``pLaTeX2e''を指定すると、
+% ``LaTeX2e''フォーマットを必要とする英語版のクラスファイルや
+% パッケージファイルなどが使えなくなってしまうために再定義します。
+% このコマンドは\file{ltclass.dtx}で定義されています。
+%    \begin{macrocode}
+\def\NeedsTeXFormat#1{%
+   \def\reserved@a{#1}%
+   \ifx\reserved@a\pfmtname
+     \expandafter\@needsPformat
+   \else
+     \ifx\reserved@a\fmtname
+       \expandafter\expandafter\expandafter\@needsformat
+     \else
+       \@latex@error{This file needs format `\reserved@a'%
+          \MessageBreak but this is `\pfmtname'}{%
+          The current input file will not be processed
+          further,\MessageBreak
+          because it was written for some other flavor of
+          TeX.\MessageBreak\@ehd}%
+       \endinput
+     \fi
+   \fi}
+%
+\def\@needsPformat{\@ifnextchar[\@needsPf@rmat{}}
+%
+\def\@needsPf@rmat[#1]{%
+    \@ifl@t@r\pfmtversion{#1}{}%
+    {\@latex@warning@no@line
+        {You have requested release `#1' of pLaTeX,\MessageBreak
+         but only release `\pfmtversion' is available}}}
+%
+\@onlypreamble\@needsPformat
+\@onlypreamble\@needsPf@rmat
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\documentstyle}
+% |\documentclass|の代わりに|\documentstyle|が使われると、
+% \LaTeX~2.09互換モードに入ります。このとき、
+% オリジナルの\LaTeX では\file{latex209.def}を読み込みますが、
+% p\LaTeX{}では\file{pl209.def}を読み込みます。
+% このコマンドは\file{ltmiscen.dtx}で定義されています。
+%    \begin{macrocode}
+\def\documentstyle{%
+  \makeatletter\input{pl209.def}\makeatother
+  \documentclass}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
 % \subsection{改ページ}
-% 縦組のときには、このコマンドの次の内容が、
-% 偶数ページ（右ページ）からはじまるように改ページをします。
-% 横組のときには、奇数ページ（右ページ）からはじまるようにしています。
+% 縦組のとき、改ページ後の内容が偶数ページ（右ページ）からはじまるようにします。
+% 横組のときには、奇数ページ（右ページ）からはじまります。
 %
 % \begin{macro}{\cleardoublepage}
 % このコマンドによって出力される、白ページのページスタイルを
@@ -99,6 +169,28 @@
   \fi\fi}
 %    \end{macrocode}
 % \end{macro}
+%
+% \subsection{改行}
+% \changes{v1.1c}{1995/08/25}{行頭禁則文字の直前での改行での不具合の修正}
+% 日本語\TeX{}の行頭禁則処理は、禁則対象文字の直前に、
+% |\prekinsokupenalty|で指定されたペナルティの値を挿入することで
+% 行なっています。そのため、ペナルティ値に$10000$の値を持つ文字の直後で
+% |\\|で改行しようとしても、改行されません。
+%
+% \begin{verbatim}
+% あいうえお\\
+% ！かきくけこ
+% \end{verbatim}
+%
+% そのため、|\newline|マクロに|\mbox{}|を入れることによって、
+% |\newline|マクロのペナルティ$-10000$と行頭文字のペナルティ$10000$が
+% 加算されないようにします。|\\|は|\newline|マクロを呼び出しています。
+%
+% なお、|\newline|マクロは\file{ltspaces.dtx}で定義されています。
+%    \begin{macrocode}
+\def\newline{\ifvmode \@nolnerr \else \unskip\nobreak\hfil
+  \penalty -\@M\mbox{}\fi}
+%    \end{macrocode}
 %
 % \subsection{オブジェクトの出力順序}
 % オリジナルの\LaTeX{}は、トップフロート、本文、脚注、ボトムフロート
@@ -356,20 +448,29 @@
      \if@specialpage
        \global\@specialpagefalse\@nameuse{ps@\@specialstyle}%
      \fi
+%    \end{macrocode}
+% \changes{v1.1c}{1995/02/05}{\cs{oddsidemargin}と\cs{evensidemargin}が
+%    逆だったのを修正}
+%    \begin{macrocode}
      \if@twoside
        \ifodd\count\z@ \let\@thehead\@oddhead \let\@thefoot\@oddfoot
-          \iftdir\let\@themargin\oddsidemargin
-          \else\let\@themargin\evensidemargin\fi
+          \iftdir\let\@themargin\evensidemargin
+          \else\let\@themargin\oddsidemargin\fi
        \else \let\@thehead\@evenhead
           \let\@thefoot\@evenfoot
-           \iftdir\let\@themargin\evensidemargin
-           \else\let\@themargin\oddsidemargin\fi
+           \iftdir\let\@themargin\oddsidemargin
+           \else\let\@themargin\evensidemargin\fi
      \fi\fi
+%    \end{macrocode}
+% トンボ出力オプションが指定されている場合、ここで用紙サイズを再設定します。
+% \TeX の加える左と上部の1インチは、トンボの内側に入ります。
+% \changes{v1.1a}{1995/11/10}{\cs{topmargin}が反映されないバグを修正}
+%    \begin{macrocode}
+     \@@topmargin\topmargin
 \iftombow
      \@@paperwidth\paperwidth \advance\@@paperwidth 6mm\relax
      \@@paperheight\paperheight \advance\@@paperheight 16mm\relax
-     \@@topmargin\topmargin \advance\@@topmargin 1in\relax
-     \advance\@themargin 1in\relax
+     \advance\@@topmargin 1in\relax \advance\@themargin 1in\relax
 \fi
      \reset@font
      \normalsize
@@ -462,284 +563,6 @@
 % \end{macro}
 %
 %
-% \subsection{フロートとキャプションの出力位置}
-% キャプションとフロートは、
-% 出力位置の指定や大きさの指定などができるように拡張しています。
-% 詳細は、\tlatexbook{}を参照してください。
-%
-% |\layoutfloat|コマンドで作られるボックスです。
-%    \begin{macrocode}
-\newbox\@floatbox
-%    \end{macrocode}
-% フロートオブジェクトの幅と高さです。
-%    \begin{macrocode}
-\newdimen\floatwidth
-\newdimen\floatheight
-%    \end{macrocode}
-% フロートオブジェクトのまわりに引かれる罫線の太さです。
-%    \begin{macrocode}
-\newdimen\floatruletick \floatruletick=0.4pt
-%    \end{macrocode}
-% フロートオブジェクトとキャプションの間のアキです。
-%    \begin{macrocode}
-\newdimen\captionfloatsep \captionfloatsep=10pt
-%    \end{macrocode}
-% |\caption@dir|には、キャプションを組む方向を示すオプションが格納されます。
-% |\captiondir|は|\caption@dir|の値と現在の組み方向によって、
-% |\yoko|, |\tate|, |\relax|のいずれかに設定されます。
-%    \begin{macrocode}
-\def\caption@dir{Z}
-\let\captiondir\relax
-%    \end{macrocode}
-% キャプションの幅と高さです。
-%    \begin{macrocode}
-\newdimen\captionwidth \captionwidth\z@
-%    \end{macrocode}
-% キャプションを付ける位置を指定します。
-%    \begin{macrocode}
-\def\caption@posa{Z}
-\def\caption@posb{Z}
-%    \end{macrocode}
-% 組み立てられたキャプションが格納されるボックスです。
-%    \begin{macrocode}
-\newbox\@captionbox
-%    \end{macrocode}
-% キャプションに使われる文字です。
-%    \begin{macrocode}
-\def\captionfontsetup{\small\normalfont}
-%    \end{macrocode}
-%
-% \begin{macro}{\layoutfloat}
-% \begin{macro}{\X@layoutfloat}
-% \begin{macro}{\@layoutfloat}
-% |\layoutfloat|は図表類の大きさと位置を指定するのに使います。
-% 大きさを省略するか、負の値を指定すると、
-% そのオブジェクトの自然な長さになります。このときは、罫が引かれません。
-% 正の大きさを指定すると、|\floatruletick|の太さの罫で囲まれます。
-%
-% 位置指定を省略した場合、中央揃えになるようにしています。
-%    \begin{macrocode}
-\def\layoutfloat{\@ifnextchar(%)
-   {\X@layoutfloat}{\X@layoutfloat(-5\p@,-5\p@)}}
-%
-\def\X@layoutfloat(#1,#2){\@ifnextchar[%]
-   {\@layoutfloat(#1,#2)}{\@layoutfloat(#1,#2)[c]}}
-%
-\long\def\@layoutfloat(#1,#2)[#3]#4{%
-  \setbox\z@\hbox{#4}%
-  \floatwidth=#1 \floatheight=#2 \edef\float@pos{#3}%
-  \ifdim\floatwidth<\z@
-     \floatwidth\wd\z@\floatruletick\z@
-  \fi
-  \ifdim\floatheight<\z@
-     \floatheight\ht\z@\advance\floatheight\dp\z@\relax
-     \floatruletick\z@
-  \fi
-  \setbox\@floatbox\vbox to\floatheight{\offinterlineskip
-    \hrule width\floatwidth height\floatruletick depth\z@
-    \vss\hbox to\floatwidth{%
-      \vrule width\floatruletick height\floatheight depth\z@
-      \hss\vbox to\floatheight{\hsize\floatwidth\vss#4\vss}\hss
-      \vrule width\floatruletick height\floatheight depth\z@
-    }\hrule width\floatwidth height\floatruletick depth\z@}}
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-%
-% \begin{macro}{\DeclareLayoutCaption}
-% |\DeclareLayoutCaption|コマンドは、キャプションの組方向、付ける位置や幅の
-% デフォルトをフロートのタイプごとに設定することができます。
-% このコマンドでデフォルト値が設定されていないと、
-% |\pcaption|コマンドでエラーが発せられます。
-% このコマンドはプリアンブルでのみ、使用できます。
-%
-% \DescribeMacro\DeclareLayoutCaption
-% |\DeclareLayoutCaption|\meta{type}^^A
-%         |<|\meta{dir}|>(|\meta{width}|)[|\meta{pos1}\meta{pos2}|]|
-%
-% コマンド引数を省略することはできません。
-% \meta{dir}には、`|y|', `|t|', `|z|', `|n|'のいずれかを指定します。
-% `|n|'と指定をすると、本文の組み方向と同じ方向でキャプションが組まれます。
-% これがデフォルトです。
-%
-% \meta{width}には、キャプションを折り返す長さを指定します。
-% `|(12zw)|'と指定をすると、漢字12文字分の長さで折り返されます。
-% `|(\floatwidth)|'と指定をすると、
-% キャプションの幅はフロートオブジェクトの幅となります。
-% これがデフォルトです。なお、`|(\floatheigt)|'と指定をすると、
-% キャプションの幅はフロートオブジェクトの高さとなります。
-%
-% \meta{pos1}と\meta{pos2}には、キャプションを出力する位置を指定します。
-% \meta{pos1}は、`|c|', `|t|', `|b|'のいずれかです。
-% \meta{pos2}は、`|u|', `|d|', `|l|', `|r|'のいずれかです。
-% デフォルトは、|figure|タイプが`|cd|'、|table|タイプは`|cu|'です。
-%    \begin{macrocode}
-\def\DeclareLayoutCaption#1<#2>(#3)[#4#5]{%
-  \expandafter
-  \ifx\csname #1@layoutcaption\endcsname\relax \else
-    \@latex@info{Redeclaring capiton layout setting of '#1'}%
-  \fi
-  \expandafter
-  \def\csname #1@layoutcaption\endcsname{%
-     \if Z\caption@dir\def\caption@dir{#2}\fi
-     \ifdim\captionwidth=\z@ \captionwidth=#3\relax\fi
-     \if Z\caption@posa\def\caption@posa{#4}\fi
-     \if Z\caption@posb\def\caption@posb{#5}\fi}}
-\@onlypreamble\DeclareLayoutCaption
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\layoutcaption}
-% \begin{macro}{\X@layoutcaption}
-% \begin{macro}{\@ilayoutcaption}
-% \begin{macro}{\@iilayoutcaption}
-% |\DeclareLayoutCaption|コマンドで設定をした、デフォルト値とは異なる設定で
-% 組みたい場合は、|\layoutcaption|コマンドを使用します。
-% 
-% |\layoutcaption<|\meta{dir}|>(|\meta{width}|)[|\meta{pos}|]|
-%
-% なお、|\layoutcaption|に組み方向オプションを付けましたので、
-% |\captiondir|で組み方向を指定する必要はありません。
-% また、|\captiondir|で指定をしても、その値は無視されます。
-%    \begin{macrocode}
-\def\layoutcaption{\def\caption@dir{Z}\captionwidth\z@
-  \def\caption@posa{Z}\def\caption@posb{Z}%
-  \@ifnextchar<\X@layoutcaption{%
-    \@ifnextchar(\@ilayoutcaption{%
-      \@ifnextchar[\@iilayoutcaption\relax}}}
-%
-\def\X@layoutcaption<#1>{\def\caption@dir{#1}%
-  \@ifnextchar(\@ilayoutcaption{%
-    \@ifnextchar[\@iilayoutcaption\relax}}
-%
-\def\@ilayoutcaption(#1){\setlength\captionwidth{#1}%
-  \@ifnextchar[{\@iilayoutcaption}{\relax}}
-%
-\def\@iilayoutcaption[#1#2]{%
-  \def\caption@posa{#1}\def\caption@posb{#2}}
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
-%
-% \begin{macro}{\pcaption}
-% \begin{macro}{\@pcaption}
-% キャプションを図表類の天地左右の指定箇所に付けるには|\pcaption|コマンドで
-% 指定をします。位置の指定は|\layoutcaption|コマンドで行ないます。
-% |\layoutcaption|コマンドが省略された場合は、|\DeclareLayoutCaption|コマンド
-% で設定されているデフォルト値が使われます。
-%    \begin{macrocode}
-\def\pcaption{\refstepcounter\@captype \@dblarg{\@pcaption\@captype}}
-%
-\long\def\@pcaption#1[#2]#3{%
-  \addcontentsline{\csname ext@#1\endcsname}{#1}{%
-    \protect\numberline{\csname the#1\endcsname}{\ignorespaces#2}}%
-  \ifvoid\@floatbox
-     \latex@error{Use with `\protect\layoutfloat'.}\@eha
-  \fi
-  \make@pcaptionbox{#3}%
-  \@pboxswfalse
-  \setbox\@tempboxa\vbox{\hbox to\hsize{\if l\float@pos\else\hss\fi
-    \if l\caption@posb\box\@captionbox\kern\captionfloatsep\fi
-    \if t\caption@posa\vtop
-    \else\if b\caption@posa\vbox
-    \else\ifmmode\vcenter \else\@pboxswtrue $\vcenter \fi\fi\fi
-    {\if u\caption@posb\box\@captionbox\kern\captionfloatsep\fi
-     \unvbox\@floatbox
-     \if d\caption@posb\kern\captionfloatsep\box\@captionbox\fi}%
-    \if r\caption@posb\kern\captionfloatsep\box\@captionbox\fi
-    \if@pboxsw \m@th$\fi \if r\float@pos\else\hss\fi}}%
-  \par\vskip.25\baselineskip
-  \box\@tempboxa}
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
-%
-% \begin{macro}{\make@pcaptionbox}
-% キャプションを組み立て、|\@captionbox|を作成します。
-%    \begin{macrocode}
-\def\make@pcaptionbox#1{%
-%    \end{macrocode}
-% まず、デフォルトの設定がされているかを確認します。
-% 設定されていない場合は、警告メッセージを出力し、
-% 現在の組モードでのデフォルト値を使用します。
-% 設定されていれば、そのデフォルト値にします。
-%    \begin{macrocode}
-  \expandafter
-  \ifx\csname\@captype @layoutcaption\endcsname\relax
-     \latex@warning{Default caption layout of `\@captype' unknown.}%
-       \def\caption@dir{Z}\captionwidth\z@
-       \def\caption@posa{Z}\def\caption@posb{Z}%
-  \else
-     \csname \@captype @layoutcaption\endcsname
-  \fi
-%    \end{macrocode}
-% 次に、組み方向を設定します。 
-% 基本組の組み方向とキャプションの組み方向を変える場合には、
-% |\@tempswa|を真とします。文字を回転させるときは|\@rotsw|を真にします。
-%    \begin{macrocode}
-  \@rotswfalse \@tempswafalse
-  \iftdir\if y\caption@dir \let\captiondir\yoko \@tempswatrue
-    \else\if z\caption@dir \let\captiondir\relax \@rotswtrue
-    \else\let\captiondir\tate\fi\fi
-  \else\if t\caption@dir\let\captiondir\tate \@tempswatrue
-    \else\let\captiondir\yoko\fi
-  \fi
-%    \end{macrocode}
-% キャプションを組み立てる前に、まず、キャプション文字列がどの程度の長さを
-% 持っているのかを確認するために、|\hbox|に入れます。
-%    \begin{macrocode}
-  \setbox0\hbox{\if@rotsw $\fi\hbox{\captiondir
-     \captionfontsetup\parindent\z@\inhibitglue
-     \csname fnum@\@captype\endcsname\char\euc"A1A1\relax#1}%
-  \if@rotsw \m@th$\fi}%
-%    \end{macrocode}
-% キャプションの幅に合わせるため、再び、ボックスを組み立てます。
-%
-% キャプションを折り返さなくてもよい場合、|\@tempdima|をキャプションの長さに
-% します。ただし、キャプションの組み方向が基本組の組み方向と異なる場合
-% （|\@tempswa|が真）は、ボックス０の幅ではなく、高さに設定をします。
-% |\captionwidth|の値が、キャプションの幅よりも長い場合、
-% 折り返さなくてはなりませんので、|\@tempdima|を|\captionwidth|にします。
-%    \begin{macrocode}
-  \if@tempswa \@tempdima\ht0 \else\@tempdima\wd0 \fi
-  \ifdim\@tempdima>\captionwidth \@tempdima\captionwidth \fi
-  \@pboxswfalse
-  \setbox0\hbox{\if@rotsw\ifmmode\@rotswfalse \else $\fi\fi
-    \if u\caption@posb\vbox
-    \else\if d\caption@posb\vbox
-    \else\if t\caption@posa\vtop
-    \else\if b\caption@posa\vbox
-    \else\ifmmode\vcenter\else\@pboxswtrue $\vcenter\fi
-    \fi\fi\fi\fi
-    {\hsize\@tempdima\kern\z@
-    \vbox{\captiondir\hsize\@tempdima
-      \captionfontsetup\parindent\z@\inhibitglue
-      \csname fnum@\@captype\endcsname\char\euc"A1A1\relax#1}\kern\z@
-    }\if@pboxsw \m@th$\fi \if@rotsw \m@th$\fi}%
-%    \end{macrocode}
-% 最後に|\@captionbox|を組み立てます。
-%
-% 位置２オプションが`|u|'か`|d|'の場合、
-% このボックスの幅をフロートオブジェクトの幅と同じ長さにし、
-% 位置１オプションでの揃えに組み立てます。
-%
-% 位置２オプションが`|l|'か`|r|'の場合は、キャプションの幅です。
-% このときの位置１オプションの揃えは、この前の段階で準備をしておき、
-% |\@pcaption|で最終的にフロートオブジェクトと組み合わせるときになされます。
-%    \begin{macrocode}
-  \let\to@captionboxwidth\relax
-  \if l\caption@posb \else\if r\caption@posb\else
-  \def\to@captionboxwidth{to\floatwidth}\fi\fi
-  \setbox\@captionbox\hbox\to@captionboxwidth{%
-     \if t\caption@posa\else\hss\fi
-     \unhbox0\relax
-     \if b\caption@posa\else\hss\fi}}
-%    \end{macrocode}
-% \end{macro}
-%
 % \subsection{脚注マクロ}
 % 脚注を組み立てる部分のマクロを再定義します。
 % 主な修正点は、縦組モードでの動作の追加です。
@@ -770,9 +593,11 @@
 % 脚注記号を作成するマクロです。
 %
 % \changes{v1.0a}{1995/04/12}{縦組でも上付き数字を使うように修正}
+% \changes{v1.1b}{1996/01/26}{脚注マークの後ろに余計なスペースが入るのを修正}
 %    \begin{macrocode}
-\def\@makefnmark{\hbox{\ifydir $\m@th^{\@thefnmark}$
-  \else\hbox{\yoko$\m@th^{\@thefnmark}$}\fi}}
+\renewcommand\@makefnmark{\hbox{%
+  \ifydir \@textsuperscript{\normalfont\@thefnmark}%
+  \else\hbox{\yoko\@textsuperscript{\@thefnmark}}\fi}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -805,13 +630,79 @@
 % \changes{v1.0a}{1995/04/12}{脚注記号の出力位置の調整}
 %    \begin{macrocode}
 \def\@footnotemark{\leavevmode
-  \ifhmode\edef\@x@sf{\the\spacefactor}\fi
+  \ifhmode\edef\@x@sf{\the\spacefactor}\nobreak\fi
   \ifydir\@makefnmark
   \else\hbox to\z@{\hskip-.25zw\raise2\cht\@makefnmark\hss}\fi
   \ifhmode\spacefactor\@x@sf\fi\relax}
 %    \end{macrocode}
 % \end{macro}
 %
+%
+% \subsection{相互参照}
+%
+% \begin{macro}{\@setref}
+% \changes{v1.1c}{1995/09/07}{change \cs{null} to \cs{relax} in \cs{@setref}.}
+% |\ref|コマンドや|\pageref|コマンドで参照したとき、これらのコマンドに
+% よって出力された番号と続く２バイト文字との間に|\xkanjiskip|が入りません。
+% これは、|\null|が|\hbox{}|と定義されているためです。
+% そこで|\null|を取り除きます。
+%    \begin{macrocode}
+\def\@setref#1#2#3{%
+  \ifx#1\relax
+    \protect\G@refundefinedtrue
+    \nfss@text{\reset@font\bfseries ??}%
+    \@latex@warning{Reference `#3' on page \thepage \space
+              undefined}%
+  \else
+    \expandafter#2#1\relax% change \null to \relax
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{疑似タイプ入力}
+%
+% \begin{macro}{\verb}
+% \changes{v1.1b}{1995/04/05}{互換モードのときは、pl209.defの定義を使う}
+% オリジナルの|\verb|コマンドでは、数式モードでないときは、
+% |\leavevmode|で水平モードに入ったあと、|\null|を出力しています。
+% マクロ|\null|は|\hbox{}|として定義されていますので、
+% ここには和欧文間スペース（|\xkanjiskip|）が入りません。
+% そこで、|\null|を出力しないようマクロを修正します。
+% このマクロは、\file{ltmiscen.dtx}で定義されています。
+%    \begin{macrocode}
+\if@compatibility\else
+\def\verb{\relax\ifmmode\hbox\else\leavevmode\fi
+  \bgroup \@noligs
+    \verbatim@font \verb@eol@error \let\do\@makeother \dospecials
+    \@ifstar\@sverb\@verb}
+\fi
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{tabbing環境}
+% \changes{v1.1d}{1996/03/12}{\cs{=}の後ろに和欧文間スペースが入るのを修正}
+% 相互参照や疑似タイプ入力では、和欧文間スペースが入らないので、|\null|を
+% 取り除きましたが、|tabbing|環境では、逆に|\null|がないため、
+% 和欧文間スペースが入ってしまうので、それを追加します。
+%
+%    \begin{macrocode}
+\gdef\@stopfield{\null\color@endgroup\egroup}
+%    \end{macrocode}
+%
+% \subsection{用語集の出力}
+% \LaTeX には、なぜか用語集を出力するためのコマンドがありませんので、
+% 追加をします。
+% \changes{v1.1e}{1996/02/17}{\cs{printglossary}を追加}
+%
+% \begin{macro}{\printglossary}
+% \cs{printglossary}コマンドは、単に拡張子が\texttt{gls}のファイルを
+% 読み込むだけです。このファイルの生成には、mendexなどを用います。
+%    \begin{macrocode}
+\newcommand\printglossary{\@input@{\jobname.gls}}
+%    \end{macrocode}
+% \end{macro}
 %
 %
 %    \begin{macrocode}

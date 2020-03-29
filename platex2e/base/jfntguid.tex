@@ -2,11 +2,12 @@
 %
 % Japanese edition: Copyright 1994,1995 ASCII Corporation.
 %
-% Copyright 1993-1995 the LaTeX3 project and the individual authors
-% listed elsewhere in this file.   All rights reserved.
+% Copyright 1993 1994 1995 the LaTeX3 project and the individual
+% authors listed elsewhere in this file.
 %
-% For further copyright information see the file legal.txt, and any
-% other copyright notices in this file.
+% For further copyright information, and conditions for modification
+% and distribution, see the file legal.txt, and any other copyright
+% notices in this file.
 % 
 % This file is part of the LaTeX2e system.
 % ----------------------------------------
@@ -14,8 +15,8 @@
 %  but WITHOUT ANY WARRANTY; without even the implied warranty of
 %  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 % 
-%  For error reports concerning UNCHANGED versions of this file no more
-%  than one year old, see bugs.txt.
+%  For error reports concerning UNCHANGED versions of this file no
+%  more than one year old, see bugs.txt.
 %
 %  Please do not request updates from us directly.  Primary
 %  distribution is through the CTAN archives.
@@ -25,15 +26,15 @@
 % 
 % You are NOT ALLOWED to distribute this file alone.
 % 
-% You are allowed to distribute this file under the condition that it is
-% distributed together with all files mentioned in manifest.txt.
+% You are allowed to distribute this file under the condition that it
+% is distributed together with all files mentioned in manifest.txt.
 % 
 % If you receive only some of these files from someone, complain!
 % 
-% Permission granted to copy this file to another file with a clearly
-% different name and to customize the declarations in that copy to serve
-% the needs of your installation, provided that you comply with
-% the conditions in the file legal.txt
+% Permission granted to copy this file to another file with a
+% clearly different name and to customize the declarations in that
+% copy to serve the needs of your installation, provided that you
+% comply with the conditions in the file legal.txt
 %
 % However, NO PERMISSION is granted to produce or to distribute a
 % modified version of this file under its original name.
@@ -44,9 +45,9 @@
 % \fi
 % Filename: jfntguid.tex
  
-\NeedsTeXFormat{pLaTeX2e}[1995/02/17]
+\NeedsTeXFormat{pLaTeX2e}
  
-\documentclass{jltxguid}[1995/02/17]
+\documentclass{ltxguide}
  
 \title{\LaTeXe{} font selection}
 
@@ -54,7 +55,7 @@
   All rights reserved.\thanks{この文書は、LaTeXシステムに含まれる、
   \texttt{fntguide.tex}を ken-na@ascii.co.jp が日本語に訳したものです。}}
 
-\date{10 June 1995}
+\date{12 December 1995}
  
 \begin{document}
  
@@ -156,6 +157,10 @@ Karl Berry, \emph{TUGboat} 11(4), 1990で説明されている、
  
 クラス作成者用ガイド\emph{\clsguide}(|clsguide.tex|)は、
 文書クラスやパッケージの作成者のために新しい\LaTeX{}の機能を説明しています。
+\LaTeX{}の修正については、
+\texttt{cfgguide.tex}の\emph{\cfgguide}で説明されています。
+\LaTeX{}を修正する上での我々のポリシーは、
+\texttt{modguide.tex}の\emph{\modguide}で説明されています。
  
 我々は如々に、\LaTeX{}のためのソースコードを
 \LaTeX{}文書\emph{\sourcecode}の中に戻しつつあります。
@@ -164,9 +169,17 @@ Karl Berry, \emph{TUGboat} 11(4), 1990で説明されている、
  
 \TeX{}および\LaTeX{}についてもっと知りたい場合は、
 ローカルな\TeX{}ユーザグループに連絡してください。
-国際\TeX{}ユーザグループの連絡先は、
-P.~O. Box~869, Santa Barbara, CA 93102-0869, USA, Fax:~+1 805 963 8358,
-E-mail:~tug@tug.org です。
+つぎにいくつかのアドレスを載せておきます。
+  \begin{quote}\small\label{addrs}
+    \TeX{} Users Group, 1850 Union Street \#1637,
+    San~Francisco, CA~94123, USA\\
+    Fax:~+1~415~982~8559 \
+    Email: \texttt{tug@tug.org}
+
+    UK TUG, 1 Eymore Close, Selly Oak, Birmingham B29~4LB, UK\\
+    Fax: +44 121 476 2159 \ Email: \texttt{uktug-enquiries@tex.ac.uk}
+  \end{quote}
+
  
 \section{テキストフォント}
 \label{Sec:text}
@@ -1083,6 +1096,16 @@ e.g.~|<<8>> <<9>> <<10>> gen * cmtt|
  
 \item[sgen]
 `gen'関数に似ていますが、端末に警告を出力せず、ログにだけ出力します。
+
+\item[genb]
+\NEWfeature{1995/12/01}
+\m{fontarg}に要求されたサイズを続けた外部フォントを生成します。
+たとえば、|<<10.98>> genb * dctt|は|dctt1098|を生成します。
+
+\item[sgenb]
+\NEWfeature{1995/12/01}
+`genb'と同じですが、端末に警告を出力せず、ログにだけ出力します。
+
  
 \item[sub]
 \m{family}|/|\m{series}|/|\m{shape}形式の\m{fontarg}で与えられた、
@@ -1382,7 +1405,7 @@ OMSバージョンが選択されます。
 すべてのエンコードスキーマ用に\m{text-setting}と\m{math-setting}を宣言します。
 実行されたものに依存するエンコードスキーマの前に実行されます。
 したがって、多くの場合のためにデフォルトを設定し、
-必要なときに|\DeclarefontEncoding|を使って上書きすることができます。
+必要なときに|\DeclareFontEncoding|を使って上書きすることができます。
  
 引数に|\relax|が使われた場合、デフォルトのカレント設定は未変更のままです。
  
@@ -1417,6 +1440,36 @@ OMSバージョンが選択されます。
    \DeclareFontSubstitution{T1}{cmr}{m}{n}
 \end{verbatim}
  
+
+\subsection{大文字/小文字の変換}
+\label{sec:case}
+
+\begin{decl}
+  |\MakeUppercase| \arg{text} \\
+  |\MakeLowercase| \arg{text}
+\end{decl}
+
+\NEWfeature{1995/06/01}
+\TeX{}は、テキストの大文字/小文字を変換するために|\uppercase|と|\lowercase|の
+二つのプリミティブを提供しています。しかし、これらの\TeX{}プリミティブは、
+|\ae|や|\aa|のようなコマンドによってアクセスすることができません。
+この問題を解決するために、\LaTeX{}は、上記の二つのコマンドを提供します。
+
+最終的には、|\MakeUppercase|のようなコマンドよりも、
+すべてが大文字のフォントを使いたいのですが、現時点では不可能です。
+なぜなら、そのようなフォントが存在しないからです。
+
+詳細については、\texttt{clsguide.tex}を参照してください。
+
+\NEWdescription{1995/12/01}
+大文字/小文字の規則が適切に動作し、現在のハイフネーションを提供できれば、
+\LaTeXe{}は、文書のいたるところで、固定された変換用テーブルと同じものを使う
+\emph{べき}です。
+そのテーブルは、|T1|エンコードフォント用にデザインされたテーブルです。
+これは、すべてのラテンアルファベットの標準\TeX{}フォントでうまく動きます。
+しかし、その他のアルファベットを使うとき、問題を起こします。
+
+
  
 \section{その他}
 \label{Sec:misc}

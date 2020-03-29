@@ -1,14 +1,13 @@
 % \iffalse meta-comment
 %% File: plfonts.dtx
-%%% $Id: plfonts.dtx,v 1.2 1995/08/22 11:06:47 ken-na Exp ken-na $
 %
-%  Copyright 1994,1995 ASCII Corporation.
+%  Copyright 1994,1995,1996 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
-% \CheckSum{1168}
+% \CheckSum{1299}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -35,13 +34,14 @@
 % \changes{v1.1}{1995/02/21}{\cs{selectfont}アルゴリズム変更}
 % \changes{v1.1b}{1995/04/25}{\cs{selectfont}修正}
 % \changes{v1.1c}{1995/08/22}{縦横フォント同時切り替え}
+% \changes{v1.2}{1995/11/09}{\cs{DeclareFixedFont}の日本語化}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plfonts.dtx}[1995/08/31 v1.1c pLaTeX core file]
+\ProvidesFile{plfonts.dtx}[1995/11/21 v1.2 pLaTeX core file]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plfonts.dtx}
@@ -113,7 +113,7 @@
 % 和文フォントの属性を格納するオブジェクトや長さ変数、
 % 属性を切替える際の判断材料として使うリストなどを定義しています。
 %
-
+%
 % \subsubsection{和文フォント属性}
 % ここでは、和文フォントの属性を格納するためのオブジェクトについて
 % 説明をしています。
@@ -248,6 +248,21 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \subsubsection{一時コマンド}
+%
+% \begin{macro}{\afont}
+% \LaTeXe 内部の|\do@subst@correction|マクロでは、
+% |\fontname\font|で返される外部フォント名を用いて、
+% \LaTeXe フォント名を定義しています。したがって、|\font|をそのまま使うと、
+% 和文フォント名に欧文の外部フォントが登録されたり、
+% 縦組のフォント名が横組用の外部フォントに割り付けられたりしますので、
+% |\jfont|か|\tfont|を用いるようにします。
+% |\afont|は、|\font|コマンドの保存用です。
+%    \begin{macrocode}
+\let\afont\font
+%    \end{macrocode}
+% \end{macro}
+%
 %
 % \subsubsection{フォントリスト}
 % ここでは、フォントのエンコードやファミリの名前を登録するリストについて
@@ -282,12 +297,12 @@
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\kenc@list}
 % \begin{macro}{\fenc@list}
-% |\kenc@list|には、|\DeclareKanjiEncoding|コマンドで宣言されたエンコード名が
+% \begin{macro}{\kenc@list}
+% |\fenc@list|には、|\DeclareFontEncoding|コマンドで宣言されたエンコード名が
 % 格納されていきます。
 %
-% |\fenc@list|には、|\DeclareFontEncoding|コマンドで宣言されたエンコード名が
+% |\kenc@list|には、|\DeclareKanjiEncoding|コマンドで宣言されたエンコード名が
 % 格納されていきます。
 %
 % \changes{v1.1b}{1995/03/28}{リストの初期値を変更}
@@ -297,9 +312,9 @@
 % リストにエンコードの登録をするように|\DecalreFontEncoding|を再定義
 % する前に、欧文エンコードが宣言されるため、リストに登録されないからです。
 %    \begin{macrocode}
-\def\kenc@list{\enc@elt<JY1>\enc@elt<JT1>}
 \def\fenc@list{\enc@elt<OML>\enc@elt<T1>\enc@elt<OT1>%
                \enc@elt<OMS>\enc@elt<OMX>\enc@elt<U>}
+\def\kenc@list{\enc@elt<JY1>\enc@elt<JT1>}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -331,8 +346,14 @@
 \def\kfam@list{\fam@elt<mc>\fam@elt<gt>}
 \def\ffam@list{\fam@elt<cmr>\fam@elt<cmss>\fam@elt<cmtt>%
                \fam@elt<cmm>\fam@elt<cmsy>\fam@elt<cmex>}
-\let\notkfam@list\@empty
-\let\notffam@list\@empty
+%    \end{macrocode}
+% \changes{v1.1c}{1996/03/06}{\cs{notkfam@list}と\cs{notffam@list}の
+%       初期値を変更}
+% つぎの二つのリストの初期値として、上記の値を用います。
+% これらのファミリ名は、和文でないこと、欧文でないことがはっきりしています。
+%    \begin{macrocode}
+\let\notkfam@list\ffam@list
+\let\notffam@list\kfam@list
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -342,6 +363,8 @@
 %
 % \subsubsection{支柱}
 % 行間の調整などに用いる支柱です。
+% 支柱のもととなるボックスの大きさは、フォントサイズが変更されるたびに、
+% |\set@fontsize|コマンドによって変化します。
 %
 % フォントサイズが変更されたときに、|\set@fontsize|コマンドで更新されます。
 %
@@ -359,6 +382,31 @@
 % \end{macro}
 % \end{macro}
 %
+% \begin{macro}{\strut}
+% \begin{macro}{\tstrut}
+% \begin{macro}{\zstrut}
+% |\strutbox|は|\yoko|ディレクションで組まれていますので、
+% 縦組ボックス内で|\unhcopy|をするとエラーとなります。
+% このマクロは\file{ltplain.dtx}で定義されています。
+%
+% \changes{v1.1c}{1995/08/24}{``\cs{centerling}~\cs{strat}''の幅がゼロに
+% なってしまうのを修正}
+%    \begin{macrocode}
+\def\strut{\relax
+  \ifydir
+    \ifmmode\copy\strutbox\else\unhcopy\strutbox\fi
+  \else\hbox{\yoko
+    \ifmmode\copy\strutbox\else\unhcopy\strutbox\fi}\fi}
+\def\tstrut{\relax\hbox{\tate
+   \ifmmode\copy\tstrutbox\else\unhcopy\tstrutbox\fi}}
+\def\zstrut{\relax\hbox{\tate
+   \ifmmode\copy\zstrutbox\else\unhcopy\zstrutbox\fi}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+%
 %
 % \subsection{コマンド}
 % 次のコマンドの定義をしています。
@@ -372,6 +420,7 @@
 % +\Declare{Font|Kanji}Family+ & ファミリの宣言\\
 % +\DeclareKanjiSubstitution+ & 和文の代用フォントの宣言\\
 % +\DeclareErrorKanjiFont+ & 和文のエラーフォントの宣言 \\
+% +\DeclareFixedFont+ & フォントの名前の宣言 \\
 % +\{Declare|Set}RelationFont+ & 従属書体の宣言\\
 % +\userelfont+ & 欧文書体を従属書体にする\\
 % +\selectfont+ & フォントを切り替える\\
@@ -442,11 +491,12 @@
     \def\enc@elt{\noexpand\enc@elt}%
     \xdef\kenc@list{\kenc@list\enc@elt<#1>}%
   \else
-    \@font@info{Redeclaring KANJI font encoding #1}%
+    \@font@info{Redeclaring KANJI (yoko) font encoding #1}%
   \fi
   \global\@namedef{T@#1}{#2}%
   \global\@namedef{M@#1}{\default@KM#3}%
   }
+%
 \@onlypreamble\DeclareKanjiEncoding
 \@onlypreamble\DeclareKanjiEncoding@
 %    \end{macrocode}
@@ -552,9 +602,9 @@
        \cdp@list
        \xdef\cdp@list{\the\toks@}%
     \endgroup
-    \global\@namedef{D@#1}{\def\default@k@family{#2}%
-                           \def\default@k@series{#3}%
-                           \def\default@k@shape{#4}}%
+    \global\@namedef{D@#1}{\def\default@family{#2}%
+                           \def\default@series{#3}%
+                           \def\default@shape{#4}}%
   \fi}
 %
 \def\DeclareErrorKanjiFont#1#2#3#4#5{%
@@ -575,6 +625,35 @@
 \@onlypreamble\DeclareErrorKanjiFont
 %    \end{macrocode}
 % \end{macro}
+% \end{macro}
+%
+%
+% \begin{macro}{\DeclareFixedFont}
+% フォント名を宣言するコマンドです。
+%
+% \changes{v1.2}{1995/11/09}{\cs{DeclareFixedFont}の日本語化}
+%    \begin{macrocode}
+\def\DeclareFixedFont#1#2#3#4#5#6{%
+   \begingroup
+      \let\afont\font
+      \math@fontsfalse
+      \every@math@size{}%
+      \fontsize{#6}\z@
+      \edef\tmp@item{{#2}}%
+      \expandafter\expandafter\expandafter
+      \inlist@\expandafter\tmp@item\expandafter{\kenc@list}%
+      \ifin@
+         \edef\tmpa@encoding{\k@encoding}%
+         \usekanji{#2}{#3}{#4}{#5}%
+         \edef\tmpb@encoding{\k@encoding}%
+         \ifx\tmpa@encoding\tmpb@encoding\let\font\jfont
+         \else\let\font\tfont\fi
+      \else\useroman{#2}{#3}{#4}{#5}\fi
+      \global\expandafter\let\expandafter#1\the\font
+      \let\font\afont
+   \endgroup
+  }
+%    \end{macrocode}
 % \end{macro}
 %
 %
@@ -659,25 +738,15 @@
 % \item 和欧文のベースラインを調整する部分
 % \end{itemize}
 %
-% \begin{macro}{\afont}
-% \LaTeXe 内部の|\do@subst@correction|マクロでは、
-% |\fontname\font|で返される外部フォント名を用いて、
-% \LaTeXe フォント名を定義しています。したがって、|\font|をそのまま使うと、
-% 和文フォント名に欧文の外部フォントが登録されたり、
-% 縦組のフォント名が横組用の外部フォントに割り付けられたりしますので、
-% |\jfont|か|\tfont|を用いるようにします。
-% |\afont|は、|\font|コマンドの保存用です。
-%    \begin{macrocode}
-\let\afont\font
-%    \end{macrocode}
-% \end{macro}
-%
 % \changes{v1.0c}{1995/08/22}{縦横両方のフォントを切り替えるようにした}
+% \changes{v1.2}{1995/11/22}{エラーフォントに対応した}
 % |\selectfont|コマンドは、まず、和文フォントを切り替えます。
 %    \begin{macrocode}
 %</plcore>
 %<*plcore|trace>
 \DeclareRobustCommand\selectfont{%
+  \let\tmp@error@fontshape\error@fontshape
+  \let\error@fontshape\error@kfontshape
   \let\tmp@encoding\k@encoding
   \let\font\jfont
   \ifx\k@encoding\cy@encoding\else\let\k@encoding\cy@encoding\fi
@@ -695,6 +764,7 @@
 %<trace>  \@font@info{Kanji(tate):Switching to \font@name}\fi
   \let\k@encoding\tmp@encoding
   \kenc@update
+  \let\error@fontshape\tmp@error@fontshape
 %    \end{macrocode}
 % 次に、|\if@knjcmd|が真の場合、
 % 欧文書体を現在の和文書体に関連付けされたフォントに変えます。
@@ -792,17 +862,14 @@
 % 現在の和文フォントの空白（EUCコードA1A1）の中央に
 % 現在の欧文フォントの``/''の中央がくるようにベースラインシフトを設定します。
 % \changes{v1.0c}{1995/08/31}{欧文書体の基準を`M'から`/'に変更}
+% \changes{v1.2}{1995/11/21}{縦組時のみ調整するようにした}
 %
 % まず、ベースラインシフト量をゼロにします。
 %    \begin{macrocode}
 \newbox\adjust@box
 \newdimen\adjust@dimen
 \def\adjustbaseline{%
-  \ifydir
-    \ybaselineshift\z@
-  \else
-    \tbaselineshift\z@
-  \fi
+  \iftdir\tbaselineshift\z@
 %    \end{macrocode}
 % 和文フォントの基準値を設定します。
 %    \begin{macrocode}
@@ -820,8 +887,8 @@
 %
 % \begin{eqnarray*}
 % \lefteqn{ベースラインシフト量 = }\\
-%  && \{ (０の深さ) - (\mbox{M}の深さ) \}
-%       - \frac{(０の高さ+深さ) - (\mbox{M}の高さ+深さ)}{2}\\
+%  && \{ (全角空白の深さ) - (\mbox{/}の深さ) \}
+%       - \frac{(全角空白の高さ+深さ) - (\mbox{/}の高さ+深さ)}{2}\\
 % \end{eqnarray*}
 %
 %    \begin{macrocode}
@@ -832,14 +899,10 @@
   \divide\adjust@dimen\tw@
   \advance\adjust@dimen\cdp
   \advance\adjust@dimen-\dp\adjust@box
-  \ifydir
-    \ybaselineshift\adjust@dimen
-  \else
     \tbaselineshift\adjust@dimen
-  \fi
 %<trace>\ifnum \tracingfonts>\tw@
 %<trace>  \@font@info{baselineshift:\the\adjust@dimen}\fi
-  }
+  \fi}
 %</plcore|trace>
 %<*plcore>
 %    \end{macrocode}
@@ -923,6 +986,20 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\@notkfam}
+% \begin{macro}{\@notffam}
+% |\fontfamily|コマンド内で使用するフラグです。
+% |@notkfam|フラグは和文ファミリでなかったことを、
+% |@notffam|フラグは欧文ファミリでなかったことを示します。
+%
+% \changes{v1.2}{1995/11/21}{\cs{fontfamily}コマンド用のフラグ追加}
+%    \begin{macrocode}
+\newif\if@notkfam
+\newif\if@notffam
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
 %
 % \begin{macro}{\romanfamily}
 % \begin{macro}{\kanjifamily}
@@ -932,18 +1009,29 @@
 % |\kanjifamily|と|\romanfamily|は与えられた引数が、
 % 和文あるいは欧文のファミリとして正しいかのチェックは行なっていません。
 % そのため、高速に動作をしますが、|\kanjifamily|に欧文ファミリを指定したり、
-% 逆に|\romanfamily|に和文ファミリを指定した場合はエラーとなります。
+% 逆に|\romanfamily|に和文ファミリを指定した場合は、エラーとなり、
+% 代用フォントかエラーフォントが使われます。
 %    \begin{macrocode}
 \DeclareRobustCommand\romanfamily[1]{\edef\f@family{#1}}
 \DeclareRobustCommand\kanjifamily[1]{\edef\k@family{#1}}
 %    \end{macrocode}
+%
 % |\fontfamily|は、指定された値によって、和文ファミリか欧文ファミリ、
 % \emph{あるいは両方}のファミリを切り替えます。
+% 和欧文ともに無効なファミリ名が指定された場合は、和欧文ともに代替書体が
+% 使用されます。
 %
 % 引数が|\rmfamily|のような名前で与えられる可能性があるため、
 % まず、これを展開したものを作ります。
+%
+% また、和文ファミリと欧文ファミリのそれぞれになかったことを示すフラグを
+% 偽にセットします。
+%
+% \changes{v1.2}{1995/11/21}{代用フォントが使われないバグを修正}
 %    \begin{macrocode}
 \def\fontfamily#1{\edef\tmp@item{{#1}}%
+  \@notkfamfalse
+  \@notffamfalse
 %    \end{macrocode}
 % 次に、この引数が|\kfam@list|に登録されているかどうかを調べます。
 % 登録されていれば、|\k@family|にその値を入れます。
@@ -953,14 +1041,15 @@
   \ifin@ \edef\k@family{#1}%
 %    \end{macrocode}
 % そうでないときは、|\notkfam@list|に登録されているかどうかを調べます。
-% 登録されていれば、この引数は和文ファミリではありませんので何もしません。
+% 登録されていれば、この引数は和文ファミリではありませんので、
+% |\@notkfam|フラグを真にして、欧文ファミリのルーチンに移ります。
+%
 % このとき、|\efam@list|を調べるのではないことに注意をしてください。
-% |\efam@list|を調べ、これにないファミリが和文ファミリであるとすると、
-% たとえば、|\romanfamily{nar}|で先にナールファミリが読み込まれていて、
-% 和文ファミリのナールの書体定義ファイルがまだ読み込まれていないときに、
-% |\fontfamily{nar}|を指定しても、|nar|が|\efam@list|に登録されているため、
-% |\k@family|に|nar|を設定することができません。
-% （|\kfam@list|に登録されるのは|\DeclareKanjiFamily|でです）。
+% |\efam@list|を調べ、これにないファミリを和文ファミリであるとすると、
+% たとえば、欧文ナールファミリが定義されているけれども、和文ナールファミリ
+% が未定義の場合、|\fontfamily{nar}|という指定は、|nar|が|\efam@list|にだけ、
+% 登録されているため、和文書体をナールにすることができません。
+%
 % 逆に、|\kfam@list|に登録されていないからといって、|\k@family|に|nar|を設定
 % すると、|cmr|のようなファミリも|\k@family|に設定される可能性があります。
 % したがって、「欧文でない」を明示的に示す|\notkfam@list|を見る必要があります。
@@ -968,37 +1057,35 @@
   \else
     \expandafter\expandafter\expandafter
     \inlist@\expandafter\tmp@item\expandafter{\notkfam@list}%
-    \ifin@ \relax
+    \ifin@ \@notkfamtrue
 %    \end{macrocode}
 % |\notkfam@list|に登録されていない場合は、
 % フォント定義ファイルが存在するかどうかを調べます。
 % ファイルが存在する場合は、|\k@family|を変更します。
-% ファイルが存在しない場合は、|\notk@list|に登録します。
+% ファイルが存在しない場合は、|\notkfam@list|に登録します。
 %
-% |\kenc@list|に登録されていないエンコードと、指定された和文ファミリの
-% 組合せのフォント定義ファイルが存在しなければ、どこかでエラーとなります。
-% なぜなら、|\kenc@list|に登録されていないということは、
-% |\DeclareKanjiEncoding|コマンドが実行されていないということだからです。
-% 宣言されていないエンコードは知ることができません。
-%
-% フォント定義ファイルがなくても、
-% プリアンブルに|\DelcareKanjiFamily|コマンドが記述してあればエラーでは
-% ありません。しかし、この場合は|\kfam@list|に登録されているため、
-% この部分のコードが実行されることがありません。
-% ここが実行される場合は、プリアンブルでのファミリ宣言よりも前に、
-% フォントファミリを変更しようとした場合です。
-%
-% \changes{v1.1b}{1995/05/10}{\cs{notkfam@list}に、
-%   エンコードごとに登録されてしまうのを修正した。欧文についても同様。}
+% |\kenc@list|に登録されているエンコードと、指定された和文ファミリの
+% 組合せのフォント定義ファイルが存在する場合は、|\k@family|に指定された
+% 値を入れます。
 %    \begin{macrocode}
     \else
       \@tempswafalse
       \def\fam@elt{\noexpand\fam@elt}%
-      \def\enc@elt<##1>{\IfFileExists{##1#1.fd}{\@tempswatrue}{}}%
+      \message{(I search font definition file:}%
+      \def\enc@elt<##1>{\message{.}\IfFileExists{##1#1.fd}{\@tempswatrue}{}}%
       \kenc@list
+      \message{)}%
       \if@tempswa
         \edef\k@family{#1}%
+%    \end{macrocode}
+% つぎの部分が実行されるのは、和文ファミリとして認識できなかった場合です。
+% この場合は、|\@notkfam|フラグを真にして、|\notkfam@list|に登録します。
+%
+% \changes{v1.1b}{1995/05/10}{\cs{notkfam@list}に、
+%   エンコードごとに登録されてしまうのを修正した。欧文についても同様。}
+%    \begin{macrocode}
       \else
+        \@notkfamtrue
         \xdef\notkfam@list{\notkfam@list\fam@elt<#1>}%
       \fi
 %    \end{macrocode}
@@ -1014,16 +1101,30 @@
   \ifin@ \edef\f@family{#1}\else
     \expandafter\expandafter\expandafter
     \inlist@\expandafter\tmp@item\expandafter{\notffam@list}%
-    \ifin@ \relax \else
+    \ifin@ \@notffamtrue \else
       \@tempswafalse
       \def\fam@elt{\noexpand\fam@elt}%
-      \def\enc@elt<##1>{\IfFileExists{##1#1.fd}{\@tempswatrue}{}}%
+      \message{(I search font definition file:}%
+      \def\enc@elt<##1>{\message{.}\IfFileExists{##1#1.fd}{\@tempswatrue}{}}%
       \fenc@list
+      \message{)}%
       \if@tempswa
         \edef\f@family{#1}%
       \else
+        \@notffamtrue
         \xdef\notffam@list{\notffam@list\fam@elt<#1>}%
       \fi
+  \fi\fi
+%    \end{macrocode}
+% 最後に、指定された文字列が、和文ファミリと欧文ファミリのいずれか、
+% あるいは両方として認識されたかどうかを確認します。
+%
+% どちらとも認識されていない場合は、ファミリの指定ミスですので、
+% 代用フォントを使うために、故意に指定された文字列をファミリに
+% 入れます。
+%    \begin{macrocode}
+  \if@notkfam\if@notffam
+      \edef\k@family{#1}\edef\f@family{#1}%
   \fi\fi}
 %    \end{macrocode}
 % \end{macro}
@@ -1063,11 +1164,12 @@
 %
 % \begin{macro}{\usekanji}
 % \begin{macro}{\useroman}
+% \begin{macro}{\usefont}
 % 書体属性を一度に指定するコマンドです。
 % 和文書体には|\usekanji|を、欧文書体には|\useroman|を指定してください。
 %
-% |\usefont|コマンドは、和文書体にも欧文書体にも使用することができますが、
-% シリーズとシェイプは和欧文ともに変更されることに注意をしてください。
+% |\usefont|コマンドは、第一引数で指定されるエンコードによって、
+% 和文または欧文フォントを切り替えます。
 %    \begin{macrocode}
 \def\usekanji#1#2#3#4{%
     \kanjiencoding{#1}\kanjifamily{#2}\kanjiseries{#3}\kanjishape{#4}%
@@ -1075,7 +1177,14 @@
 \def\useroman#1#2#3#4{%
     \romanencoding{#1}\romanfamily{#2}\romanseries{#3}\romanshape{#4}%
     \selectfont\ignorespaces}
+\def\usefont#1#2#3#4{\edef\tmp@item{{#1}}%
+  \expandafter\expandafter\expandafter
+  \inlist@\expandafter\tmp@item\expandafter{\kenc@list}%
+  \ifin@ \usekanji{#1}{#2}{#3}{#4}%
+  \else\useroman{#1}{#2}{#3}{#4}%
+  \fi}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 % \end{macro}
 %
@@ -1325,7 +1434,6 @@
 % \changes{v1.1c}{1995/09/12}{\cs{xkanjiskip}のデフォルト値}
 %    \begin{macrocode}
 \xkanjiskip=.25zw plus1pt minus1pt
-%\xkanjiskip=2.5pt plus1pt minus1pt
 \autoxspacing
 %    \end{macrocode}
 % |\jcharwidowpenalty|は、パラグラフに対する禁則です。
@@ -1361,11 +1469,11 @@
 %<JY1gt>\ProvidesFile{JY1gt.fd}
 %<JT1mc>\ProvidesFile{JT1mc.fd}
 %<JT1gt>\ProvidesFile{JT1gt.fd}
-%<JY1mc,JY1gt,JT1mc,JT1gt>       [1995/02/21 v1.1 Kanji font defines]
+%<JY1mc,JY1gt,JT1mc,JT1gt>       [1995/11/24 v1.2 KANJI font defines]
 %    \end{macrocode}
 % 横組用、縦組用ともに、
 % 明朝体のシリーズ|bx|がゴシック体となるように宣言しています。
-% また、シェイプ|it|, |sl|, |sc|もゴシック体になるように宣言をしています。
+% \changes{v1.2}{1995/11/24}{it, sl, sc の宣言を外した}
 %    \begin{macrocode}
 %<*JY1mc>
 \DeclareKanjiFamily{JY1}{mc}{}
@@ -1373,9 +1481,6 @@
 \DeclareRelationFont{JY1}{mc}{bx}{}{OT1}{cmr}{bx}{}
 \DeclareFontShape{JY1}{mc}{m}{n}{<5> <6> <7> <8> <9> sgen*min
     <10-> min10}{}
-\DeclareFontShape{JY1}{mc}{m}{it}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JY1}{mc}{m}{sl}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JY1}{mc}{m}{sc}{<->ssub*gt/m/n}{}
 \DeclareFontShape{JY1}{mc}{bx}{n}{<->ssub*gt/m/n}{}
 %</JY1mc>
 %<*JT1mc>
@@ -1384,9 +1489,6 @@
 \DeclareRelationFont{JT1}{mc}{bx}{}{OT1}{cmr}{bx}{}
 \DeclareFontShape{JT1}{mc}{m}{n}{<5> <6> <7> <8> <9> sgen*tmin
     <10-> tmin10}{}
-\DeclareFontShape{JT1}{mc}{m}{it}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JT1}{mc}{m}{sl}{<->ssub*gt/m/n}{}
-\DeclareFontShape{JT1}{mc}{m}{sc}{<->ssub*gt/m/n}{}
 \DeclareFontShape{JT1}{mc}{bx}{n}{<->ssub*gt/m/n}{}
 %</JT1mc>
 %<*JY1gt>

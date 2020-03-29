@@ -1,13 +1,12 @@
 % \iffalse
-% $Id: jclasses.dtx,v 1.3 1995/04/21 08:46:33 ken-na Exp ken-na $
 %
-%  Copyright 1995 ASCII Corporation.
+%  Copyright 1995,1996 ASCII Corporation.
 %
 %  This file is part of the pLaTeX2e system.
 %  -----------------------------------------
 %
 % \fi
-% \CheckSum{3642}
+% \CheckSum{3820}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -29,8 +28,11 @@
 % \StopEventually{}
 %
 % \iffalse
-% \changes{v1.0a}{1995/08/30}{ページスタイル部分の調整}
 % \changes{v1.0}{1995/04/19}{first edition}
+% \changes{v1.0a}{1995/08/30}{ページスタイル部分の調整}
+% \changes{v1.0b}{1995/11/08}{ページスタイル部分の調整}
+% \changes{v1.0c}{1996/01/30}{LaTeX `1995/12/01' での修正を反映}
+% \changes{v1.0d}{1996/02/29}{デフォルトページスタイルの修正}
 % \fi
 %
 % \iffalse
@@ -61,9 +63,9 @@
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
 %<*article|report|book>
-   [1995/08/30 v1.0a Standard pLaTeX class]
+   [1996/03/01 v1.0c Standard pLaTeX class]
 %</article|report|book>
-%<10pt|11pt|12pt>  [1995/08/30 v1.0a Standard pLaTeX file (size option)]
+%<10pt|11pt|12pt>  [1996/03/01 v1.0d Standard pLaTeX file (size option)]
 %<*driver>
 \documentclass{jltxdoc}
 \GetFileInfo{jclasses.dtx}
@@ -71,8 +73,8 @@
 \author{Ken Nakano}
 \date{作成日：\filedate}
 \begin{document}
-\tableofcontents
   \maketitle
+  \tableofcontents
   \DocInput{jclasses.dtx}
 \end{document}
 %</driver>
@@ -156,14 +158,7 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\if@openbib}
-% 参考文献をオープンスタイルで作成するかどうかのスイッチです。
-% デフォルトではクローズスタイルで作成します。
-%    \begin{macrocode}
-\newif\if@openbib
-\@openbibfalse
-%    \end{macrocode}
-% \end{macro}
+% \changes{v1.0c}{1995/12/25}{Macro \cs{if@openbib} removed}
 %
 % \begin{macro}{\if@mainmatter}
 % スイッチ|\@mainmatter|が真の場合、本文を処理しています。
@@ -178,9 +173,11 @@
 %
 % \subsection{用紙オプション}
 % 用紙サイズを指定するオプションです。
+% これらのオプションは、\LaTeX 2.09にはないため、互換モードでは無効にします。
 % \changes{v1.0a}{1995/09/26}{Change b4paper width/height 352x250 to 364x257}
 % \changes{v1.0a}{1995/09/26}{Change b5paper width/height 250x176 to 257x182}
 %    \begin{macrocode}
+\if@compatibility\else
 \DeclareOption{a4paper}{\renewcommand{\@paper}{1}%
   \setlength\paperheight {297mm}%
   \setlength\paperwidth  {210mm}}
@@ -193,12 +190,17 @@
 \DeclareOption{b5paper}{\renewcommand{\@paper}{4}%
   \setlength\paperheight {257mm}
   \setlength\paperwidth  {182mm}}
+\fi
 %    \end{macrocode}
 %
 % \subsection{サイズオプション}
 % 基準となるフォントの大きさを指定するオプションです。
 %    \begin{macrocode}
+\if@compatibility
+  \renewcommand{\@ptsize}{0}
+\else
 \DeclareOption{10pt}{\renewcommand{\@ptsize}{0}}
+\fi
 \DeclareOption{11pt}{\renewcommand{\@ptsize}{1}}
 \DeclareOption{12pt}{\renewcommand{\@ptsize}{2}}
 %    \end{macrocode}
@@ -208,7 +210,9 @@
 % このオプションを処理したときに、長さを入れ換えるのでは\emph{ない}ので、
 % オプションの順番を気にする必要がありません。
 %    \begin{macrocode}
+\if@compatibility\else
 \DeclareOption{landscape}{\@landscapetrue}
+\fi
 %    \end{macrocode}
 %
 % \subsection{トンボオプション}
@@ -224,7 +228,7 @@
 %    \end{macrocode}
 %
 % \subsection{両面、片面オプション}
-% towsideオプションが指定されると、両面印字出力に適した整形を行ないます。
+% twosideオプションが指定されると、両面印字出力に適した整形を行ないます。
 %    \begin{macrocode}
 \DeclareOption{oneside}{\@twosidefalse}
 \DeclareOption{twoside}{\@twosidetrue}
@@ -248,13 +252,17 @@
 % chapterを右ページあるいは左ページから
 % はじめるかどうかを指定するオプションです。
 %    \begin{macrocode}
-%<report|book>\DeclareOption{openright}{\@openrighttrue}
-%<report|book>\DeclareOption{openany}{\@openrightfalse}
+%<!article>\if@compatibility
+%<book>\@openrighttrue
+%<!article>\else
+%<!article>\DeclareOption{openright}{\@openrighttrue}
+%<!article>\DeclareOption{openany}{\@openrightfalse}
+%<!article>\fi
 %    \end{macrocode}
 %
 % \subsection{数式のオプション}
-% leqnoを指定すると、数式番号を数式の左側に出力します。
-% fleqnを指定するとディスプレイ数式を左揃えで出力します。
+% \Lopt{leqno}を指定すると、数式番号を数式の左側に出力します。
+% \Lopt{fleqn}を指定するとディスプレイ数式を左揃えで出力します。
 %    \begin{macrocode}
 \DeclareOption{leqno}{\input{leqno.clo}}
 \DeclareOption{fleqn}{\input{fleqn.clo}}
@@ -263,8 +271,24 @@
 % \subsection{参考文献のオプション}
 % 参考文献一覧を``オープンスタイル''の書式で出力します。
 % これは各ブロックが改行で区切られ、|\bibindent|のインデントが付く書式です。
+% \changes{v1.0c}{1995/12/25}{openbibオプションを再実装}
 %    \begin{macrocode}
-\DeclareOption{openbib}{\@openbibtrue}
+\DeclareOption{openbib}{%
+%    \end{macrocode}
+% 参考文献環境内の最初のいくつかのフックを満たします。
+%    \begin{macrocode}
+  \AtEndOfPackage{%
+   \renewcommand\@openbib@code{%
+      \advance\leftmargin\bibindent
+      \itemindent -\bibindent
+      \listparindent \itemindent
+      \parsep \z@
+      }%
+%    \end{macrocode}
+% そして、|\newblock|を再定義します。
+%    \begin{macrocode}
+   \renewcommand\newblock{\par}}%
+}
 %    \end{macrocode}
 %
 % \subsection{ドラフトオプション}
@@ -292,11 +316,15 @@
 %<tate>\ExecuteOptions{a4paper,10pt,twoside,onecolumn,final,openright,tate}
 %<yoko>\ExecuteOptions{a4paper,10pt,twoside,onecolumn,final,openright}
 %</book>
-\ProcessOptions
+\ProcessOptions\relax
 %<book&tate>\input{tbk1\@ptsize.clo}
 %<!book&tate>\input{tsize1\@ptsize.clo}
 %<book&yoko>\input{jbk1\@ptsize.clo}
 %<!book&yoko>\input{jsize1\@ptsize.clo}
+%    \end{macrocode}
+% 縦組用クラスファイルの場合は、ここで\file{plext.sty}も読み込みます。
+%    \begin{macrocode}
+%<tate>\usepackage{plext}
 %</article|report|book>
 %    \end{macrocode}
 %
@@ -524,13 +552,20 @@
 %
 % \begin{macro}{\paperheight}
 % \begin{macro}{\paperwidth}
-% 用紙サイズを設定します。デフォルトはA4用紙（縦）です。
+% landscape オプションが指定されたときは、用紙サイズと本文領域の縦横の
+% 値を交換します。指定されていなければ、そのままです。
+% デフォルトは、A4用紙です。
+%
+% \changes{v1.0b}{1995/11/08}{landscape時の本文領域のスワッピング}
 %    \begin{macrocode}
 %<*article|report|book>
 \if@landscape
   \setlength\@tempdima{\paperheight}
   \setlength\paperheight{\paperwidth}
   \setlength\paperwidth{\@tempdima}
+  \setlength\@tempdima{\textheight}
+  \setlength\textheight{\textwidth}
+  \setlength\textwidth{\@tempdima}
 \fi
 %    \end{macrocode}
 % \end{macro}
@@ -560,8 +595,10 @@
 % \end{macro}
 %
 % \begin{macro}{\baselinestretch}
-% これは|\baselineskip|を何倍するかを示します。
-% デフォルトでは、何もしません。
+% これは、|\baselineskip|の倍率を示すために使います。
+% デフォルトでは、\emph{何もしません}。このコマンドが``empty''でない場合、
+% |\baselineskip|の指定の\texttt{plus}や\texttt{minus}部分は無視される
+% ことに注意してください。
 %    \begin{macrocode}
 \renewcommand{\baselinestretch}{}
 %    \end{macrocode}
@@ -577,6 +614,26 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
+%
+%  \begin{macro}{\smallskipamount}
+%  \begin{macro}{\medskipamount}
+%  \begin{macro}{\bigskipamount}
+% これら３つのパラメータの値は、\LaTeX{}カーネルの中で設定されています。
+% これらはおそらく、サイズオプションの指定によって変えるべきです。
+% しかし、\LaTeX~2.09や\LaTeXe の以前のリリースの両方との互換性を保つために、
+% これらはまだ同じ値としています。
+% \changes{v1.3n}{1995/10/29}{Added setting the values of
+%    \cs{...skipamount}}
+%    \begin{macrocode}
+%<*10pt|11pt|12pt>
+\setlength\smallskipamount{3\p@ \@plus 1\p@ \@minus 1\p@}
+\setlength\medskipamount{6\p@ \@plus 2\p@ \@minus 2\p@}
+\setlength\bigskipamount{12\p@ \@plus 4\p@ \@minus 4\p@}
+%</10pt|11pt|12pt>
+%    \end{macrocode}
+%  \end{macro}
+%  \end{macro}
+%  \end{macro}
 %
 % \begin{macro}{\@lowpenalty}
 % \begin{macro}{\@medpenalty}
@@ -636,10 +693,11 @@
 % \end{macro}
 %
 % \begin{macro}{\maxdepth}
-% \begin{macro}{\@maxdepth}
+% \changes{v1.1c}{1995/12/25}{\cs{@maxdepth}の設定を除外した}
 % \TeX のプリミティブレジスタ|\maxdepth|は、|\topskip|と同じような
 % 働きをします。|\@maxdepth|レジスタは、つねに|\maxdepth|のコピーでなくては
-% いけません。\TeX と\LaTeX~2.09では、|\maxdepth|は\texttt{4pt}に固定です。
+% いけません。これは|\begin{document}|の内部で設定されます。
+% \TeX と\LaTeX~2.09では、|\maxdepth|は\texttt{4pt}に固定です。
 % \LaTeX2e\ では、|\maxdepth|$+$|\topskip|を基本サイズの1.5倍にしたいので、
 % |\maxdepth|を|\topskip|の半分の値で設定します。
 %    \begin{macrocode}
@@ -648,9 +706,7 @@
 \else
   \setlength\maxdepth{.5\topskip}
 \fi
-\setlength\@maxdepth\maxdepth
 %    \end{macrocode}
-% \end{macro}
 % \end{macro}
 %
 % \subsubsection{本文領域}
@@ -900,6 +956,7 @@
 % |\marginparwidth|を計算します。
 % ここで、|\@tempdima|の値は、\linebreak
 % |\paperwidth| $-$ |\textwidth|です。
+%\changes{v1.1d}{1995/11/24}{typo: \cs{marginmarwidth} to \cs{marginparwidth}}
 %    \begin{macrocode}
 %<*yoko>
   \if@twoside
@@ -910,7 +967,7 @@
     \addtolength\marginparwidth{-.4in}
   \fi
   \ifdim \marginparwidth >2in
-    \setlength\marginmarwidth{2in}
+    \setlength\marginparwidth{2in}
   \fi
 %</yoko>
 %    \end{macrocode}
@@ -958,7 +1015,8 @@
 %
 % \subsection{フロート}
 % すべてのフロートパラメータは、\LaTeX{}のカーネルでデフォルトが定義
-% されています。
+% されています。そのため、カウンタ以外のパラメータは|\renewcommand|で
+% 設定する必要があります。
 %
 % \subsubsection{フロートパラメータ}
 %
@@ -970,9 +1028,9 @@
 % これらのパラメータで制御されます。これらのパラメータは、一段組モードと
 % 二段組モードの段抜きでないフロートの両方で使われます。
 %
-% |\floatsep|は、ページ上部あるいは下部のフロートと本文との距離です。
+% |\floatsep|は、ページ上部あるいは下部のフロート間の距離です。
 %
-% |\textfloatsep|は、ページ上部あるいは下部のフロート間の距離です。
+% |\textfloatsep|は、ページ上部あるいは下部のフロートと本文との距離です。
 %
 % |\intextsep|は、本文の途中に出力されるフロートと本文との距離です。
 %    \begin{macrocode}
@@ -1164,47 +1222,47 @@
 %
 %
 % \section{ページスタイル}\label{sec:pagestyle}
-% ここでは、いくつかのページスタイルを定義しています。
+% p\LaTeXe では、つぎの6種類のページスタイルを使用できます。
+% \pstyle{empty}は\file{latex.dtx}で定義されています。 
+%
+% \begin{tabular}{ll}
+% empty      & ヘッダにもフッタにも出力しない\\
+% plain      & フッタにページ番号のみを出力する\\
+% headnombre & ヘッダにページ番号のみを出力する\\
+% footnombre & フッタにページ番号のみを出力する\\
+% headings   & ヘッダに見出しとページ番号を出力する\\
+% bothstyle  & ヘッダに見出し、フッタにページ番号を出力する\\
+% \end{tabular}
+%
 % ページスタイル\pstyle{foo}は、|\ps@foo|コマンドとして定義されます。
 %
 % \begin{macro}{\@evenhead}
 % \begin{macro}{\@oddhead}
 % \begin{macro}{\@evenfoot}
 % \begin{macro}{\@oddfoot}
-% |\ps@...|コマンドは、ヘッダとフッタとして、|\@oddhead|, |\@oddfoot|,
-% |\@evenhead|, |\@evenfoot|コマンドを定義します。
-% たとえば、|\@oddhead|は奇数ページのヘッダとなります。
-% この内容は|\textwidth|の幅を持つ|\hbox|に入れられます。
-% ただし、縦組みのときは、|\textheight|の幅となります。
-% \end{macro}
-% \end{macro}
-% \end{macro}
-% \end{macro}
+% これらは|\ps@...|から呼び出され、ヘッダとフッタを出力するマクロです。
 %
-% \pstyle{headings}と\pstyle{bothstyle}では、
-% \pstyle{jplain}を\pstyle{headnombre}と\pstyle{footnombre}にしています。
-% これは、\LaTeX{}のカーネルで設定されている\pstyle{plain}が、
-% ページ番号をフッタの中央に出力するように定義されているので、
-% \pstyle{headings}あるいは\pstyle{bothstyle}と組み合わせたときに、
-% 奇妙なスタイルになってしまうためです。
+% \DeleteShortVerb{\|}
+% \begin{tabular}{ll}
+% |\@oddhead| & 奇数ページのヘッダを出力\\
+% |\@oddfoot| & 奇数ページのフッタを出力\\
+% |\@evenhead| & 偶数ページのヘッダを出力\\
+% |\@evenfoot| & 偶数ページのフッタを出力\\
+% \end{tabular}
+% \MakeShortVerb{\|}
 %
-% p\LaTeX{}では、|\chapter|コマンドのスタイルを\pstyle{jplain}にし、
-% \pstyle{headnombre}または\pstyle{footnombre}のいずれかを使用するように
-% しています。また|\cleardoublepage|コマンドによって出力される、
-% 白ページのページスタイルは、
-% フォーマットファイルで\pstyle{empty}に拡張されています。
+% これらの内容は、横組の場合は|\textwidth|の幅を持つ|\hbox|に入れられ、
+% 縦組の場合は|\textheight|の幅を持つ|\hbox|に入れられます。
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 % \subsection{マークについて}
-% 作られるヘッダは、見出しコマンドによって決定されます。
-% ページスタイルは|\chaptermark|や|\sectionmark|などを定義しています。
-% |\chaptermark{|\meta{TEXT}|}|は、|\chapter|から呼ばれ、マークを設定します。
-%
-% |\...mark|コマンドと|\...head|コマンドは、次のマクロを使って
-% 定義されています（すべての|\...mark|コマンドは、
-% 空に初期化されなくてはいけません）。
-%
-% \LaTeX{}は、\TeX{}の|\mark|機能を拡張しており、次のコマンドを使うことで、
-% `left'と`right'の２種類のマークを生成することができます
+% ヘッダに入る章番号や章見出しは、見出しコマンドで実行されるマークコマンドで
+% 決定されます。ここでは、実行されるマークコマンドの定義を行なっています。
+% これらのマークコマンドは、\TeX{}の|\mark|機能を用いて、
+% `left'と`right'の２種類のマークを生成するように定義しています。
 %
 % \begin{flushleft}
 % |\markboth{|\meta{LEFT}|}{|\meta{RIGHT}|}|: 両方のマークに追加します。
@@ -1214,28 +1272,64 @@
 % |\leftmark|: |\@oddhead|, |\@oddfoot|, |\@evenhead|, |\@evenfoot|マクロで
 %     使われ、現在の``左''マークを出力します。
 %     |\leftmark|は\TeX{}の|\botmark|コマンドのような働きをします。
+%     初期値は空でなくてはいけません。
 %
 % |\rightmark|: |\@oddhead|, |\@oddfoot|, |\@evenhead|, |\@evenfoot|マクロで
 %     使われ、現在の``右''マークを出力します。
 %     |\rightmark|は\TeX{}の|\firstmark|コマンドのような働きをします。
+%     初期値は空でなくてはいけません。
 % \end{flushleft}
 %
 % マークコマンドの動作は、左マークの`範囲内の'右マークのために
-% 合理的になっています。
-% たとえば、左マークは|\chapter|コマンドによって変更されます。
-% そして右マークは|\section|コマンドによって変更されます。
+% 合理的になっています。たとえば、左マークは|\chapter|コマンドによって
+% 変更されます。そして右マークは|\section|コマンドによって変更されます。
 % しかし、同一ページに複数の|\markboth|コマンドが現れたとき、
 % おかしな結果となることがあります。
 %
 % |\tableofcontents|のようなコマンドは、|\@mkboth|コマンドを用いて、
 % あるページスタイルの中でマークを設定しなくてはなりません。
-% |\@mkboth|は、|\ps@...|コマンドによって、
-% |\markboth|（ヘッダを設定する）か、
+% |\@mkboth|は、|\ps@...|コマンドによって、|\markboth|（ヘッダを設定する）か、
 % |\@gobbletwo|（何もしない）に|\let|されます。
 %
-% \pstyle{empty}と\pstyle{plain}は\file{latex.dtx}で定義されています。 
-%
 % \changes{v1.0a}{1995/08/30}{柱の書体がノンブルに影響するバグの修正}
+%
+%
+% \subsection{plainページスタイル}
+% \pstyle{jpl@in}に|\let|するために、ここで定義をします。
+%
+% \begin{macro}{\ps@plain}
+%    \begin{macrocode}
+\def\ps@plain{\let\@mkboth\@gobbletwo
+   \let\ps@jpl@in\ps@plain
+   \let\@oddhead\@empty
+   \def\@oddfoot{\reset@font\hfil\thepage\hfil}%
+   \let\@evenhead\@empty
+   \let\@evenfoot\@oddfoot}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{jpl@inページスタイル}
+% \changes{v1.0d}{1996/02/29}{\pstyle{jpl@in}の初期値を定義}
+%
+% \pstyle{jpl@in}スタイルは、クラスファイル内部で使用するものです。
+% \LaTeXe では、bookクラスを\pstyle{headings}としています。
+% しかし、\cs{tableofcontnts}コマンドの内部では\pstyle{plain}として
+% 設定されるため、一つの文書でのページ番号の位置が上下に出力される
+% ことになります。
+%
+% そこで、p\LaTeXe では、\cs{tableofcontents}や\cs{theindex}のページスタイル
+% を\pstyle{jpl@in}にし、実際に出力される形式は、ほかのページスタイル
+% で|\let|をしています。したがって、\pstyle{headings}のとき、目次ページの
+% ページ番号はヘッダ位置に出力され、\pstyle{plain}のときには、フッタ位置に
+% 出力されます。
+%
+% ここで、定義をしているのは、その初期値です。
+%
+% \begin{macro}{\ps@jpl@in}
+%    \begin{macrocode}
+\let\ps@jpl@in\ps@plain
+%    \end{macrocode}
+% \end{macro}
 %
 % \subsection{headnombreページスタイル}
 %
@@ -1243,6 +1337,7 @@
 % \pstyle{headnombre}スタイルは、ヘッダにページ番号のみを出力します。
 %    \begin{macrocode}
 \def\ps@headnombre{\let\@mkboth\@gobbletwo
+    \let\ps@jpl@in\ps@headnombre
 %<yoko>  \def\@evenhead{\thepage\hfil}%
 %<yoko>  \def\@oddhead{\hfil\thepage}%
 %<tate>  \def\@evenhead{\hfil\thepage}%
@@ -1257,6 +1352,7 @@
 % \pstyle{footnombre}スタイルは、フッタにページ番号のみを出力します。
 %    \begin{macrocode}
 \def\ps@footnombre{\let\@mkboth\@gobbletwo
+    \let\ps@jpl@in\ps@footnombre
 %<yoko>  \def\@evenfoot{\thepage\hfil}%
 %<yoko>  \def\@oddfoot{\hfil\thepage}%
 %<tate>  \def\@evenfoot{\hfil\thepage}%
@@ -1276,7 +1372,7 @@
 % 横組の場合は、奇数ページが右に、偶数ページが左にきます。
 % 縦組の場合は、奇数ページが左に、偶数ページが右にきます。
 %    \begin{macrocode}
-  \def\ps@headings{\let\ps@jplain\ps@headnombre
+  \def\ps@headings{\let\ps@jpl@in\ps@headnombre
     \let\@oddfoot\@empty\let\@evenfoot\@empty
 %<yoko>    \def\@evenhead{\thepage\hfil\leftmark}%
 %<yoko>    \def\@oddhead{{\rightmark}\hfil\thepage}%
@@ -1308,7 +1404,7 @@
 % 片面印刷の場合：
 %    \begin{macrocode}
 \else % if not twoside
-  \def\ps@headings{\let\ps@jplain\ps@headnombre
+  \def\ps@headings{\let\ps@jpl@in\ps@headnombre
     \let\@oddfoot\@empty
 %<yoko>    \def\@oddhead{{\rightmark}\hfil\thepage}%
 %<tate>    \def\@oddhead{\thepage\hfil\rightmark}%
@@ -1346,14 +1442,15 @@
 %
 % このスタイルは、両面印刷と片面印刷とで形式が異なります。
 % \changes{1995/08/23}{v1.0d}{横組の evenfoot が中央揃えになっていたのを修正}
+% \changes{1996/03/05}{v1.0d}{横組で偶数ページと奇数ページの設定が逆なのを修正}
 %    \begin{macrocode}
 \if@twoside
-  \def\ps@bothstyle{\let\ps@jplain\ps@footnombre
+  \def\ps@bothstyle{\let\ps@jpl@in\ps@footnombre
 %<*yoko>
-    \def\@evenhead{\hfil\leftmark}% right page
-    \def\@evenfoot{\hfil\thepage}% right page
-    \def\@oddhead{\rightmark\hfil}% left page
-    \def\@oddfoot{\thepage\hfil}% left page
+    \def\@evenhead{\leftmark\hfil}% right page
+    \def\@evenfoot{\thepage\hfil}% right page
+    \def\@oddhead{\hfil\rightmark}% left page
+    \def\@oddfoot{\hfil\thepage}% left page
 %</yoko>
 %<*tate>
     \def\@evenhead{\hfil\leftmark}% right page
@@ -1384,7 +1481,7 @@
 %</report|book>
   }
 \else % if not two column
-  \def\ps@bothstyle{\let\ps@jplain\ps@footnombre
+  \def\ps@bothstyle{\let\ps@jpl@in\ps@footnombre
 %<yoko>    \def\@oddhead{\hfil\rightmark}%
 %<yoko>    \def\@oddfoot{\hfil\thepage}%
 %<tate>    \def\@oddhead{\rightmark\hfil}%
@@ -1422,7 +1519,7 @@
 % ユーザがページスタイルを設計するときのヒナ型として使用することができます。
 % \changes{1995/08/23}{v1.0d}{横組モードの左右が逆であったのを修正}
 %    \begin{macrocode}
-\def\ps@myheadings{\let\ps@jplain\ps@plain%
+\def\ps@myheadings{\let\ps@jpl@in\ps@plain%
   \let\@oddfoot\@empty\let\@evenfoot\@empty
 %<yoko>  \def\@evenhead{\thepage\hfil\leftmark}%
 %<yoko>  \def\@oddhead{{\rightmark}\hfil\thepage}%
@@ -1461,19 +1558,61 @@
 % \end{macro}
 %
 % \begin{environment}{titlepage}
-% この環境は、表題と概要をを独立したページとするときに使います。
+% 通常の環境では、ページの最初と最後を除き、タイトルページ環境は何もしません。
+% また、ページ番号の出力を抑制します。レポートスタイルでは、
+% ページ番号を1にリセットし、そして最後で1に戻します。
+% 互換モードでは、ページ番号はゼロに設定されますが、
+% 右起こしページ用のページパラメータでは誤った結果になります。
+% 二段組スタイルでも一段組のページが作られます。
+%
+% \changes{v1.0g}{1993/12/09}{Moved the setting of
+%    \cs{@restonecolfalse}}
+% \changes{v1.2c}{1994/03/17}{page := 0 only in compatibility mode
+%    (LL)}
+% \changes{v1.2d}{1994/04/11}{Moved \cs{cleardoublepage} inside
+%    definition of titlepage environment}
+% \changes{v1.3i}{1995/08/08}{New implementation with support for
+%      twoside and openright option}
+%
+% 最初に互換モードの定義を作ります。
 %    \begin{macrocode}
-\newenvironment{titlepage}{%
-%<book>  \cleardoublepage
-  \if@twocolumn\@restonecoltrue\onecolumn
-  \else\@restonecolfalse\newpage\fi
-  \thispagestyle{empty}%
-  \if@compatibility\setcounter{page}{0}%
-%<report|article>  \else\setcounter{page}{1}%
-  \fi}{
-  \if@restonecol\twocolumn\else\newpage\fi
-%<report|article>    \setcounter{page}{1}%
-  }
+\if@compatibility
+\newenvironment{titlepage}
+    {%
+%<book>      \cleardoublepage
+     \if@twocolumn\@restonecoltrue\onecolumn
+     \else\@restonecolfalse\newpage\fi
+     \thispagestyle{empty}%
+     \setcounter{page}\z@
+    }%
+    {\if@restonecol\twocolumn\else\newpage\fi
+    }
+%   \end{macrocode}
+%
+% そして、\LaTeXe{}ネイティブのための定義です。
+%   \begin{macrocode}
+\else
+\newenvironment{titlepage}
+    {%
+%<book>      \cleardoublepage
+      \if@twocolumn
+        \@restonecoltrue\onecolumn
+      \else
+        \@restonecolfalse\newpage
+      \fi
+      \thispagestyle{empty}%
+      \setcounter{page}\@ne
+    }%
+    {\if@restonecol\twocolumn \else \newpage \fi
+%    \end{macrocode}
+% 二段組モードでなければ、タイトルページの直後のページのページ番号も1に
+% します。
+%    \begin{macrocode}
+     \if@twoside\else
+        \setcounter{page}\@ne
+     \fi
+    }
+\fi
 %    \end{macrocode}
 % \end{environment}
 %
@@ -1500,6 +1639,7 @@
   \let\footnotesize\small
   \let\footnoterule\relax
 %<tate>  \let\thanks\p@thanks
+  \let\footnote\thanks
 %<tate>  \vbox to\textwidth\bgroup\yoko\hsize\textheight
   \null\vfil
   \vskip 60\p@
@@ -1518,9 +1658,33 @@
 %<tate>  \egroup
 %<yoko>  \@thanks\vfil\null
   \end{titlepage}%
+%    \end{macrocode}
+% \Lcount{footnote}カウンタをリセットし、|\thanks|と|\maketitle|コマンドを
+% 無効にし、いくつかの内部マクロを空にして格納領域を節約します。
+%    We reset the \Lcount{footnote} counter, disable |\thanks| and
+%    |\maketitle| and save some storage space by emptying the internal
+%    information macros.
+% \changes{v1.3j}{1995/08/16}{use \cs{let} to save space}
+% \changes{v1.3n}{1995/10/29}{Empty \cs{@date} as well}
+%    \begin{macrocode}
   \setcounter{footnote}{0}%
-  \let\thanks\relax\let\maketitle\relax\let\p@thanks\relax
-  \gdef\@thanks{}\gdef\@author{}\gdef\@title{}}
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\p@thanks\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+%    \end{macrocode}
+% タイトルが組版されたら、|\title|コマンドなどの宣言を無効にできます。
+% |\and|の定義は、|\author|の引数でのみ使用しますので、破棄します。
+% \changes{v1.3k}{1995/08/27}{Disable \cs{title} and similar decls}
+%    \begin{macrocode}
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+  }%
 \else
   \newcommand{\maketitle}{\par
   \begingroup
@@ -1544,22 +1708,41 @@
       \global\@topnum\z@   % Prevents figures from going at top of page.
       \@maketitle
     \fi
-    \thispagestyle{jplain}\@thanks
+     \thispagestyle{jpl@in}\@thanks
+%    \end{macrocode}
+% ここでグループを閉じ、\Lcount{footnote}カウンタをリセットし、
+% |\thanks|, |\maketitle|, |\@maketitle|を無効にし、
+% いくつかの内部マクロを空にして格納領域を節約します。
+% \changes{v1.3j}{1995/08/16}{use \cs{let} to save space}
+% \changes{v1.3k}{1995/08/27}{Disable \cs{title} and similar decls}
+% \changes{v1.3n}{1995/10/29}{Empty \cs{@date} as well}
+%    \begin{macrocode}
   \endgroup
   \setcounter{footnote}{0}%
-  \let\thanks\relax\let\p@thanks\relax
-  \let\maketitle\relax\let\@maketitle\relax
-  \gdef\@thanks{}\gdef\@author{}\gdef\@title{}}
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\p@thanks\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+  }
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\@maketitle}
 % 独立した表題ページを作らない場合の、表題の出力形式です。
 %    \begin{macrocode}
-\def\@maketitle{%
+  \def\@maketitle{%
   \newpage\null
   \vskip 2em%
   \begin{center}%
+%<yoko>  \let\footnote\thanks
+%<tate>  \let\footnote\p@thanks
     {\LARGE \@title \par}%
     \vskip 1.5em%
     {\large
@@ -1581,17 +1764,23 @@
 % 要約文のための環境です。bookクラスでは使えません。
 % reportスタイルと、|titlepage|オプションを指定したarticleスタイルでは、
 % 独立したページに出力されます。
+% \changes{v1.3e}{1995/06/19}{Added setting of \cs{@endparpenalty}
+%         to avoid page break after abstract heading.}
+%    \begin{macrocode}
+% \changes{v1.3m}{1995/10/23}{Added setting of \cs{beginparpenalty} to
+%    discourage page break before abstract heading.}
 %    \begin{macrocode}
 %<*article|report>
 \if@titlepage
   \newenvironment{abstract}{%
-    \begin{titlepage}%
+      \titlepage
       \null\vfil
+      \@beginparpenalty\@lowpenalty
       \begin{center}%
         {\bfseries\abstractname}%
-      \end{center}}{%
-      \par\vfil\null
-    \end{titlepage}}
+        \@endparpenalty\@M
+      \end{center}}%
+      {\par\vfil\null\endtitlepage}
 \else
   \newenvironment{abstract}{%
     \if@twocolumn
@@ -1707,34 +1896,34 @@
 %
 %    \begin{macrocode}
 %<*tate>
-\renewcommand{\thepart}{\rensuji{\Roman{part}}}
-%<article>\renewcommand{\thesection}{\rensuji{\arabic{section}}}
+\renewcommand{\thepart}{\rensuji{\@Roman\c@part}}
+%<article>\renewcommand{\thesection}{\rensuji{\@arabic\c@section}}
 %<*report|book>
-\renewcommand{\thechapter}{\rensuji{\arabic{chapter}}}
-\renewcommand{\thesection}{\thechapter・\rensuji{\arabic{section}}}
+\renewcommand{\thechapter}{\rensuji{\@arabic\c@chapter}}
+\renewcommand{\thesection}{\thechapter・\rensuji{\@arabic\c@section}}
 %</report|book>
-\renewcommand{\thesubsection}{\thesection・\rensuji{\arabic{subsection}}}
+\renewcommand{\thesubsection}{\thesection・\rensuji{\@arabic\c@subsection}}
 \renewcommand{\thesubsubsection}{%
-   \thesubsection・\rensuji{\arabic{subsubsection}}}
+   \thesubsection・\rensuji{\@arabic\c@subsubsection}}
 \renewcommand{\theparagraph}{%
-   \thesubsubsection・\rensuji{\arabic{paragraph}}}
+   \thesubsubsection・\rensuji{\@arabic\c@paragraph}}
 \renewcommand{\thesubparagraph}{%
-   \theparagraph・\rensuji{\arabic{subparagraph}}}
+   \theparagraph・\rensuji{\@arabic\c@subparagraph}}
 %</tate>
 %<*yoko>
-\renewcommand{\thepart}{\Roman{part}}
-%<article>\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thepart}{\@Roman\c@part}
+%<article>\renewcommand{\thesection}{\@arabic\c@section}
 %<*report|book>
-\renewcommand{\thechapter}{\arabic{chapter}}
-\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thechapter}{\@arabic\c@chapter}
+\renewcommand{\thesection}{\thechapter.\@arabic\c@section}
 %</report|book>
-\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsection}{\thesection.\@arabic\c@subsection}
 \renewcommand{\thesubsubsection}{%
-   \thesubsection.\arabic{subsubsection}}
+   \thesubsection.\@arabic\c@subsubsection}
 \renewcommand{\theparagraph}{%
-   \thesubsubsection.\arabic{paragraph}}
+   \thesubsubsection.\@arabic\c@paragraph}
 \renewcommand{\thesubparagraph}{%
-   \theparagraph.\arabic{subparagraph}}
+   \theparagraph.\@arabic\c@subparagraph}
 %</yoko>
 %    \end{macrocode}
 % \end{macro}
@@ -1857,11 +2046,13 @@
 % そして、部扉のページスタイルを\pstyle{empty}にします。
 % ２段組の場合でも、１段組で作成しますが、後ほど２段組に戻すために、
 % |\@restonecol|スイッチを使います。
+% \changes{v1.3o}{1995/11/02}{(CAR) Make \cs{footnote} always work in
+%      title, etc}
 %    \begin{macrocode}
 %<*report|book>
 \newcommand{\part}{\cleardoublepage\thispagestyle{empty}%
   \if@twocolumn\onecolumn\@restonecoltrue\else\@restonecolfalse\fi
-  \hbox{}\vfil
+  \null\vfil
   \secdef\@part\@spart}
 %</report|book>
 %    \end{macrocode}
@@ -1942,13 +2133,20 @@
 % \end{macro}
 %
 % \begin{macro}{\@endpart}
+% \changes{v1.3j}{1995/08/16}{move docstrip guard to avoid defining
+%    \cs{@endpart} in article}
 % |\@part|と|\@spart|の最後で実行されるマクロです。
 % 両面印刷モードのときは、白ページを追加します。
 % 二段組モードのときには、これ以降のページを二段組に戻します。
 %    \begin{macrocode}
+%<*report|book>
 \def\@endpart{\vfil\newpage
-   \if@twoside\hbox{}\thispagestyle{empty}\newpage\fi
-   \if@restonecol\twocolumn\fi}
+   \if@twoside\null\thispagestyle{empty}\newpage\fi
+%    \end{macrocode}
+% 二段組文書のとき、スイッチを二段組モードに戻す必要があります。
+%    \begin{macrocode}
+   \if@tempswa\twocolumn\fi}
+%</report|book>
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1962,8 +2160,8 @@
 % なお、縦組の場合でも右ページからはじまるように、
 % フォーマットファイルで|\clerdoublepage|が定義されています。
 %
-% 章見出しが出力されるページのスタイルは、\pstyle{jplain}になります。
-% \pstyle{jplain}は、\pstyle{headnomble}か\pstyle{footnomble}のいずれかです。
+% 章見出しが出力されるページのスタイルは、\pstyle{jpl@in}になります。
+% \pstyle{jpl@in}は、\pstyle{headnomble}か\pstyle{footnomble}のいずれかです。
 % 詳細は、第\ref{sec:pagestyle}節を参照してください。
 %
 % また、|\@topnum|をゼロにして、
@@ -1972,7 +2170,7 @@
 %<*report|book>
 \newcommand{\chapter}{%
   \if@openright\cleardoublepage\else\clearpage\fi
-  \thispagestyle{jplain}%
+  \thispagestyle{jpl@in}%
   \global\@topnum\z@
   \@afterindentfalse
   \secdef\@chapter\@schapter}
@@ -2117,8 +2315,8 @@
 \newcommand{\appendix}{\par
   \setcounter{section}{0}%
   \setcounter{subsection}{0}%
-%<tate>  \renewcommand{\thesection}{\rensuji{\Alph{section}}}}
-%<yoko>  \renewcommand{\thesection}{\Alph{section}}}
+%<tate>  \renewcommand{\thesection}{\rensuji{\@Alph\c@section}}}
+%<yoko>  \renewcommand{\thesection}{\@Alph\c@section}}
 %</article>
 %    \end{macrocode}
 %
@@ -2131,14 +2329,16 @@
 % \item |\thechapter|を英小文字で出力するように再定義する。
 % \end{itemize}
 %
+% \changes{v1.3j}{1995/08/16}{replace braces by \cs{space}}
 %    \begin{macrocode}
 %<*report|book>
 \newcommand{\appendix}{\par
   \setcounter{chapter}{0}%
   \setcounter{section}{0}%
   \renewcommand{\@chapapp}{\appendixname}%
-  \renewcommand{\@chappos}{}%
-  \renewcommand{\thechapter}{\rensuji{\Alph{chapter}}}}
+  \renewcommand{\@chappos}\space%
+%<tate>  \renewcommand{\thechapter}{\rensuji{\@Alph\c@chapter}}}
+%<yoko>  \renewcommand{\thechapter}{\@Alph\c@chapter}}
 %</report|book>
 %    \end{macrocode}
 % \end{macro}
@@ -2185,10 +2385,6 @@
   \setlength\leftmarginvi{1em}
 \fi
 %    \end{macrocode}
-% トップレベルの左マージンを設定します。
-%    \begin{macrocode}
-\setlength\leftmargin    {\leftmargini}
-%    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -2234,13 +2430,18 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\@listI}
 % \begin{macro}{\@listi}
-% |\@listI|と|\@listi|は、|\leftmargin|, |\parsep|, |\topsep|, |\itemsep|の
+% \begin{macro}{\@listI}
+% |\@listi|は、|\leftmargin|, |\parsep|, |\topsep|, |\itemsep|などの
 % トップレベルの定義をします。
+% この定義は、フォントサイズコマンドによって変更されます（たとえば、
+% |\small|の中では``小さい''リストパラメータになります）。
+%
+% このため、|\normalsize|がすべてのパラメータを戻せるように、
+% |\@listI|は|\@listi|のコピーを保存するように定義されています。
 %    \begin{macrocode}
 %<*10pt|11pt|12pt>
-\def\@listI{\leftmargin\leftmargini
+\def\@listi{\leftmargin\leftmargini
 %<*10pt>
   \parsep 4\p@ \@plus2\p@ \@minus\p@
   \topsep 8\p@ \@plus2\p@ \@minus4\p@
@@ -2256,7 +2457,10 @@
   \topsep 10\p@ \@plus4\p@   \@minus6\p@
   \itemsep5\p@  \@plus2.5\p@ \@minus\p@}
 %</12pt>
-\let\@listi\@listI
+\let\@listI\@listi
+%    \end{macrocode}
+% ここで、パラメータを初期化しますが、厳密には必要ありません。
+%    \begin{macrocode}
 \@listi
 %    \end{macrocode}
 % \end{macro}
@@ -2268,6 +2472,10 @@
 % \begin{macro}{\@listv}
 % \begin{macro}{\@listvi}
 % 下位レベルのリスト環境のパラメータの設定です。
+% これらは保存用のバージョンを持たないことと、
+% フォントサイズコマンドによって変更されないことに注意をしてください。
+% 言い換えれば、このクラスは、本文サイズが
+% |\normalsize|で現れるリストの入れ子についてだけ考えています。
 %    \begin{macrocode}
 \def\@listii{\leftmargin\leftmarginii
    \labelwidth\leftmarginii \advance\labelwidth-\labelsep
@@ -2323,16 +2531,16 @@
 %    \begin{macrocode}
 %<*article|report|book>
 %<*tate>
-\renewcommand{\theenumi}{\rensuji{\arabic{enumi}}}
-\renewcommand{\theenumii}{\rensuji{(\alph{enumii})}}
-\renewcommand{\theenumiii}{\rensuji{\roman{enumiii}}}
-\renewcommand{\theenumiv}{\rensuji{\Alph{enumiv}}}
+\renewcommand{\theenumi}{\rensuji{\@arabic\c@enumi}}
+\renewcommand{\theenumii}{\rensuji{(\@alph\c@enumii)}}
+\renewcommand{\theenumiii}{\rensuji{\@roman\c@enumiii}}
+\renewcommand{\theenumiv}{\rensuji{\@Alph\c@enumiv}}
 %</tate>
 %<*yoko>
-\renewcommand{\theenumi}{\arabic{enumi}}
-\renewcommand{\theenumii}{\alph{enumii}}
-\renewcommand{\theenumiii}{\roman{enumiii}}
-\renewcommand{\theenumiv}{\Alph{enumiv}}
+\renewcommand{\theenumi}{\@arabic\c@enumi}
+\renewcommand{\theenumii}{\@alph\c@enumii}
+\renewcommand{\theenumiii}{\@roman\c@enumiii}
+\renewcommand{\theenumiv}{\@Alph\c@enumiv}
 %</yoko>
 %    \end{macrocode}
 % \end{macro}
@@ -2480,13 +2688,16 @@
 % verse環境は、リスト環境のパラメータを使って定義されています。
 % 改行をするには|\\|を用います。|\\|は|\@centercr|に|\let|されています。
 %
+%
+% \changes{v1.3j}{1995/08/16}{stop \cs{item} scanning for [ with
+%    \cs{relax}}
 %    \begin{macrocode}
 \newenvironment{verse}
-  {\let\\=\@centercr
+  {\let\\\\@centercr
    \list{}{\itemsep\z@ \itemindent -1.5em%
            \listparindent\itemindent
            \rightmargin\leftmargin \advance\leftmargin 1.5em}%
-           \item[]}{\endlist}
+           \item\relax}{\endlist}
 %    \end{macrocode}
 % \end{environment}
 %
@@ -2497,13 +2708,15 @@
 % この環境の各行は、|\textwidth|よりも小さく設定されています。
 % この環境における、段落の最初の行はインデントされます。
 %
+% \changes{v1.3j}{1995/08/16}{stop \cs{item} scanning for [ with
+%    \cs{relax}}
 %    \begin{macrocode}
 \newenvironment{quotation}
   {\list{}{\listparindent 1.5em%
            \itemindent\listparindent
            \rightmargin\leftmargin
            \parsep\z@ \@plus\p@}%
-           \item[]}{\endlist}
+           \item\relax}{\endlist}
 %    \end{macrocode}
 % \end{environment}
 %
@@ -2511,10 +2724,13 @@
 %
 % \begin{environment}{quote}
 % quote環境は、段落がインデントされないことを除き、quotation環境と同じです。
+%
+% \changes{v1.3j}{1995/08/16}{stop \cs{item} scanning for [ with
+%    \cs{relax}}
 %    \begin{macrocode}
 \newenvironment{quote}
   {\list{}{\rightmargin\leftmargin}%
-           \item[]}{\endlist}
+           \item\relax}{\endlist}
 %    \end{macrocode}
 % \end{environment}
 %
@@ -2771,10 +2987,10 @@
 % このコードは|\chapter|定義の後、より正確にはchapterカウンタの定義の後、
 % でなくてはいけません。
 %    \begin{macrocode}
-%<article>\renewcommand{\theequation}{\arabic{equation}}
+%<article>\renewcommand{\theequation}{\@arabic\c@equation}
 %<*report|book>
 \@addtoreset{equation}{chapter}
-\renewcommand{\theequation}{\thechapter.\arabic{equation}}
+\renewcommand{\theequation}{\thechapter.\@arabic\c@equation}
 %</report|book>
 %    \end{macrocode}
 % \end{macro}
@@ -2834,9 +3050,14 @@
 % \begin{macro}{\mit}
 % これらのコマンドは数式モードでだけ使うことができます。
 % 数式モード以外では何もしません。
+% 現在のNFSSは、これらのコマンドが警告を生成するように定義していますので、
+% `手ずから'定義する必要があります。
+% \changes{v1.2w}{1994/12/01}{Now define \cs{cal} and \cs{mit} using
+%    \cs{DeclareRobustCommand*}}
+% \changes{v1.3j}{1995/08/16}{Remove surplus braces}
 %    \begin{macrocode}
-\DeclareRobustCommand*{\cal}{\@fontswitch{\relax}{\mathcal}}
-\DeclareRobustCommand*{\mit}{\@fontswitch{\relax}{\mathnormal}}
+\DeclareRobustCommand*{\cal}{\@fontswitch\relax\mathcal}
+\DeclareRobustCommand*{\mit}{\@fontswitch\relax\mathnormal}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -2973,9 +3194,11 @@
 \def\addcontentsline#1#2#3{%
   \protected@write\@auxout
     {\let\label\@gobble \let\index\@gobble \let\glossary\@gobble
-     \@temptokena{\rensuji{\thepage}}}%
+%<tate>\@temptokena{\rensuji{\thepage}}}%
+%<yoko>\@temptokena{\thepage}}%
     {\string\@writefile{#1}%
-       {\protect\contentsline{#2}{#3}{\the\@temptokena}}}}
+       {\protect\contentsline{#2}{#3}{\the\@temptokena}}}%
+}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -3013,11 +3236,14 @@
     {\leavevmode\large\bfseries
      \setlength\@lnumwidth{4zw}%
      #1\hfil\nobreak
-     \hbox to\@pnumwidth{\hss#2}\par
-    }\nobreak
+     \hbox to\@pnumwidth{\hss#2}}\par
+%    \end{macrocode}
+% \changes{v1.3j}{1995/08/16}{Add missing percent}
+%    \begin{macrocode}
+    \nobreak
 %<article>    \if@compatibility
     \global\@nobreaktrue
-    \everypar{\global\@nobreakfalse\everypar{}}
+    \everypar{\global\@nobreakfalse\everypar{}}%
 %<article>    \fi
      \endgroup
   \fi}
@@ -3142,8 +3368,9 @@
 %
 % \begin{macro}{\listoftables}
 % 表の一覧を作成します。
+% \changes{v1.0c}{1995/12/28}{fix the \cs{listoftable} typo.}
 %    \begin{macrocode}
-\newcommand{\listoftable}{%
+\newcommand{\listoftables}{%
 %<*report|book>
   \if@twocolumn\@restonecoltrue\onecolumn
   \else\@restonecolfalse\fi
@@ -3170,55 +3397,79 @@
 % \begin{macro}{\bibindent}
 % オープンスタイルの参考文献で使うインデント幅です。
 %    \begin{macrocode}
-\newdimen\bibindent \bibindent=1.5em
+\newdimen\bibindent
+\setlength\bibindent{1.5em}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\newblock}
-% |\newblock|のダミーです。
+% |\newblock|のデフォルト定義は、小さなスペースを生成します。
+% \changes{v1.3k}{1995/08/27}{Default changed.}
 %    \begin{macrocode}
-\newcommand{\newblock}{}
+\newcommand{\newblock}{\hskip .11em\@plus.33em\@minus.07em}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{environment}{\thebibliography}
 % 参考文献や関連図書のリストを作成します。
+% \changes{v1.0i}{1993/12/19}{Corrected definition of thebibliography
+%    for article}
+% \changes{v1.2z}{1995/05/09}{added a missing percent character}
+% \changes{v1.3b}{1995/05/23}{Added missing braces in definition
+%    of thebibliography environment.}
+% \changes{v1.3j}{1995/08/16}{remove surplus spaces}
+% \changes{v1.3k}{1995/08/27}{Code for openbib changed}
 %    \begin{macrocode}
 \newenvironment{thebibliography}[1]
 %<article>{\section*{\refname\@mkboth{\refname}{\refname}}%
 %<report|book>{\chapter*{\bibname\@mkboth{\bibname}{\bibname}}%
-   \list{\@biblabel{\arabic{enumiv}}}%
+   \list{\@biblabel{\@arabic\c@enumiv}}%
         {\settowidth\labelwidth{\@biblabel{#1}}%
          \leftmargin\labelwidth
          \advance\leftmargin\labelsep
-         \if@openbib
-           \advance\leftmargin\bibindent
-           \itemindent -\bibindent
-           \listparindent \itemindent
-           \parsep \z@
-         \fi
+         \@openbib@code
          \usecounter{enumiv}%
          \let\p@enumiv\@empty
-         \renewcommand{\theenumiv}{\arabic{enumiv}}}%
-   \if@openbib
-     \renewcommand{\newblock}{\par}
-   \else
-     \renewcommand{\newblock}{\hskip .11em \@plus.33em \@minus.07em}%
-   \fi
+         \renewcommand\theenumiv{\@arabic\c@enumiv}}%
    \sloppy\clubpenalty4000\widowpenalty4000%
-   \sfcode`\.=\@m}
+   \sfcode`\.\@m}
   {\def\@noitemerr
     {\@latex@warning{Empty `thebibliography' environment}}%
    \endlist}
 %    \end{macrocode}
 % \end{environment}
 %
+% \begin{macro}{\@openbib@code}
+% |\@openbib@code|のデフォルト定義は何もしません。
+% この定義は、\Lopt{openbib}オプション」によって変更されます。
+% \changes{v1.3k}{1995/08/27}{Macro added}
+%    \begin{macrocode}
+\let\@openbib@code\@empty
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@biblabel}
+%    The label for a |\bibitem[...]| command is produced by this
+%    macro. The default from \file{latex.dtx} is used.
+%    \begin{macrocode}
+% \renewcommand*{\@biblabel}[1]{[#1]\hfill}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@cite}
+%    The output of the |\cite| command is produced by this macro. The
+%    default from \file{latex.dtx} is used.
+%    \begin{macrocode}
+% \renewcommand*{\@cite}[1]{[#1]}
+%    \end{macrocode}
+% \end{macro}
+%
 %
 % \subsection{索引}
 %
 % \begin{environment}{\theindex}
 % ２段組の索引を作成します。
-% 索引の先頭のページのスタイルは\pstyle{jplain}とします。したがって、
+% 索引の先頭のページのスタイルは\pstyle{jpl@in}とします。したがって、
 % \pstyle{headings}と\pstyle{bothstyle}に適した位置に出力されます。
 %    \begin{macrocode}
 \newenvironment{theindex}
@@ -3227,7 +3478,7 @@
 %<article>   \twocolumn[\section*{\indexname}]%
 %<report|book>   \twocolumn[\@makeschapterhead{\indexname}]%
    \@mkboth{\indexname}{\indexname}%
-   \thispagestyle{jplain}\parindent\z@
+   \thispagestyle{jpl@in}\parindent\z@
    \parskip\z@ \@plus .3\p@\relax
    \let\item\@idxitem}
   {\if@restonecol\onecolumn\else\clearpage\fi}
@@ -3238,10 +3489,13 @@
 % \begin{macro}{\subitem}
 % \begin{macro}{\subsubitem}
 % 索引項目の字下げ幅です。|\@idxitem|は|\item|の項目の字下げ幅です。
+% \changes{v1.3f}{1995/06/23}{Corrected error in definition of
+%                         \cs{@idxitem}.}
+% \changes{v1.3j}{1995/08/16}{use \cs{@idxitem} to save space}
 %    \begin{macrocode}
-\newcommand{\@idxitem}  {\par\hangindent 40\p@}
-\newcommand{\subitem}   {\par\hangindent 40\p@ \hspace*{20\p@}}
-\newcommand{\subsubitem}{\par\hangindent 40\p@ \hspace*{30\p@}}
+\newcommand{\@idxitem}{\par\hangindent 40\p@}
+\newcommand{\subitem}{\@idxitem \hspace*{20\p@}}
+\newcommand{\subsubitem}{\@idxitem \hspace*{30\p@}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -3280,11 +3534,11 @@
 % |\@makefnmark|は脚注記号を組み立てるマクロです。
 %    \begin{macrocode}
 %<*tate>
-\long\def\@makefntext#1{\parindent 1zw
+\newcommand\@makefntext[1]{\parindent 1zw
   \noindent\hbox to 2zw{\hss\@makefnmark}#1}
 %</tate>
 %<*yoko>
-\long\def\@makefntext#1{\parindent 1em%
+\newcommand\@makefntext[1]{\parindent 1em%
   \noindent\hbox to 1.8em{\hss\@makefnmark}#1}
 %</yoko>
 %    \end{macrocode}
@@ -3343,25 +3597,68 @@
 %
 % \section{初期設定}
 %
+% \begin{macro}{\prepartname}
+% \begin{macro}{\postpartname}
+% \begin{macro}{\prechaptername}
+% \begin{macro}{\postchaptername}
 %    \begin{macrocode}
 \newcommand{\prepartname}{第}
 \newcommand{\postpartname}{部}
 %<report|book>\newcommand{\prechaptername}{第}
 %<report|book>\newcommand{\postchaptername}{章}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\contentsname}
+% \begin{macro}{\listfigurename}
+% \begin{macro}{\listtablename}
+%    \begin{macrocode}
 \newcommand{\contentsname}{目 次}
 \newcommand{\listfigurename}{図 目 次}
 \newcommand{\listtablename}{表 目 次}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\refname}
+% \begin{macro}{\bibname}
+% \begin{macro}{\indexname}
+%    \begin{macrocode}
 %<article>\newcommand{\refname}{参考文献}
 %<report|book>\newcommand{\bibname}{関連図書}
 \newcommand{\indexname}{索 引}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\figurename}
+% \begin{macro}{\tablename}
+%    \begin{macrocode}
 \newcommand{\figurename}{図}
 \newcommand{\tablename}{表}
-\newcommand{\appendixname}{付 録}
-\newcommand{\abstractname}{概 要}
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
+% \begin{macro}{\appendixname}
+% \begin{macro}{\abstractname}
 %    \begin{macrocode}
-\pagestyle{headings}
+\newcommand{\appendixname}{付 録}
+%<article|report>\newcommand{\abstractname}{概 要}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \changes{v1.0d}{1996/02/29}{articleとreportのデフォルトを
+%                              \pstyle{plain}に修正}
+%    \begin{macrocode}
+%<book>\pagestyle{headings}
+%<!book>\pagestyle{plain}
 \pagenumbering{arabic}
 \raggedbottom
 \if@twocolumn
@@ -3372,7 +3669,7 @@
   \onecolumn
 \fi
 %    \end{macrocode}
-% |@mparswitch|は傍注を左右（縦組では上下）どちらのマージンに
+% |\@mparswitch|は傍注を左右（縦組では上下）どちらのマージンに
 % 出力するかの指定です。偽の場合、傍注は一方の側にしか出力されません。
 % このスイッチを真とすると、とくに縦組の場合、奇数ページでは本文の上に、
 % 偶数ページでは本文の下に傍注が出力されますので、おかしなことになります。

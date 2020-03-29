@@ -1,13 +1,13 @@
 % \iffalse meta-comment
 %%% $Id: platex.dtx,v 1.7 1995/04/26 13:30:54 ken-na Exp ken-na $
 %
-%  Copyright 1995 ASCII Corporation.
+%  Copyright 1995,1996 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
-% \CheckSum{360}
+% \CheckSum{377}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -35,6 +35,8 @@
 % \iffalse
 % \changes{v1.0}{1995/05/08}{first edition}
 % \changes{v1.0a}{1995/08/25}{互換性について、\dst{}の使い方、参考文献を追加}
+% \changes{v1.0b}{1996/02/01}{\file{omake-sh.ins}, \file{omake-pl.ins}を
+%     \dst{}の変更にともなう変更をした}
 % \fi
 %
 % \iffalse
@@ -44,6 +46,7 @@
 \ProvidesFile{platex.dtx}[1995/08/25 v1.0a pLaTeX document file]
 % \iffalse
 \documentclass{jltxdoc}
+\usepackage{plext}
 \GetFileInfo{platex.dtx}
 %
 \title{p\LaTeX について}
@@ -60,17 +63,18 @@
 %
 %
 % \section{概要}\label{platex:intro}
-% この文書は、\LaTeX{}をp\LaTeX{}へ拡張したときのノートであり、
-% \LaTeX{}およびp\LaTeX{}についての説明書ではありません。
+% この文書は、p\LaTeX{}の概要を示していますが、使い方のガイドでは
+% ありません。
 %
 % \LaTeX{}の機能については、\cite{latex-book2}や\cite{latex-comp}などを
+% 参照してください。新しい機能については、\file{usrguide.tex}\footnote{%
+% 訳したものを\file{jusrguid.tex}として添付してあります。}なども
 % 参照してください。
-% 新しい機能については、\file{usrguide.tex}なども参照してください。
 %
 % 日本語\TeX{}については、\cite{jtex-tech}や
 % \cite{tate-book}を参照してください。
 % このバージョンでは、\cite{tate-book}のコマンドのいくつかを修正しています。
-% その詳細については、\file{plcmds.dtx}を参照してください。
+% その詳細については、\file{plext.dtx}を参照してください。
 %
 % この文書の構成は次のようになっています。
 %
@@ -125,8 +129,8 @@
 %
 % \subsubsection{ファイルの取り出し方}
 %
-% この文書から、p\LaTeX のフォーマットファイル\file{platex.fmt}を
-% 作るためのソースファイルを生成したい場合、次のような操作を行ないます。
+% たとえば、この文書の``plcore''の部分を``\file{platex.ltx}''という
+% ファイルにするときの手順はつぎのようになります。
 %
 % \begin{enumerate}
 % \item platex docstrip
@@ -140,59 +144,59 @@
 % \end{enumerate}
 % これで、\file{platex.ltx}が作られます。
 %
-% あるいは、次のような内容のファイル\file{fmt.ins}を作成し、
+% あるいは、次のような内容のファイル\file{batch.ins}を作成し、
 % |platex fmt.ins|することでも\file{platex.ltx}を作ることができます。
 %
 % \begin{verbatim}
-%   \def\batchfile{fmt.ins}
+%   \def\batchfile{batch.ins}
 %   \input docstrip.tex
 %   \generateFile{platex.ltx}{t}{\from{platex.dtx}{plcore}}
 % \end{verbatim}
 %
+% \dst プログラムの詳細は、\file{docstrip.dtx}を参照してください。
 %
 %
 % \section{p\LaTeX の機能について}\label{platex:plcore}
 % p\LaTeX{}の機能は、いくつものファイルに分割されて実装されています。
-% これらのファイルを、大きく分けると、
+% これらのファイルはつぎの３種類に分類することができます。
+%
 % \begin{itemize}
 % \item フォーマットファイル
 % \item クラスファイル
 % \item パッケージファイル
 % \end{itemize}
-% の３つに分類することができます。
 %
 % フォーマットファイルには、基本的な機能が定義されており、
 % p\LaTeX{}の核となるファイルです。このファイルに定義されているマクロは、
 % 実行時の速度を高めるために、あらかじめ\TeX の内部形式の形で保存されて
 % います。
 %
-% \TeX{}は、基本機能をロードした後、文書ファイルを読み込み、
-% |\documentclass|コマンドで指定されているクラスファイルをロードします。
-% クラスファイルは、文書のレイアウトや文書構造などを定義している
-% マクロファイルです。
+% クラスファイルとパッケージファイルは、従来、スタイルファイルと呼ばれていた
+% ものです。\LaTeXe ではそれらを、レイアウトに関するものをクラスファイルと
+% 呼び、マクロの拡張をするものをパッケージファイルと呼んで区別するように
+% なりました。
 %
-% そして、|\usepackage|コマンドで指定されているパッケージファイルを
-% ロードします。パッケージファイルは、フォーマットファイルやクラスファイル
-% で定義されていない機能を提供します。
+% \TeX 文書が使用するクラスは、文書のプリアンブルで|\documentclass|コマンド
+% を用いて指定します。|\documentclass|ではなく、旧版の|\documentstyle|を
+% 用いると、自動的に\emph{2.09互換モード}に入ります。
+% 互換モードは旧版の文書を組版するためだけに作られていますので、
+% 新しく文書を作成する場合は、|\documentclass|コマンドを用いてください。
+% 互換モードでは\LaTeXe の新機能も使えなくなります。
 %
-%
-% ここでは、これらのファイルにどのような機能が定義されているかを
-% 説明しています。それらのコマンドの構文や使い方などについては、
-% それらが定義されているファイルを参照してください。
+% 旧版では、|\documentstyle|のオプションでマクロファイルを読み込んで
+% いましたが、\LaTeXe では、|\usepackage|コマンドを用いて読み込みます。
 %
 % \subsection{フォーマットファイル}
-% p\LaTeX{}の核となるフォーマットファイルについて説明をしています。
-%
 % フォーマットファイルには、基本的な機能が定義されていますが、
 % これらは\TeX{}の内部形式に変換された形式となっています。
 % フォーマットファイルを作成するには、
 % ソースファイル``platex.ltx''を|iniptex|プログラムで処理します。
 %
 % 次のリストが、その内容です。
-% このバージョンでは、\LaTeX{}からp\LaTeX{}への拡張を
+% ただし、このバージョンでは、\LaTeX{}からp\LaTeX{}への拡張を
 % \file{plcore.ltx}をロードすることで行ない、
 % \file{latex.ltx}には直接、手を加えないようにしています。
-% したがって\file{platex.ltx}は、次のようにとても短いものとなっています。
+% したがって\file{platex.ltx}はとても短いものとなっています。
 % \file{latex.ltx}には\LaTeX{}のコマンドが、
 % \file{plcore.ltx}にはp\LaTeX{}で拡張したコマンドが定義されています。
 %
@@ -222,8 +226,8 @@
 % \begin{itemize}
 % \item \file{plvers.dtx}は、p\LaTeX{}のフォーマットバージョンを定義しています。
 % \item \file{plfonts.dtx}は、\NFSS2を拡張しています。
-% \item \file{plcmds.dtx}は、基本的なコマンドの拡張や追加を行なっています。
-% \item \file{ploutput.dtx}は、出力ルーチンに関わる部分を拡張しています。
+% \item \file{plcore.dtx}は、上記以外のコマンドでフォーマットファイルに
+%  格納されるコマンドを定義しています。
 % \end{itemize}
 %
 % プリロードフォントや組版パラメータなどの設定は、
@@ -236,16 +240,17 @@
 %
 %
 % \subsubsection{バージョン}
-% p\LaTeX{}のバージョンは、\file{plvers.dtx}で定義しています。
-% また、フォーマットファイル名{\bf pLaTeX2e}を|\pfmtname|で定義しています。
+% p\LaTeX{}のバージョンやフォーマットファイル名は、
+% \file{plvers.dtx}で定義しています。
+%
 %
 % \subsubsection{\NFSS2コマンド}
 % \LaTeXe{}では、フォント選択機構として\NFSS2を用いています。
-% p\LaTeXe{}では、同様のインターフェイスで、和文フォントを選択できるように、
-% \file{plfonts.dtx}で\NFSS2を拡張しています。
-% \NFSS2についての詳細は、\file{fntguide.tex}を参照してください。
+% p\LaTeXe{}では、オリジナルの\NFSS2 と同様のインターフェイスで、
+% 和文フォントを選択できるように、\file{plfonts.dtx}で\NFSS2を拡張しています。
 %
-% また、このファイルには、プリロードフォントの設定、
+% \NFSS2についての詳細は、\file{jfntguid.tex}を参照してください。
+% このファイルには、プリロードフォントの設定、
 % 和文エンコードの定義、組版パラメータなどの設定、フォント定義ファイルなど
 % の記述も含まれています。
 %
@@ -253,92 +258,34 @@
 % それが欧文書体か和文書体のいずれかを対象とするものかを、
 % できるだけ意識しないようにする方向で拡張しています。
 % いいかえれば、コマンドが（可能な限りの）判断をします。
-% したがって、多くの英語版のクラスファイルやパッケージファイルなどの書体変更
-% コマンドを修正する必要はありません。
-%
-% \subsubsection{コマンドの拡張と追加}
-% \file{plcmds.dtx}は、次の項目について、拡張や追加を行なっています。
-%
-% \begin{itemize}
-% \item 表組環境
-% \item 段落ボックス環境
-% \item 作図環境
-% \item 連数字、漢数字、傍点、下線
-% \item 疑似タイプ入力
-% \item 参照番号
-% \item 支柱
-% \end{itemize}
-%
-% \paragraph{組方向オプションについて}
-% 上記の表組環境、段落ボックス環境、作図環境の次の環境やコマンドは、
-% 組方向オプションが追加され、拡張されています。
-% これらの書式については、\file{plcmds.dtx}を参照してください。
-%
-% \begin{itemize}
-% \item tabular環境、array環境
-% \item minipage環境、|\parbox|コマンド、|\pbox|コマンド
-% \item picture環境
-% \end{itemize}
-%
-% 組方向オプションには、"y", "t", "z"のいずれかを指定でき、
-% それぞれ、次の意味を持っています。
-%
-% \medskip
-% \DeleteShortVerb{\|}
-% \begin{center}
-% \begin{tabular}{c|l}
-% \emph{オプション} & \emph{意味}\\\hline
-% \texttt{y}& 横組で出力（横組モードでは何もしない）\\
-% \texttt{t}& 縦組で出力（縦組モードでは何もしない）\\
-% \texttt{z}& 90度回転して出力（横組モードでは何もしない）\\
-% \end{tabular}
-% \end{center}
-% \MakeShortVerb{\|}
-%
-% 組方向オプションを用いたサンプルを図\ref{fig:diroption}に示します。
-% 左から、``y'', ``t'', ``z''オプションを指定してあります。
-%
-% \begin{figure}[htb]
-% \begin{sample}{10zw}
-%  \parbox<z>{10zw}{たとえば、これはいったい何、いったいどうして、などと
-%   思えるようなことが世の中にはたくさんあります。}
-%
-%  \bigskip
-%  \parbox<t>{10zw}{たとえば、これはいったい何、いったいどうして、などと
-%   思えるようなことが世の中にはたくさんあります。}
-%
-%  \bigskip
-%  \parbox<y>{10zw}{たとえば、これはいったい何、いったいどうして、などと
-%   思えるようなことが世の中にはたくさんあります。}
-% \end{sample}
-% \caption{組方向オプションの使用例\label{fig:diroption}}
-% \end{figure}
+% したがって数多くある英語版のクラスファイルやパッケージファイルなどで
+% 書体の変更を行っている箇所を修正する必要はあまりありません。
 %
 %
 % \subsubsection{出力ルーチンとフロート}
-% \file{ploutput.dtx}は、次の項目について、拡張や追加を行なっています。
+% \file{plcore.dtx}は、次の項目に関するコマンドを日本語処理用に修正や拡張
+% をしています。
 %
 % \begin{itemize}
+% \item プリアンブルコマンド
 % \item 改ページ
+% \item 改行
 % \item オブジェクトの出力順序
 % \item トンボ
-% \item フロートとキャプションの出力位置の指定
 % \item 脚注マクロ
+% \item 相互参照
+% \item 疑似タイプ入力
 % \end{itemize}
-%
-% フロートとキャプションの出力位置の指定の項で定義されている、
-% |\layoutcaption|コマンドにも組方向オプションを指定することができます。
-% キャプションコマンドについての詳細は、\file{ploutput.dtx}を参照してください。
 %
 %
 % \subsection{クラスファイルとパッケージファイル}
 % クラスファイルとパッケージファイルは、従来、スタイルファイルと呼ばれていた
-% ものです。スタイルファイルのうち、
-% 主にレイアウトに関するものをクラスファイル、主にマクロの拡張をするものを
-% パッケージファイルと呼びます。
+% ものです。\LaTeXe ではそれらを、レイアウトに関するものをクラスファイルと
+% 呼び、マクロの拡張をするものをパッケージファイルと呼んで区別するように
+% なりました。
 %
-% クラスファイルやパッケージファイルのいくつかは、オリジナルの
-% ファイルを修正しています。
+% p\LaTeXe が提供をする、クラスファイルやパッケージファイルのいくつかは、
+% オリジナルのファイルを修正しています。
 % 修正箇所には``\texttt{platex}''条件が付けられています。
 % 
 % p\LaTeX{}に付属のクラスファイルは、次のとおりです。
@@ -366,10 +313,6 @@
 %    p\LaTeX209のフォントコマンドを提供するパッケージ。
 %    \file{oldpfont.dtx}から作成される。
 %
-% \item pl209.def\par
-%    p\LaTeX209互換モードで用いるパッケージ。
-%    \file{pl209.dtx}, \file{oldpfont.dtx}から作成される。
-%
 % \item ptrace.sty\par
 %   \file{tracefnt.sty}で再定義された\NFSS2コマンドをp\LaTeX{}用に
 %   再再定義するためのパッケージ。
@@ -377,11 +320,9 @@
 % \item ascmac.sty, tascmac.sty\par
 %    旧バージョンのp\LaTeX{}で配布されていたファイル。
 %
-% \item skfonts.sty\par
-%   （株）写研製の書体を用いるためのパッケージ。
-%    \file{skfonts.fdd}から作成される。
+% \item plext.sty\par
+%    縦組用の拡張コマンドなどが定義されているファイル。
 % \end{itemize}
-%
 %
 %
 % \section{旧バージョンとの互換性}\label{platex:compati}
@@ -402,18 +343,19 @@
 %
 %
 %
-%
 % \appendix
 %
 % \section{文書ファイル}\label{app:pldoc}
 %
-% ここでは、前節で説明をしたファイルをまとめて\footnote{それぞれのファイルを
-% 個別に、独立した文書として組版することもできます。}組版をするための
-% 文書ファイルについて説明をしています。この文書は、およそ60ページになります。
+% ここでは、前節で説明をしたファイルをまとめて
+% \footnote{もちろん、それぞれのファイルを個別に、独立した文書として
+% 組版することもできます。}組版をするための文書ファイルについて説明を
+% しています。この文書は、およそ60ページになります。
 %
 %    \begin{macrocode}
 %<*pldoc>
 \documentclass{jltxdoc}
+\usepackage{plext}
 \listfiles
 
 %    \end{macrocode}
@@ -437,7 +379,7 @@
 \DoNotIndex{\dp,\wd,\ht,\vss,\unskip}
 
 %    \end{macrocode}
-% 索引と変更履歴の見出しを\cs{part}を用いるように設定をします。
+% 索引と変更履歴の見出しに\cs{part}を用いるように設定をします。
 %    \begin{macrocode}
 \IndexPrologue{\part*{索 引}%
                  \markboth{索 引}{索 引}%
@@ -524,9 +466,9 @@
 
 \DocInclude{plfonts}  % NFSS2 commands
 
-\DocInclude{plcmds}   % pLaTeX basic commands
+\DocInclude{plcore}   % pLaTeX kernel commands
 
-\DocInclude{ploutput} % pLaTeX output routine
+\DocInclude{plext}    % pLaTeX external commands
 
 \DocInclude{kinsoku}  % kinsoku parameter
 
@@ -599,8 +541,8 @@
 %    \begin{macrocode}
 %<*shprog>
 set TEXMF /usr/local/lib/texmf
-cp $TEXMF/latex2e/base/gind.ist .
-cp $TEXMF/latex2e/base/gglo.ist .
+cp $TEXMF/tex/latex2e/base/gind.ist .
+cp $TEXMF/tex/latex2e/base/gglo.ist .
 %    \end{macrocode}
 % 次に、以前に\file{pldoc.tex}を処理したときに作成された、
 % 目次ファイルや索引ファイルなどを削除します。
@@ -616,6 +558,7 @@ echo "" > ltxdoc.cfg
 % そして、\file{pldoc.tex}を処理します。
 %    \begin{macrocode}
 platex pldoc.tex
+%</shprog>
 %    \end{macrocode}
 % 索引と変更履歴を作成します。
 %
@@ -628,6 +571,7 @@ platex pldoc.tex
 % |-f|は、項目に``読み''がなくてもエラーとしないオプションです。
 % makeindexコマンドには、このオプションがありません。
 %    \begin{macrocode}
+%<*shprog>
 mendex -s gind.ist -o pldoc.ind pldoc.idx
 mendex -f -s gglo.ist -o pldoc.gls pldoc.glo
 %    \end{macrocode}
@@ -664,8 +608,14 @@ platex pldoc.tex
 % メタコメントとみなし、条件によらず出力をします。
 % しかし、この\TeX{}のコメントは、シェルにとってはエラーとなります。
 % そこで、メタコメントを出力するコマンドを再定義し、出力しないようにします。
+%
+% \changes{v1.0b}{1996/02/01}{\dst{}にともなう変更}
 %    \begin{macrocode}
-\def\putMetaComment#1\endLine{\closeOption}
+\def\noputline@do#1#2#3{\relax}
+\def\putMetaComment#1\endLine{%
+   \advance\commentsPassed\@ne
+   \let\do\noputline@do
+   \outputfiles}
 %    \end{macrocode}
 % \dst{}プログラムは、ファイルの先頭に\dst{}オプションや作成日付などを
 % \TeX{}のコメントを付けて出力します。しかし、この有益なコメントも
@@ -673,8 +623,8 @@ platex pldoc.tex
 % ここでは、先頭と末尾にテキストを出力するコマンドを無効にして、
 % これらが出力されないようにしています。
 %    \begin{macrocode}
-\let\WritePreamble\relax
-\let\WritePostamble\relax
+\def\WritePreamble#1{\relax}
+\def\WritePostamble#1{\relax}
 %    \end{macrocode}
 % |\keepsilent|は、実行しているときの経過を端末に出力しないように指定をする
 % コマンドです。
@@ -845,8 +795,14 @@ exit;
 % メタコメントとみなし、条件によらず出力をします。
 % しかし、この\TeX{}のコメントは、perlにとってはエラーとなります。
 % そこで、メタコメントを出力するコマンドを再定義し、出力しないようにします。
+%
+% \changes{v1.0b}{1996/02/01}{\dst{}にともなう変更}
 %    \begin{macrocode}
-\def\putMetaComment#1\endLine{\closeOption}
+\def\noputline@do#1#2#3{\relax}
+\def\putMetaComment#1\endLine{%
+   \advance\commentsPassed\@ne
+   \let\do\noputline@do
+   \outputfiles}
 %    \end{macrocode}
 %
 % \dst{}プログラムは、ファイルの先頭に\dst{}オプションや作成日付などを
@@ -864,9 +820,7 @@ exit;
 % そして、最後に出力される|\endinput|を出力させないように、
 % |\WritePostamble|コマンドも再定義をします。
 %    \begin{macrocode}
-\def\WritePostamble{%
-  \WriteOut{\DoubleperCent End of file `\outFileName'.}}%
-}
+\def\WritePostamble#1{\relax}
 %    \end{macrocode}
 % |\keepsilent|は、実行しているときの経過を端末に出力しないように指定をする
 % コマンドです。

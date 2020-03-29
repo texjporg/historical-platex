@@ -2,11 +2,12 @@
 %
 % Japanese edition: Copyright 1994,1995 ASCII Corporation.
 %
-% Copyright 1993-1995 the LaTeX3 project and the individual authors
-% listed elsewhere in this file.  All rights reserved.
-% 
-% For further copyright information see the file legal.txt, and any
-% other copyright notices in this file.
+% Copyright 1993 1994 1995 The LaTeX3 project and the individual
+% authors listed elsewhere in this file.
+%
+% For further copyright information, and conditions for modification
+% and distribution, see the file legal.txt, and any other copyright
+% notices in this file.
 %
 % This file is part of the LaTeX2e system.
 % ----------------------------------------
@@ -14,8 +15,8 @@
 %  but WITHOUT ANY WARRANTY; without even the implied warranty of
 %  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 %
-%   For error reports concerning UNCHANGED versions of this file no more
-%   than one year old, see bugs.txt.
+%   For error reports concerning UNCHANGED versions of this file no
+%   more than one year old, see bugs.txt.
 %
 %   Please do not request updates from us directly.  Primary
 %   distribution is through the CTAN archives.
@@ -25,15 +26,15 @@
 % 
 % You are NOT ALLOWED to distribute this file alone.
 %
-% You are allowed to distribute this file under the condition that it is
-% distributed together with all the files listed in manifest.txt.
+% You are allowed to distribute this file under the condition that it
+% is distributed together with all the files listed in manifest.txt.
 %
 % If you receive only some of these files from someone, complain!
 %
-% Permission is granted to copy this file to another file with a clearly
-% different name and to customize the declarations in that copy to serve
-% the needs of your installation, provided that you comply with
-% the conditions in the file legal.txt.
+% Permission is granted to copy this file to another file with a
+% clearly different name and to customize the declarations in that
+% copy to serve the needs of your installation, provided that you
+% comply with the conditions in the file legal.txt.
 %
 % However, NO PERMISSION is granted to produce or to distribute a
 % modified version of this file under its original name.
@@ -44,9 +45,9 @@
 % \fi
 % Filename: jusrguid.tex
 
-\NeedsTeXFormat{pLaTeX2e}[1995/02/17]
+\NeedsTeXFormat{pLaTeX2e}[1996/03/01]
 
-\documentclass{jltxguid}[1995/02/17]
+\documentclass{jltxguid}[1996/03/01]
 
 \title{\LaTeXe~for authors}
 
@@ -54,7 +55,7 @@
    All rights reserved.\thanks{この文書は、LaTeXシステムに含まれる、
   \texttt{usrguide.tex}を ken-na@ascii.co.jp が日本語に訳したものです。}}
 
-\date{10 June 1995}
+\date{8 December 1995}
 
 \begin{document}
 
@@ -90,7 +91,7 @@
 \LaTeXe{}はこのようなすべての拡張を一つのフォーマットに戻し、
 \LaTeX~2.09の互いに異なる方言のproliferationを防ぎます。
 `新しいフォント選択スキーマ'を持つ\LaTeXe{}が標準です。
-また、たとえば\textsf{amstex}（一般的な\AmSLaTeX{}フォーマット）や
+また、たとえば\textsf{amsmath}（一般的な\AmSLaTeX{}フォーマット）や
 \textsf{slides}（一般的な\SLiTeX{}フォーマット）は単純に拡張パッケージになり、
 すべて同じ基本フォーマットで動作します。
 
@@ -122,11 +123,15 @@
 寄付の仕方やこれらのグループへの参加についての情報は、
 次のところから得ることができます。
 
-\begin{quote}
-\TeX{} Users Group\\
-P.~O.~Box~869, Santa~Barbara, CA~93102-0869, USA\\
-Fax:~+1~805~963~8358\\
-E-Mail: \texttt{tug@tug.org}
+\begin{quote}\small\label{addrs}
+  \TeX{} Users Group, 1850 Union Street \#1637,
+  San~Fransisco,\\
+  CA~94123, USA\\
+  Fax:~+1~415~982~8559 \
+  Email: \texttt{tug@tug.org}
+
+  UK TUG, 1 Eymore Close, Selly Oak, Birmingham B29~4LB, UK\\
+  Fax: +44 121 476 2159 \ Email: \texttt{uktug-enquiries@tex.ac.uk}
 \end{quote}
 
 \LaTeX3 プロジェクトの様子についての記事は、anonynmous ftpによって、
@@ -207,8 +212,9 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 
 \LaTeX~2.09と\LaTeXe{}の主な違いは、|\begin{document}|よりも前のコマンドです。
 
-\LaTeX~2.09では、文書は|article|や|book|のような\emph{スタイル}と、
-|towside|や|epsfig|のような\emph{オプション}を持っています。
+\LaTeX~2.09では、文書は\textsf{article}や\textsf{book}のような
+\emph{スタイル}と、\textsf{twoside}や\textsf{epsfig}のような
+\emph{オプション}を持っています。
 これらは|\documentstyle|コマンドによって示されます。
 \begin{quote}
    |\documentstyle|\oarg{options}\arg{style}
@@ -218,11 +224,11 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
    \documentstyle[twoside,epsfig]{article}
 \end{verbatim}
 しかし、ここには二つの異なるタイプの文書スタイルオプションがあります。
-それは、|twoside|のような\emph{組み込みオプション}と
+それは、\textsf{twoside}のような\emph{組み込みオプション}と
 |epsfig.sty|のような\emph{パッケージ}です。
-どのような\LaTeX{}文書スタイルも|epsfig|パッケージを使うことができますが、
-|towside|オプションは、それが宣言されている文書スタイルでしか使うことが
-できないという点で、これらは非常に異なります。
+どのような\LaTeX{}文書スタイルも\textsf{epsfig}パッケージを使うことが
+できますが、\textsf{twoside}オプションは、それが宣言されている
+文書スタイルでしか使うことができないという点で、これらは非常に異なります。
 
 このような混乱を避けるため、\LaTeXe{}では、組み込みオプションとパッケージを
 区別します。これらは新しく、|\documentclass|と|\usepackage|コマンドによって
@@ -261,7 +267,7 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 \subsection{クラスとパッケージのオプション}
 
 \LaTeX~2.09では、
-文書スタイルでのみ|towside|か|draft|のようなオプションを指定できました。
+文書スタイルでのみ|twoside|か|draft|のようなオプションを指定できました。
 \LaTeXe{}では、クラスとパッケージの両方でオプションを指定することができます。
 たとえば、|dvips|ドライバによって図形を扱う、
 両面組のarticleを指定するには、次のようにします。
@@ -271,7 +277,7 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
    \usepackage[dvips]{graphics}
 \end{verbatim}
 複数のパッケージで共通のオプションを共有することができます。たとえば、
-次のように|color|パッケージの指定を追加してロードすることもできますが、
+次のように\textsf{color}パッケージの指定を追加してロードすることもできますが、
 \begin{verbatim}
    \documentclass[twoside]{article}
    \usepackage[dvips]{graphics}
@@ -297,11 +303,11 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 
 次に、\LaTeX で配布されるクラスを示します。
 \begin{description}
-\item[article]  \emph{\LaTeXbook}で説明されている|article|クラスです。
-\item[book]     \emph{\LaTeXbook}で説明されている|book|クラスです。
-\item[report]   \emph{\LaTeXbook}で説明されている|report|クラスです。
-\item[letter]   \emph{\LaTeXbook}で説明されている|letter|クラスです。
-\item[slides]   \emph{\LaTeXbook}で説明されている|slides|クラスで、
+\item[article] \emph{\LaTeXbook}で説明されている|article|クラスです。
+\item[book]    \emph{\LaTeXbook}で説明されている|book|クラスです。
+\item[report]  \emph{\LaTeXbook}で説明されている|report|クラスです。
+\item[letter]  \emph{\LaTeXbook}で説明されている|letter|クラスです。
+\item[slides]  \emph{\LaTeXbook}で説明されている|slides|クラスで、
    従来の\SLiTeX です。
 \item[proc]     処理用の文書クラスです。|article|をベースにしています。
    従来の|proc|パッケージです。
@@ -314,6 +320,17 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 \item[ltnews]   \emph{\LaTeX{} News}情報シート用の文書クラスです。
    |article|をベースにしています。このクラス用のレイアウトは、
    将来の\LaTeX リリースで変更される可能性があります。
+\item[minimal]
+\NEWfeature{1995/12/01}
+   このクラスは、たった3行ほどですが、必要な\LaTeX\ クラスファイルです。
+   このクラスはテキストの幅と高さと|\normalsize|の定義しかしません。
+   これは主に、|article|のような`フル'クラスをロードする必要がない状況で
+   \LaTeX\ のコードのデバッグやテストをするために使います。
+   しかしながら、articleクラスで提供される構造とは根本的に異なる構造を持つ
+   ドキュメントを作ろうと、完全に新しいクラスをデザインしようとするときには、
+   |article|からはじめてコードを修正していくよりも、
+   このクラスをベースにして、必要な構造を実装していくほうが
+   いいかもしれません。
 \end{description}
 
 \subsection{標準パッケージ}
@@ -329,8 +346,10 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 \item[doc] これは\LaTeX{}プログラムの文書を組版するための基本パッケージです。
    |doc.dtx|と\emph{\LaTeXcomp}で説明されています。
 \item[exscale] 数学拡張書体のスケール化バージョンを提供します。
+
   |exscale.dtx|と\emph{\LaTeXcomp}で説明されています。
  \item[fontenc] \LaTeX{}が必要とするフォントエンコードの記述に使われます。
+
    |ltoutenc.dtx|で説明されています。
 \item[graphpap]
 \NEWfeature{1994/12/01}
@@ -345,7 +364,7 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
   |inputenc.dtx|で説明されています。
 \item[latexsym] \LaTeXe{}はもはや\LaTeX{}シンボルフォントをデフォルトと
   してロードしません。このフォントにアクセスするためには、
-  |latexsym|パッケージを使います。|latexsym.dtx|と\emph{\LaTeXcomp}で
+  \textsf{latexsym}パッケージを使います。|latexsym.dtx|と\emph{\LaTeXcomp}で
   説明されています。また、第\ref{Sec:problems}節を参照してください。
 \item[makeidx] 索引を作成するためのコマンドを提供します。
   \emph{\LaTeXbook}と\emph{\LaTeXcomp}で説明されています。
@@ -357,6 +376,7 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
   各|\index|コマンドの引数が出現したページに、それを印刷します。
   \emph{\LaTeXbook}で説明されています。
 \item[syntonly] 組版処理をすることなしに文書を処理するのに使われます。
+
   |syntonly.dtx|と\emph{\LaTeXcomp}で説明されています。
 \item[tracefnt] 画面に表示される\LaTeX のフォントロードについての情報量を
   制御します。\emph{\LaTeXcomp}で説明されています。
@@ -366,13 +386,13 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 
 次のソフトウェアは、\LaTeXe{}と同じ配布者から利用可能でなくてはいけません。
 少なくとも\textsf{graphics}と\textsf{tools}は、
-\LaTeXbook ですべてのファイルが説明されているため、手に入れるべきです。
+\emph{LaTeXbook}ですべてのファイルが説明されているため、手に入れるべきです。
 また、この本のC.5.2節では、
-|amstex|パッケージ（\textsf{amslatex}の一部）と\textsf{babel}も
+\textsf{amsmath}パッケージ（\textsf{amslatex}の一部）と\textsf{babel}も
 `標準パッケージ'のリストに挙げられています。
 \begin{description}
 \item[amslatex]  American Mathmatical Societyが拡張した数学組版です。
-  これは|amstex|パッケージを含み、
+  これは|amsmath|パッケージを含み、
   とても複雑な数式組版のための多くのコマンドを提供しています。
   American Mathmatical Society によって提供およびサポートされています。
   \emph{\LaTeXcomp}で説明されています。
@@ -510,7 +530,8 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 このオプションは続くすべての|\usepackage|コマンド（後述）にも影響します。
 
 オプション引数\m{release-date}には、
-そのクラスファイルのリリース日付を\textsc{yyyy/mm/dd}の形式で指定します。
+そのクラスファイルのリリース日付を\break
+\textsc{yyyy/mm/dd}の形式で指定します。
 指定する日付は、正しく動作する、最も古いクラスファイルの日付です。
 この日付よりも古いクラスのバージョンが見つかると、警告が表示されます。
 
@@ -524,7 +545,8 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 |\documentstyle| \oarg{option-list} \arg{class-name}
 \end{decl}
 
-このコマンドは古いファイルとの互換のためにサポートされています。
+|\documentstyle|コマンドは、古いファイルとの互換のため
+に提供しています。このコマンドは、
 \emph{\LaTeX~2.09互換モード}に入ることを除き、
 |\documentclass|とほとんど同じです。
 \m{option-list}に指定されたオプションは、クラスファイルでは処理されず、
@@ -545,7 +567,8 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 この\m{package-name}ファイルで定義された要素の形式を変更します。
 
 さきほどと同じように、\m{release-date}には、
-パッケージファイルのリリース日付を\textsc{yyyy/mm/dd}の形式で指定します。
+パッケージファイルのリリース日付を
+\textsc{yyyy/}\textsc{mm/}\textsc{dd}の形式で指定します。
 指定する日付は、正しく動作する、最も古いパッケージファイルの日付です。
 この日付よりも古いパッケージのバージョンが見つかると、警告が表示されます。
 
@@ -577,17 +600,22 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 読み込まれたファイルのリストが実行終了時に画面に表示されます。
 またログファイルにも書き込まれます。短い説明も生成されることがあります。
 
+\NEWdescription{1995/12/01}
 \emph{警告}：このコマンドは、|\input|\arg{file}または|\include|\arg{file}の
 ような\LaTeX{}コマンドを使って読み込まれたファイルだけをリストします。
-プリミティブの\TeX{}の構文、|\input |\emph{file}（ファイル名の前後に|{ }|括弧
+\TeX{}のプリミティブ構文、|\input |\emph{file}（ファイル名の前後に|{ }|括弧
 がない）を用いて読み込まれたファイルはリストされません。
+括弧のついた\LaTeX{}の形式の失敗は、より厳密な問題を起こします。
+できるだけ、重要なファイルで上書きしていくようにし、
+\textbf{つねに括弧の中に置く}ようにします。
+
 
 \begin{decl}
 |\setcounter{errorcontextlines}| \arg{num}
 \end{decl}
 
-エラーメッセージの形式を制御するために、
-\TeX~3 で新しく|\errorcontextlines|プリミティブが追加されました。
+\TeX~3では、エラーメッセージの形式を制御するために、
+|\errorcontextlines|プリミティブが追加されました。
 \LaTeXe{}は、標準の|\setcounter|コマンドを通して、
 このインターフェイスを提供します。\LaTeX{}コマンドがエラーを起こしたとき、
 ほとんどの\LaTeX{}ユーザは、その内部定義を見たくありません。
@@ -691,11 +719,13 @@ Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
 
 \NEWfeature{1994/12/01}
   上記の５つの`定義コマンド'は、現在、\texttt{*}形式を持っています。
-  引数を持つコマンドを定義するとき、
-  これらの引数がテキストの段落全体を含むようなことのない限りは、
+  引数を持つコマンドを定義するとき、それらの引数に段落を指定しないならば、
   一般的にアスタリスク形式のほうがよりよい形式です。
-  そして、非アスタリスク形式で使う必要があるときは、その引数が、
-  定義された環境に合う内容として扱われていなかったかを調べてください。
+  非アスタリスク形式で使う必要があるときは、環境として定義したほうが、
+  その内容を扱うのに合うのではないかどうかを考えてみてください。
+
+\NEWfeature{1995/12/01}
+  上記5つの`定義コマンド'によって作られるコマンドは、頑丈になりました。
 
 \subsection{ボックス}
 
@@ -745,7 +775,7 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
 \end{decl}
 
 上記のボックスコマンドでは、
-そのボックスの自然な長さを示すために\oarg{height}の中で、
+ボックスの自然な長さを示すために\oarg{height}の中で、
 |\height|や|\width|などが使われるかもしれません。
 
 \m{inner-pos}が\LaTeXe での新しいオプションです。
@@ -833,6 +863,10 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
 
 アスタリスク形式は、ページにある垂直スペースをできる限り縮め、
 ページにあるテキストの量を最も合うようにします。
+
+\NEWdescription{1995/12/01}
+これらのコマンドは、脚注テキストの位置は変えません。したがって、
+ページが長すぎるとき、脚注に重なってしまうことがあります。
 
 \subsection{フロート}
 
@@ -972,13 +1006,13 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
 |\textsuperscript| \arg{text}
 \end{decl}
 
-\NEWfeature{1995/06/01} koko
+\NEWfeature{1995/06/01}
 \LaTeX~2.09での、脚注記号のような上付き文字は、内部的に数式モードに入ったり、
 数式上付き文字として数値を組版することで生成されていました。
 これらはテキストフォントとしてコンピュータモダンフォントが使われ、
 数式フォントの数字が同じ場合は、とても見栄えが良く感じます。
 しかし、Timesのような別のフォントと組み合わせた場合、少し違和感があります。
-このような理由にｙとり、|\textsuperscript|コマンドが作られました。
+このような理由により、|\textsuperscript|コマンドが作られました。
 このコマンドは、引数をカレントテキストフォントで、
 上付き文字の位置へ適切なサイズで組版をします。
 
@@ -1080,9 +1114,48 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
       \begin{tabular}{lcl}
          \emph{数式コマンド} & \emph{文字} & \emph{テキストコマンド} \\
           |\bullet|   & $\bullet$   & |\textbullet| \\
-         |\cdot|     & $\cdot$     & |\textperiodcentered| \\
+         |\cdot|     & $\cdot$     & |\textperiodcentered|
       \end{tabular}
    \end{center}
+
+\begin{decl}[1995/12/01]
+      |\textbackslash|
+      |\textbar|
+      |\textless|
+      |\textgreater|
+\end{decl}
+   これらのコマンドは、verbatimか数式モードでだけ有効だったASCII文字への
+   アクセスを許可します。
+   \begin{center}
+      \begin{tabular}{lcl}
+         \emph{数式コマンド} & \emph{文字} & \emph{テキストコマンド} \\
+          |\backslash|   & $\backslash$   & |\textbackslash| \\
+          |\mid|     & $\mid$     & |\textbar| \\
+          |<<| & $<$ & |\textless| \\
+          |>>| & $>$ & |\textgreater|
+      \end{tabular}
+   \end{center}
+
+\begin{decl}[1995/12/01]
+      |\textasciicircum|
+      |\textasciitilde|
+\end{decl}
+   これらのコマンドは、以前、verbatimの中でだけ有効だったASCII文字への
+   アクセスを許可します。
+   \begin{center}
+      \begin{tabular}{cl}
+         \emph{verbatim} & \emph{text command} \\
+         |^| & |\textasciicircum| \\
+         |~| & |\textasciitilde|
+      \end{tabular}
+   \end{center}
+
+\begin{decl}[1995/12/01]
+      |\textregistered|
+      |\texttrademark|
+\end{decl}
+   これらのコマンドは、`登録商標' (R) と `商標' (TM) 記号を提供します。
+
  
 \subsection{テキストコマンド：T1エンコード}
  
@@ -1097,7 +1170,7 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
   この節では、
   |T1|フォントを持っていれば使うことのできるコマンドについて説明をします。
   これらを使うにはDCフォント、あるいはpsnfssによって使われる、
-  T1エンコードされたPostScriptフォントを得ることが必要です。
+  |T1|エンコードされたPostScriptフォントを得ることが必要です。
   これらのフォントはすべて、Comprehensive \TeX{} Archiveからanonymous ftpで
   得ることができます。また、\emph{4all \TeX}や\emph{Prime Time Freeware}の
   CD-ROMにも入っています（どちらも\TeX{}ユーザグループから入手可能です）。
@@ -1141,7 +1214,8 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
       |\quotesinglbase|
       |\textquotedbl|
 \end{decl}
-  このコマンドはいろいろな種類の括弧を生成します。大雑把に表せば、
+  このコマンドはいろいろな種類の括弧を生成します。
+  大雑把に表せば、\break
   $\ll$a$\gg$ $<$a$>$ ,,a'' ,a' and |"|a|"| のようになります。
  
 \subsection{ロゴ}
@@ -1221,20 +1295,20 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
 これらは\LaTeX~2.09では自動的にロードされていましたが、
 \TeX{}は数式フォントファミリには16種類だけの領域しか持っていません。
 したがって、多くのユーザは領域を越えてしまいます。
-そのため\LaTeX{}は|latexsym|パッケージを用いない限り、
+そのため\LaTeX{}は\textsf{latexsym}パッケージを用いない限り、
 \LaTeX{}シンボルフォントをロードしません。
 
 これらの記号は、|amsfonts|パッケージによって、
 もっと多くの記号が定義されている別のフォントを使うことで代用することもできます。
 これは American Mathematical Society によって提供されています。
 
-|latexsym|パッケージは\LaTeX~2.09互換モードでは自動的にロードされます。
+\textsf{latexsym}パッケージは\LaTeX~2.09互換モードでは自動的にロードされます。
 
 \section{\LaTeX~2.09の文書}
 \label{Sec:209}
 
 \LaTeXe{}は\emph{\LaTeX~2.09互換モード}に入ることによって、
-（ほとんどの）\LaTeX~2.09文書を処理することができます。
+ほとんどの\LaTeX~2.09文書を処理することができます。
 いつもしてきたのと同じように\LaTeX{}を動かすだけで、
 何も変更することなく、同じ結果を得ることができます。
 
@@ -1251,6 +1325,29 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
 \LaTeX~2.09の下で動かしたときよりも50\%以上遅くなります。
 さらに\LaTeXe{}の新しい機能の多くは、\LaTeX~2.09互換モードではうまく動きません。
 
+\subsection{警告}
+
+\NEWdescription{1995/12/01}
+\emph{\LaTeX~2.09互換モード}は、単に、2.09文書を処理するためにだけ
+提供されています。対象としている文書は、本物の古い\LaTeX~2.09で処理できる、
+旧システムのために書かれた文書です。
+
+したがって、このモードは、\LaTeXe{}の拡張機能として使用するために
+提供しているのでは\emph{ありません}。ですから、2.09文書のような形式の
+新しい文書（|\docuementstyle|ではじまり、いくつかの新しい\LaTeXe だけの
+コマンドや環境を使用していて、古い\LaTeX~2.09システムでは処理できないような）
+を処理するためには使わないでください
+
+このシステムをそのように誤用することを避けるために、
+また、誤解の生じるようなコーディングがされた文書が配付されて、
+トラブルを起こすことを避けるために、\emph{\LaTeX~2.09互換モード}は、
+それらの新しい機能とコマンドの大部分を使えないようにしています。
+それらを使おうとすると、エラーメッセージが表示されます。
+多くのものは単に動作しないようになっていますが、奇妙な結果を生成しまうこと
+もあります。このような故意に起こしていることに対して、
+我々にバグレポートを送って困らせないでください。
+
+
 
 \subsection{フォント選択での問題}
 \label{Sec:fsprob}
@@ -1261,12 +1358,24 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
 
 \begin{itemize}
 \item エラーメッセージが表示される
-\item 期待通りのフォント変更がされない
+\item 期待どおりのフォント変更がされない
 \end{itemize}
 
 エラーメッセージの場合、その文書、または古いスタイルファイルで、
 もう定義されていない古い内部コマンドが使用されている可能性があります。
 この場合は、第\ref{Sec:oldinternals}節を参照してください。
+
+\NEWdescription{1995/12/01}
+期待どおりではない、ひとつの例は、つぎのように、数式モードでのフォントを
+変更するコマンドの新しいスタイルを使う場合です。
+\begin{verbatim}
+$ \mathbf{xy} A $
+\end{verbatim}
+つぎのように、$A$もボールドで出力されると考えて指定したかもしれません。
+\begin{verbatim}
+$ \bf {xy} A $
+\end{verbatim}
+
 
 \LaTeX~2.09では、サイトが\LaTeX{}をカスタマイズして、
 異なる結果を生み出すために異なる\LaTeX{}をインストールすることを
@@ -1312,6 +1421,46 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
 ネイティブモードで処理することができます。
 文書がネイティブモードで動作するかどうかを調べる手っ取り早い方法は、
 それを動かしてみることです！
+
+
+\section{ローカルな変更}
+\label{sec:loc}
+
+\NEWdescription{1995/12/01}
+とても簡単なローカルな変更をするとき、一般的に二つのタイプがあります。
+そのような変更で生成された文書は他の場所ではよくないことを忘れないで
+ください（そのような文書は`ノン・ポータブル'と呼ばれます）。
+
+ひとつ目のタイプは、よく使う記号や構文を個人的なコマンドで使うことです。
+（たとえば、\texttt{mymacros.sty}と呼ばれるような）パッケージファイルに
+入れられて、文書のプリアンブルに記述された|\usepackage{mymacros}|で
+ロードしているかもしれません。
+
+別のタイプは、標準クラスのひとつによく似たローカルな文書クラスです。
+これは、特別な環境や、あるパラメータの値を変えたりのように、
+いくつかの簡単な修正が含まれています。
+ここでは、このようなファイルを使うときの簡単な作り方について説明をします。
+たとえば、\textsf{larticle}と呼ばれるクラスが、
+\textsf{article}によく似ているとします。
+
+\NEWfeature{1995/12/01}
+\texttt{larticle.cls}と呼ばれるクラスファイルは、
+（準備的な識別コマンドの後ろで）つぎのようにはじめます
+\begin{verbatim}
+   \LoadClassWithOptions{article}
+\end{verbatim}
+このコマンドの後ろに、\texttt{article.sty}ファイルからの変更点や
+追加を記述します。
+
+上記の|\LoadClassWithOptions|コマンドを使うと、標準クラスファイル
+\textsf{article}に、その文書によって要求されるオプションを付けてロード
+することができます。
+このように、\textsf{larticle}クラスで使った文書は、つぎのように、
+\textsf{article}クラス標準で記述できたオプションも指定することができます。
+\begin{verbatim}
+   \documentclass[a4paper,twocolumn,dvips]{larticle}
+\end{verbatim}
+
 
 \section{問題点}
 \label{Sec:problems}
@@ -1364,7 +1513,7 @@ LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
    \mho \Join \Box \Diamond \leadsto
    \sqsubset \sqsupset \lhd \unlhd \rhd \unrhd
 \end{verbatim}
-現在、これらは|latexsym|パッケージの一部です。
+現在、これらは\textsf{latexsym}パッケージの一部です。
 修正するには、
 \begin{verbatim}
    \usepackage{latexsym}
@@ -1392,16 +1541,16 @@ NFSS（新しいフォント選択スキーマ）リリース１で使われていましたが、
 そのパッケージの新しいリリースがあるか、または（そのパッケージを自分で作成した
 ならば）フォントコマンドの新しい構文を\emph{\fntguide}で確認してください。
 
-そのパッケージの更新バージョンがどこにもない場合は、|newlfont|または
-|oldlfont|パッケージを使うことでこのエラーを回避することができます。
+そのパッケージの更新バージョンがどこにもない場合は、\textsf{newlfont}か
+\textsf{oldlfont}パッケージを使うことでこのエラーを回避することができます。
 これらのパッケージは|\newmathflphabet|をエミュレートします。
 
-文書で|oldfont|を使わなくてはいけないとき、
+文書で\textsf{oldfont}を使わなくてはいけないとき、
 数式フォントの選択は次のような構文で行ないます。
 \begin{quote}
   |{\cal A}|, etc.
 \end{quote}
-文書で|newlfont|を使うときの構文も似ています。
+文書で\textsf{newlfont}を使うときの構文も似ています。
 \begin{quote}
   |\cal{A}|, etc.
 \end{quote}
@@ -1452,19 +1601,20 @@ NFSS（新しいフォント選択スキーマ）リリース１で使われていましたが、
 そのコマンドは\emph{\fntguide}で説明されています。
 
 この方法ができないときは、最後の手段として、
-|rawfonts|パッケージを使うことができます。
+\textsf{rawfonts}パッケージを使うことができます。
 このパッケージは、\LaTeX~2.09の70種類のフォントをロードし、
 古いコマンドで直接これらにアクセスするようにします。
 ただし、この方法は時間とメモリの両方を浪費します。
-70種類すべてのフォントをロードしたくない場合は、|rawfonts|に|only|オプションを
-使うことによって、数種類だけを選択することができます。
+70種類すべてのフォントをロードしたくない場合は、
+\textsf{rawfonts}に|only|オプションを使うことによって、
+数種類だけを選択することができます。
 たとえば、|tenrm|と|tenbf|だけをロードしたいときは、次のようにします。
 \begin{verbatim}
    \usepackage[only,tenrm,tenbf]{rawfonts}
 \end{verbatim}
 
-|rawfonts|パッケージは\LaTeX{}toolsソフトウェアの一部として配布されています。
-第\ref{Sec:st-pack}節を参照してください。
+\textsf{rawfonts}パッケージは\LaTeX{}toolsソフトウェアの一部として
+配布されています。第\ref{Sec:st-pack}節を参照してください。
 
 \subsection{昔のファイル}
 
