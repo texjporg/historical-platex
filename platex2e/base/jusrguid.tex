@@ -1,0 +1,1541 @@
+% \iffalse meta-comment
+%
+% Japanese edition: Copyright 1994,1995 ASCII Corporation.
+%
+% Copyright 1993-1995 the LaTeX3 project and the individual authors
+% listed elsewhere in this file.  All rights reserved.
+% 
+% For further copyright information see the file legal.txt, and any
+% other copyright notices in this file.
+%
+% This file is part of the LaTeX2e system.
+% ----------------------------------------
+%  This system is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+%
+%   For error reports concerning UNCHANGED versions of this file no more
+%   than one year old, see bugs.txt.
+%
+%   Please do not request updates from us directly.  Primary
+%   distribution is through the CTAN archives.
+%
+%
+% IMPORTANT COPYRIGHT NOTICE:
+% 
+% You are NOT ALLOWED to distribute this file alone.
+%
+% You are allowed to distribute this file under the condition that it is
+% distributed together with all the files listed in manifest.txt.
+%
+% If you receive only some of these files from someone, complain!
+%
+% Permission is granted to copy this file to another file with a clearly
+% different name and to customize the declarations in that copy to serve
+% the needs of your installation, provided that you comply with
+% the conditions in the file legal.txt.
+%
+% However, NO PERMISSION is granted to produce or to distribute a
+% modified version of this file under its original name.
+%
+% You are NOT ALLOWED to change this file.
+%
+%
+% \fi
+% Filename: jusrguid.tex
+
+\NeedsTeXFormat{pLaTeX2e}[1995/02/17]
+
+\documentclass{jltxguid}[1995/02/17]
+
+\title{\LaTeXe~for authors}
+
+\author{\copyright~Copyright 1995, \LaTeX3 Project Team.\\
+   All rights reserved.\thanks{この文書は、LaTeXシステムに含まれる、
+  \texttt{usrguide.tex}を ken-na@ascii.co.jp が日本語に訳したものです。}}
+
+\date{10 June 1995}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{はじめに}
+\LaTeXe は\LaTeX{}文書処理システムの新しい標準バージョンです。
+
+この文書は\LaTeX{}の新しい機能の使い方、
+および古い\LaTeX{}文書を\LaTeXe{}で処理する方法について説明しています。
+しかし、この文書は新しい機能の主要な概念だけであり、
+すでに古いバージョンの\LaTeX{}に慣れ親しんだ著者のためのものです。
+これは\LaTeXe のリファレンスマニュアルでも、\LaTeX の完全な解説でも
+\emph{ありません}。
+
+\subsection{\LaTeXe---新しい\LaTeX のリリース}
+
+以前の\LaTeX のバージョンは\LaTeX~2.09として知られています。
+数年に渡り、\LaTeX 用に多くの拡張が開発されています。
+これはもちろん、広く用いられていることの確かな結果なのですが、
+異なるサイトで互換性のない\LaTeX{}フォーマットが使われるという、
+一つの不幸な結果にもなりました。これは`標準\LaTeX~2.09',
+\NFSS （新しいフォント選択スキーマ）を用いた\LaTeX, \SLiTeX, \AmSLaTeX
+などを含みます。
+したがって、さまざまな場所からの文書を処理するために、
+サイト管理者は複数の\LaTeX{}プログラムを持つことを余儀なくされていました。
+また、ソースファイルを見るとき、その文書がどのフォーマットで書かれているのか、
+いつもはっきりするということでもありませんでした。
+
+こうした望まれるべくもない状況に終止符を打つべく、\LaTeXe{}は作成されました。
+\LaTeXe{}はこのようなすべての拡張を一つのフォーマットに戻し、
+\LaTeX~2.09の互いに異なる方言のproliferationを防ぎます。
+`新しいフォント選択スキーマ'を持つ\LaTeXe{}が標準です。
+また、たとえば\textsf{amstex}（一般的な\AmSLaTeX{}フォーマット）や
+\textsf{slides}（一般的な\SLiTeX{}フォーマット）は単純に拡張パッケージになり、
+すべて同じ基本フォーマットで動作します。
+
+新しいリリースの導入はまた、しばしば要求された機能のいくつかも追加でき、
+パッケージとクラスの作成作業も簡単にします。
+
+\subsection{\LaTeX3---The long-term future of \LaTeX}
+\label{Sec:ltx3}
+
+\LaTeXe{}は、\LaTeX{}システムの包括的な再実装の統一段階です。
+\LaTeX{}の次のメジャーリリースは\LaTeX3{}になります。
+\LaTeX3{}は、文書デザイナーとパッケージライターの\LaTeX{}への
+インターフェイスのラディカルなオーバーホールを含んでいます。
+
+\LaTeX3 は長期間のリサーチプロジェクトですが、まだ終了していません。
+プロジェクトチームは\LaTeXe{}の保守業務を任されています。
+したがって、\LaTeXe{}の制作と保守から得られた経験が
+\LaTeX3{}のデザインに大きく影響するでしょう。
+
+このプロジェクトの簡単な説明は、|ltx3info.tex|文書にあります。
+
+もし、このプロジェクトをサポートしたいときは、
+\LaTeX3 Project Fund に寄付をどうぞ。
+この寄付を、現在の\LaTeX{}の保守と\LaTeX3{}の開発のボランティアに関わる、
+いろいろな費用に割り当てることで、リサーチチームを存続させることができます。
+
+この基金は、
+\TeX{}ユーザグループといろんなローカルユーザグループによって束ねられます。
+寄付の仕方やこれらのグループへの参加についての情報は、
+次のところから得ることができます。
+
+\begin{quote}
+\TeX{} Users Group\\
+P.~O.~Box~869, Santa~Barbara, CA~93102-0869, USA\\
+Fax:~+1~805~963~8358\\
+E-Mail: \texttt{tug@tug.org}
+\end{quote}
+
+\LaTeX3 プロジェクトの様子についての記事は、anonynmous ftpによって、
+Comprehensive \TeX Archiveの次のディレクトリから手に入れることができます。
+\begin{verbatim}
+  tex-archive/info/ltx3pub
+\end{verbatim}
+
+そのディレクトリある|ltx3pub.bib|ファイルに
+各ファイルの概要がまとめてあります。
+
+\subsection{概要}
+
+この文書は\LaTeX の新しい構造と新しい機能の概要について説明します。
+この文書は自分自身を説明した文書では\emph{なく}、
+バージョン2.09から変更された\LaTeX{}の機能だけを含んでいます。
+\LaTeX{}への手引としてご覧ください。
+
+\begin{description}
+\item[第\ref{Sec:class+packages}節]は、
+   \LaTeX{}文書の新しい構造についての概念を説明します。
+   ここでは、クラスやパッケージの動作やクラスやパッケージオプションの使い方
+   について説明しています。また\LaTeX の標準パッケージとクラスを列挙します。
+
+\item[第\ref{Sec:commands}節]は、
+   \LaTeXe{}で著者が使える新コマンドについて説明しています。
+
+\item[第\ref{Sec:209}節]は、
+   \LaTeXe{}を用いて古い\LaTeX{}文書を処理する方法について説明しています。
+
+\item[第\ref{Sec:problems}節]は、
+   \LaTeXe を使ったときに、遭遇するかもしれない問題の詳しいアドバイスです。
+   \LaTeXe のいくつかの新しいエラーメッセージを示し、
+   より一般的な問題についても説明しています。またそれらをどう扱うか、
+   あるいは別の情報をどこで見つけるかについても説明しています。
+\end{description}
+
+\subsection{さらなる情報}
+
+\LaTeXe の新しい機能を含む、\LaTeX の一般的な説明は、
+Leslie Lamportの『\LaTeXbook 』\cite{A-W:LLa94}を参照してください。
+
+150以上のパッケージの概要を含む、\LaTeX の新しい機能についてのより詳しい説明は、
+Michel Goossens, Frank Mittelbach, Alexander Samarinらの『\LaTeXcomp 』
+\cite{A-W:GMS94}を参照してください。
+
+多くの新しい\LaTeX{}パッケージについてのより詳しい情報は、
+そのパッケージの文書を参照してください。
+これらはあなたが\LaTeX をコピーしたところと同じ場所にあるはずです。
+
+すべての\LaTeX のコピーには、いくつかの文書が付属しています。
+\emph{\LaTeX{} News}のコピーは、\LaTeX の６ヶ月単位のリリースで更新されます。
+この文書のファイル名は|ltnews*.tex|です。
+クラスおよびパッケージ作成者用のガイド\emph{\clsguide}は、
+文書クラスおよびパッケージの作成者のために新しい\LaTeX{}の機能について
+説明しています。このガイドのファイル名は|clsguide.tex|です。
+\emph{\fntguide}は、クラスおよびパッケージ作成者のために、
+\LaTeX{}のフォント選択スキーマについて説明しています。
+このガイドのファイル名は|fntguide.tex|です。
+
+我々は、\LaTeX{}のソースコードから\LaTeX{}文書\emph{\sourcecode}に
+移行しつつあります。
+このドキュメントは\LaTeX{}コマンドの索引に含まれています。
+また|source2e.tex|から組版することができます。
+
+\TeX{}と\LaTeX{}についてのより多くの情報は、
+ローカルな\TeX{}ユーザグループ、あるいは国際\TeX{}ユーザグループ
+（P.~O.\ Box~869, Santa Barbara, CA 93102-0869, USA, Fax:~+1 805 963
+8358, E-mail:~tug@tug.org）に連絡を取ってください。
+
+\section{クラスとパッケージ}
+\label{Sec:class+packages}
+
+この節では\LaTeX{}文書の新しい構造であり、
+新しいファイルタイプである\emph{クラス}と\emph{パッケージ}について説明します。
+
+\subsection{クラスとパッケージについて}
+
+\LaTeX~2.09と\LaTeXe{}の主な違いは、|\begin{document}|よりも前のコマンドです。
+
+\LaTeX~2.09では、文書は|article|や|book|のような\emph{スタイル}と、
+|towside|や|epsfig|のような\emph{オプション}を持っています。
+これらは|\documentstyle|コマンドによって示されます。
+\begin{quote}
+   |\documentstyle|\oarg{options}\arg{style}
+\end{quote}
+たとえば、両面組のarticleで拡張PostScriptファイルを使うとき、次のようにします。
+\begin{verbatim}
+   \documentstyle[twoside,epsfig]{article}
+\end{verbatim}
+しかし、ここには二つの異なるタイプの文書スタイルオプションがあります。
+それは、|twoside|のような\emph{組み込みオプション}と
+|epsfig.sty|のような\emph{パッケージ}です。
+どのような\LaTeX{}文書スタイルも|epsfig|パッケージを使うことができますが、
+|towside|オプションは、それが宣言されている文書スタイルでしか使うことが
+できないという点で、これらは非常に異なります。
+
+このような混乱を避けるため、\LaTeXe{}では、組み込みオプションとパッケージを
+区別します。これらは新しく、|\documentclass|と|\usepackage|コマンドによって
+与えられます。
+\begin{quote}
+   |\documentclass|\oarg{options}\arg{class} \\
+   |\usepackage|\oarg{options}\arg{packages}
+\end{quote}
+たとえば、両面組のarticleで拡張PostScriptファイルを使うとき、次のようにします。
+\begin{verbatim}
+   \documentclass[twoside]{article}
+   \usepackage{epsfig}
+\end{verbatim}
+一つの|\usepackage|コマンドで、一つ以上のパッケージをロードすることができます。
+たとえば、次のように書くことも、
+\begin{verbatim}
+   \usepackage{epsfig}
+   \usepackage{multicol}
+\end{verbatim}
+次のように書くこともできます。
+\begin{verbatim}
+   \usepackage{epsfig,multicol}
+\end{verbatim}
+\LaTeXe{}は、\LaTeX~2.09の|\documentstyle|コマンドを使用できることに
+注意してください。このコマンドは\LaTeXe{}を\emph{\LaTeX~2.09互換モード}で
+動かします。このことは第\ref{Sec:209}節で説明しています。
+
+新しい文書で|\documentstyle|コマンドを使わないようにしてください。
+なぜなら、互換モードはたいへん遅く、
+また、このモードでは\LaTeXe{}の新しい機能がうまく使えません。
+
+クラスとパッケージの区別をするには、文書クラスは現在、|.sty|でなく|.cls|で
+終わっています。パッケージは|.sty|で終わっており、
+多くの\LaTeX~2.09のパッケージは\LaTeXe で動作します。
+
+\subsection{クラスとパッケージのオプション}
+
+\LaTeX~2.09では、
+文書スタイルでのみ|towside|か|draft|のようなオプションを指定できました。
+\LaTeXe{}では、クラスとパッケージの両方でオプションを指定することができます。
+たとえば、|dvips|ドライバによって図形を扱う、
+両面組のarticleを指定するには、次のようにします。
+
+\begin{verbatim}
+   \documentclass[twoside]{article}
+   \usepackage[dvips]{graphics}
+\end{verbatim}
+複数のパッケージで共通のオプションを共有することができます。たとえば、
+次のように|color|パッケージの指定を追加してロードすることもできますが、
+\begin{verbatim}
+   \documentclass[twoside]{article}
+   \usepackage[dvips]{graphics}
+   \usepackage[dvips]{color}
+\end{verbatim}
+次のように|\usepackage|に複数のパッケージを記述することもできます。
+\begin{verbatim}
+   \documentclass[twoside]{article}
+   \usepackage[dvips]{graphics,color}
+\end{verbatim}
+さらに、
+|\documentclass|コマンドに与えられる各オプションをパッケージが使うときに、
+クラスファイルが各オプションの動作を知っているならば、
+次のようにすることもできます。
+\begin{verbatim}
+   \documentclass[twoside,dvips]{article}
+   \usepackage{graphics,color}
+\end{verbatim}
+クラスとパッケージのオプションは、
+\emph{\LaTeXcomp}と\emph{\clsguide}でより詳細に説明されています。
+
+\subsection{標準クラス}
+
+次に、\LaTeX で配布されるクラスを示します。
+\begin{description}
+\item[article]  \emph{\LaTeXbook}で説明されている|article|クラスです。
+\item[book]     \emph{\LaTeXbook}で説明されている|book|クラスです。
+\item[report]   \emph{\LaTeXbook}で説明されている|report|クラスです。
+\item[letter]   \emph{\LaTeXbook}で説明されている|letter|クラスです。
+\item[slides]   \emph{\LaTeXbook}で説明されている|slides|クラスで、
+   従来の\SLiTeX です。
+\item[proc]     処理用の文書クラスです。|article|をベースにしています。
+   従来の|proc|パッケージです。
+\item[ltxdoc]   \LaTeX{}プログラムの文書用の文書クラスです。
+   |article|をベースにしています。
+\item[ltxguide] \emph{\usrguide}と\emph{\clsguide}用の文書クラスです。
+   |article|をベースにしています。今あなたが読んでいるこの文書は
+   |ltxguide|クラスを用いています。このクラス用のレイアウトは、
+   将来の\LaTeX リリースで変更される可能性があります。
+\item[ltnews]   \emph{\LaTeX{} News}情報シート用の文書クラスです。
+   |article|をベースにしています。このクラス用のレイアウトは、
+   将来の\LaTeX リリースで変更される可能性があります。
+\end{description}
+
+\subsection{標準パッケージ}
+\label{Sec:st-pack}
+
+次に、\LaTeX で配布されるパッケージを示します。
+\begin{description}
+\item[alltt]
+\NEWfeature{1994/12/01}
+   このパッケージは|alltt|環境を提供します。この環境は、|\|, |{|, |}|が
+   通常の意味を持っていることを除き、|verbatim|環境に似ています。
+   |alltt.dtx|と\emph{\LaTeXbook}で説明されています。
+\item[doc] これは\LaTeX{}プログラムの文書を組版するための基本パッケージです。
+   |doc.dtx|と\emph{\LaTeXcomp}で説明されています。
+\item[exscale] 数学拡張書体のスケール化バージョンを提供します。
+  |exscale.dtx|と\emph{\LaTeXcomp}で説明されています。
+ \item[fontenc] \LaTeX{}が必要とするフォントエンコードの記述に使われます。
+   |ltoutenc.dtx|で説明されています。
+\item[graphpap]
+\NEWfeature{1994/12/01}
+   このパッケージは|\graphpaper|コマンドを定義しています。
+   このコマンドは|picture|環境で使うことができます。
+\item[ifthen] `if\dots then do\dots otherwise do\dots'の形式のコマンド
+  を提供します。
+  |ifthen.dtx|および\emph{\LaTeXcomp}で説明されています。
+\item[inputenc]
+\NEWfeature{1994/12/01}
+  \LaTeX{}が必要とする入力エンコードについての記述に使われます。
+  |inputenc.dtx|で説明されています。
+\item[latexsym] \LaTeXe{}はもはや\LaTeX{}シンボルフォントをデフォルトと
+  してロードしません。このフォントにアクセスするためには、
+  |latexsym|パッケージを使います。|latexsym.dtx|と\emph{\LaTeXcomp}で
+  説明されています。また、第\ref{Sec:problems}節を参照してください。
+\item[makeidx] 索引を作成するためのコマンドを提供します。
+  \emph{\LaTeXbook}と\emph{\LaTeXcomp}で説明されています。
+\item[newlfont] \LaTeX~2.09のフォントコマンドを新しいフォント選択スキーマを
+  用いてエミュレートするのに使われます。\emph{\LaTeXcomp}で説明されています。
+\item[oldlfont] \LaTeX~2.09のフォントコマンドをエミュレートするのに使われます。
+  \emph{\LaTeXcomp}で説明されています。
+\item[showidx]
+  各|\index|コマンドの引数が出現したページに、それを印刷します。
+  \emph{\LaTeXbook}で説明されています。
+\item[syntonly] 組版処理をすることなしに文書を処理するのに使われます。
+  |syntonly.dtx|と\emph{\LaTeXcomp}で説明されています。
+\item[tracefnt] 画面に表示される\LaTeX のフォントロードについての情報量を
+  制御します。\emph{\LaTeXcomp}で説明されています。
+\end{description}
+
+\subsection{関連するソフトウェア}
+
+次のソフトウェアは、\LaTeXe{}と同じ配布者から利用可能でなくてはいけません。
+少なくとも\textsf{graphics}と\textsf{tools}は、
+\LaTeXbook ですべてのファイルが説明されているため、手に入れるべきです。
+また、この本のC.5.2節では、
+|amstex|パッケージ（\textsf{amslatex}の一部）と\textsf{babel}も
+`標準パッケージ'のリストに挙げられています。
+\begin{description}
+\item[amslatex]  American Mathmatical Societyが拡張した数学組版です。
+  これは|amstex|パッケージを含み、
+  とても複雑な数式組版のための多くのコマンドを提供しています。
+  American Mathmatical Society によって提供およびサポートされています。
+  \emph{\LaTeXcomp}で説明されています。
+\item[babel]  このパッケージと関連ファイルは多くの言語の組版をサポートします。
+   \emph{\LaTeXcomp}で説明されています。
+\item[graphics]  グラフィックの取り込みや変換を提供する|graphics|パッケージと
+  他のソフトウェアによって生成されたファイルが含まれています。
+  また、カラーでの組版をサポートする|color|パッケージも含まれています。
+  これらのパッケージは\emph{\LaTeXbook}で説明されています。
+\item[mfnfss] 大きな幅のビットマップ(Metafont)フォントで組版をするために
+  必要なすべてです（ただし、それらのフォントを除きます）。
+\item[psnfss] 大きな幅のタイプ１(PostScript)フォントで組版をするために
+  必要なすべてです（ただし、それらのフォントを除きます）。
+\item[tools]     \LaTeX3プロジェクトチームによって書かれた、
+                 その他のパッケージです。
+\end{description}
+これらのパッケージには説明書が付いています。また少なくとも
+\emph{\LaTeXcomp}と\emph{\LaTeXbook}のどちらかにその説明があります。
+
+\subsubsection{ツール}
+
+次に、最低限、含まれているパッケージを示します。
+ただし、いくつかのファイルはシステムにより名前が異なる場合があります。
+
+\begin{description}
+\item[array]
+      |array|, |tabular|, |tabular*|環境の拡張バージョンです。
+      多くの拡張機能があります。
+\item[dcolumn]
+      表組項目での`数値一'のアライメントです。|array|パッケージが必要です。
+\item[delarray]
+      配列のまわりに`大きな区切り文字'を追加します。|array|が必要です。
+\item[hhline]
+      表内の水平罫線を制御します。|array|が必要です。
+\item[longtable]
+      複数ページにまたがる表を作成します。|array|は必要ありませんが、
+      両方ロードされると、その拡張機能を使います。
+\item[tabularx]
+      |tabularx|環境を定義しています。この環境は、|tabular*|に似ていますが、
+      表の幅を調整するために、内部カラムのスペースでなくカラム幅を変更します。
+\item[afterpage]
+      現在ページの後ろにテキストを置きます。
+\item[enumerate]
+      |enumerate|環境の拡張バージョンです。
+\item[fontsmpl]
+      「フォントサンプル」を生成するためのパッケージ兼テストファイルです。
+\item[ftnright]
+      ２段組モードで右側のカラムにすべての脚注を置きます。
+\item[indentfirst]
+      セクションの最初の段落をインデントさせます。
+\item[layout]
+      カレントの文書クラスによって定義されたページレイアウトを表わします。
+\item[multicol]
+      `バランスのとれた'カラム長でカラム内のテキストを組版します。
+\item[rawfonts]
+      \LaTeX~2.09の古い内部フォント名でプリロードフォントを使います。
+      第\ref{Sec:oldinternals}節を参照してください。
+\item[somedefs]
+      パッケージオプションの選択操作をします（rawfontsパッケージで使われます）。
+\item[showkeys]
+      |\label|, |\ref|, |\cite|などで使われた`キー'を表示します。
+      作業中に便利です。
+\item[theorem]
+      `theorem-like'環境のフレキシブルな宣言です。
+\item[varioref]
+      ページ参照を`スマート'に操作します。
+\item[verbatim]
+      |verbatim|環境のフレキシブルな宣言です。
+\item[xr]
+     別の`外部'文書との相互参照です。
+\item[xspace] コマンド名の後、スペースを忘れる誤りを避けるための
+      `スマートスペース'コマンドです。
+\end{description}
+
+
+\section{コマンド}
+\label{Sec:commands}
+
+この節では、\LaTeXe で使える新しいコマンドについて説明します。
+\emph{\LaTeXbook}と\emph{\LaTeXcomp}で、より詳しく説明されています。
+
+\subsection{初期化コマンド}
+
+初期化コマンドは|\documentclass|よりも前で使います。
+
+\begin{decl}
+|\begin{filecontents}| \arg{file-name} \\
+  \m{file-contents} \\
+|\end{filecontents}|
+\end{decl}
+
+|filecontents|環境は、単一の文書ファイルにパッケージ、オプション、
+あるいはその他のファイルの内容をまとめるためのものです。
+この文書ファイルを\LaTeXe{}で処理したとき、この環境の本体はそのまま、
+環境に与えられている、ただ一つの引数であるファイル名に出力されます。
+ファイルがすでに存在している場合は、
+情報メッセージが表示されるだけで何も起こりません。
+
+|filecontents|環境には、
+通常のASCII文字（表示可能な７ビット）だけを入れるようにしてください。
+タブ文字、改行、８ビット文字などといった、そのほかの文字は、
+|filecontents|環境には入れることができません。
+
+タブと改ページ文字があると警告が表示され、それぞれ空白と空行に置き換えられます。
+８ビット文字が使われたときの動作はインストールされている\TeX{}に依存しますので、
+一般的な予測ができません。
+
+|filecontents|環境は\LaTeX{}ファイルをインクルードするために使います。
+拡張PostScriptファイルのような、その他のプレーンテキストファイルは
+コメント行を追加しない、|filecontents*|環境を使ってください。
+
+これらの環境は|\documentclass|よりも前でだけ許されます。この部分は、
+文書内にバンドルされているパッケージが必要とされるときに現れます。
+
+\subsection{プリアンブルコマンド}
+\label{Sec:pre}
+
+プリアンブルコマンドを変更することで、
+\LaTeXe{}文書と古い文書との違いが明確になっています。
+このコマンドは必ず、|\begin{document}|よりも前でだけ使ってください。
+
+\begin{decl}
+|\documentclass| \oarg{option-list} \arg{class-name}
+   \oarg{release-date}
+\end{decl}
+
+このコマンドは\LaTeX~2.09コマンドの|\doucmentstyle|に対応するものです。
+
+一つの文書にはただ一つの|\documentclass|コマンドがなければいけません。
+また、このコマンドは（もしあれば）|filecontents|環境よりも後ろ、
+かつ、他のいかなるコマンドよりも前でなくてはいけません。
+
+\m{option-list}はオプションの並びで、それぞれ、
+\m{class-name}ファイルで宣言された要素の形式を変更するかもしれません。
+このオプションは続くすべての|\usepackage|コマンド（後述）にも影響します。
+
+オプション引数\m{release-date}には、
+そのクラスファイルのリリース日付を\textsc{yyyy/mm/dd}の形式で指定します。
+指定する日付は、正しく動作する、最も古いクラスファイルの日付です。
+この日付よりも古いクラスのバージョンが見つかると、警告が表示されます。
+
+たとえば、1994年６月よりも新しいリリースの|article.cls|のバージョンを使って、
+２段組articleを指定するとき、次のように記述します。
+\begin{verbatim}
+   \documentclass[twocolumn]{article}[1994/06/01]
+\end{verbatim}
+
+\begin{decl}
+|\documentstyle| \oarg{option-list} \arg{class-name}
+\end{decl}
+
+このコマンドは古いファイルとの互換のためにサポートされています。
+\emph{\LaTeX~2.09互換モード}に入ることを除き、
+|\documentclass|とほとんど同じです。
+\m{option-list}に指定されたオプションは、クラスファイルでは処理されず、
+クラスがロードされた後でパッケージとしてロードされます。
+第\ref{Sec:209}では\LaTeX~2.09互換モードについて、もう少し詳しく説明しています。
+
+\begin{decl}
+|\usepackage| \oarg{option-list} \arg{package-name} \oarg{release-date}
+\end{decl}
+
+|\usepackage|コマンドはいくつでも指定できます。
+\m{package-name}で示された各パッケージファイルは、新しい要素を定義したり、
+|\documentclass|コマンドの\m{class-name}によってロードされたクラスファイルで
+定義されている要素を変更します。
+パッケージファイルは、処理ができる文書の幅を広げます。
+
+\m{option-list}には、オプションの並びを含めることができ、それぞれ、
+この\m{package-name}ファイルで定義された要素の形式を変更します。
+
+さきほどと同じように、\m{release-date}には、
+パッケージファイルのリリース日付を\textsc{yyyy/mm/dd}の形式で指定します。
+指定する日付は、正しく動作する、最も古いパッケージファイルの日付です。
+この日付よりも古いパッケージのバージョンが見つかると、警告が表示されます。
+
+たとえば、|dvips|ドライバ用に|graphics|パッケージをロードするとき、
+1994年６月よりも後にリリースされた|graphics.sty|のバージョンを使うには、
+次のように書きます。
+\begin{verbatim}
+   \usepackage[dvips]{graphics}[1994/06/01]
+\end{verbatim}
+それぞれのパッケージは１度だけロードされます。
+同じパッケージが複数回要求されたときは、
+最初の|\usepackage|にオプションが指定されていない限り、
+２度目以降は何も起こりません。
+外部オプションが指定されている場合は、エラーメッセージが表示されます。
+この問題の解決方法は第\ref{Sec:problems}を参照してください。
+
+それぞれのパッケージは、
+|\documentclass|コマンドの\m{option-list}の処理と同じように、
+|\usepackage|コマンドの\m{option-list}に与えられたオプションを処理します。
+このことは、すべてのパッケージで処理されるべきオプションを、
+それぞれのパッケージのために、必要なだけ繰り返さなくても、
+|\documentclass|コマンドで一度だけ指定すればよいことを意味しています。
+
+\begin{decl}
+|\listfiles|
+\end{decl}
+
+このコマンドがプリアンブルに置かれると、その文書の処理結果として、
+読み込まれたファイルのリストが実行終了時に画面に表示されます。
+またログファイルにも書き込まれます。短い説明も生成されることがあります。
+
+\emph{警告}：このコマンドは、|\input|\arg{file}または|\include|\arg{file}の
+ような\LaTeX{}コマンドを使って読み込まれたファイルだけをリストします。
+プリミティブの\TeX{}の構文、|\input |\emph{file}（ファイル名の前後に|{ }|括弧
+がない）を用いて読み込まれたファイルはリストされません。
+
+\begin{decl}
+|\setcounter{errorcontextlines}| \arg{num}
+\end{decl}
+
+エラーメッセージの形式を制御するために、
+\TeX~3 で新しく|\errorcontextlines|プリミティブが追加されました。
+\LaTeXe{}は、標準の|\setcounter|コマンドを通して、
+このインターフェイスを提供します。\LaTeX{}コマンドがエラーを起こしたとき、
+ほとんどの\LaTeX{}ユーザは、その内部定義を見たくありません。
+\LaTeXe{}はこれをデフォルトで$-1$に設定します。
+
+\subsection{文書構造}
+
+|book|文書クラスには、文書構造を示す新しいコマンドがあります。
+\begin{decl}
+|\frontmatter| \\ |\mainmatter| \\ |\backmatter|
+\end{decl}
+これらのコマンドは、タイトルページ、目次、まえがきなどの前付け、
+本文、そして参考文献、索引、奥付などの後付けの開始を示します。
+
+\subsection{宣言}
+
+\LaTeX{}では必須の引数と任意の引数の両方を持つことができます。
+たとえば、次のコマンドで、引数|11pt|は任意で、|article|クラス名は必須です。
+\begin{verbatim}
+   \documentclass[11pt]{article}
+\end{verbatim}
+
+\LaTeX~2.09のユーザも引数を持つコマンドを定義することができましたけれども、
+それらは必須の引数でなくてはいけませんでした。\LaTeXe{}では、
+一つの任意の引数を持つコマンドや環境を定義することができます。
+
+\begin{decl}
+|\newcommand| \arg{cmd} \oarg{num} \oarg{default} \arg{definition} \\
+|\renewcommand| \arg{cmd} \oarg{num} \oarg{default} \arg{definition}
+\end{decl}
+
+これらのコマンドは２番目に新しいオプション引数を持ちます。
+これは一つのオプション引数を取るコマンドを定義するために使われます。
+次に新しい引数を使った単純な例を示します。
+\begin{verbatim}
+   \newcommand{\example}[2][YYY]{Mandatory arg: #2;
+                                 Optional arg: #1.}
+\end{verbatim}
+これは、\arg{definition}の中で|#1|と|#2|として参照される２つの引数を持つ
+コマンド、|\example|を定義します。ここまでは何も変わりません。
+ここで|\newcommand|の２番目のオプション引数（|[YYY]|）を加えると、
+コマンド|\example|は、最初の引数（|#1|）のデフォルト値が|YYY|となるように
+作られます。
+
+したがって、|\example|の使い方は、次の２通りがあります。
+\begin{verbatim}
+   \example{BBB}
+\end{verbatim}
+は次のように出力します。
+\begin{quote}
+   Mandatory arg: BBB;
+   Optional arg: YYY.
+\end{quote}
+また、
+\begin{verbatim}
+   \example[XXX]{AAA}
+\end{verbatim}
+は次のように出力します。
+\begin{quote}
+   Mandatory arg: AAA;
+   Optional arg: XXX.
+\end{quote}
+
+オプション引数のデフォルト値は\texttt{YYY}です。この値は、
+|\newcommand|で作られる|\example|の\oarg{default}として指定されています。
+
+その他の便利な例としては、次の宣言、
+\begin{verbatim}
+   \newcommand{\seq}[2][n]{\lbrace #2_{0},\ldots,\,#2_{#1} \rbrace}
+\end{verbatim}
+は、|$\seq{a}$|は式$\lbrace a_{0},\ldots,\,a_{n} \rbrace$を生成し、
+|$\seq[k]{x}$|は式$\lbrace x_{0},\ldots,\,x_{k} \rbrace$を生成することを
+意味します。
+
+要約すれば、コマンド、
+\begin{quote}
+   |\newcommand| \arg{cmd} \oarg{num} \oarg{default} \arg{definition}
+\end{quote}
+は\m{num}個の引数を持つ\m{cmd}を定義します。
+また１番目の引数はオプションで、そのデフォルトは\m{default}です。
+
+これらは一つのオプション引数を持てますが、
+そのまえに、全部で９つまでの引数しか持てないことに注意をしてください。
+
+\begin{decl}
+|\newenvironment|
+ \arg{cmd} \oarg{num} \oarg{default} \arg{beg-def} \arg{end-def} \\
+|\renewenvironment|
+ \arg{cmd} \oarg{num} \oarg{default} \arg{beg-def} \arg{end-def}
+\end{decl}
+\LaTeXe{}では、これら二つのコマンドも|\newcommand|と同じように拡張されて
+いますので、一つのオプション引数を持つ環境を作成することができます。
+
+\begin{decl}
+|\providecommand| \arg{cmd} \oarg{num} \oarg{default} \arg{definition}
+\end{decl}
+これは|\newcommand|と同じ引数を持ちます。
+この\m{cmd}がすでに定義されている場合は、存在する宣言はそのまま保たれます。
+しかし、まだ定義されていない場合は、
+|\providecommand|は|\newcommand|と同じように\m{cmd}を定義します。
+
+\NEWfeature{1994/12/01}
+  上記の５つの`定義コマンド'は、現在、\texttt{*}形式を持っています。
+  引数を持つコマンドを定義するとき、
+  これらの引数がテキストの段落全体を含むようなことのない限りは、
+  一般的にアスタリスク形式のほうがよりよい形式です。
+  そして、非アスタリスク形式で使う必要があるときは、その引数が、
+  定義された環境に合う内容として扱われていなかったかを調べてください。
+
+\subsection{ボックス}
+
+LRボックスを作成するための、次の３つのコマンドはすべて\LaTeX~2.09からあります。
+これらは２通りの方法で拡張されています。
+
+\begin{decl}
+|\makebox| \oarg{width} \oarg{pos}  \arg{text} \\
+|\framebox| \oarg{width} \oarg{pos}  \arg{text} \\
+|\savebox| \arg{cmd} \oarg{width} \oarg{pos}  \arg{text}
+\end{decl}
+
+\LaTeXe{}で、小さいけれども大きく変更された点は\m{width}だけで、
+特別な４種類の長さを使うことができます。
+これらはすべて、単純に|\mbox|\arg{text}によって得られたボックスの寸法です。
+\begin{itemize}
+\item []   |\height|\quad そのベースラインよりも上の高さ
+\item []   |\depth|\quad そのベースラインよりも下の深さ
+\item []   |\totalheight|\quad |\height|と|\depth|の合計
+\item []   |\width|\quad その幅
+\end{itemize}
+`hello'をその自然な幅の２倍の中央に置くには、次のようにします。
+\begin{verbatim}
+   \makebox[2\width]{hello}
+\end{verbatim}
+また、\framebox{\makebox[\totalheight]{\itshape f\/}}のように、
+\textit{f}を正方形のボックスに置くには、次のようにします。
+\begin{verbatim}
+   \framebox{\makebox[\totalheight]{\itshape f\/}}
+\end{verbatim}
+枠付きのボックスの合計幅は、枠も含んでおり、
+それが|\totalheight|に設定されることに注意してください。
+
+他には、\m{pos}が変更され、|l|と|r|に|s|が追加されています。
+\m{pos}が|s|の場合、そのテキストは
+ボックス内にある、単語間スペースも含めた`伸縮長'によって、
+そのボックスの幅全体に伸ばされます。
+`伸縮長'がないときは、アンダーフルボックスが生成されます。
+
+\begin{decl}
+|\parbox| \oarg{pos} \oarg{height} \oarg{inner-pos} \arg{width}
+         \arg{text} \\
+|\begin{minipage}|
+         \oarg{pos} \oarg{height} \oarg{inner-pos} \arg{width}\\
+\m{text}\\
+|\end{minipage}|
+\end{decl}
+
+上記のボックスコマンドでは、
+そのボックスの自然な長さを示すために\oarg{height}の中で、
+|\height|や|\width|などが使われるかもしれません。
+
+\m{inner-pos}が\LaTeXe での新しいオプションです。
+これは|\makebox|などの\m{pos}と同じような意味を持ち、
+ボックス内部の\m{text}の垂直位置を決定するためのものです。
+\m{inner-pos}は|t|, |b|, |c|, |s|のいずれかであり、
+それぞれ上、下、中央、``伸ばされた''アライメントを示します。
+\m{inner-pos}が省略されたとき、\LaTeX{}は\m{pos}と同じ値を使います。
+
+\begin{decl}
+|\begin{lrbox}| \arg{cmd}\\
+\m{text}\\
+|\end{lrbox}|
+\end{decl}
+
+この環境は直接何らかを印刷するものではなく、
+\m{cmd}に組版した\m{text}を保存するものです。
+|\sbox| \arg{cmd} \arg{text}に似ていますが、
+含まれる\m{text}の前後の空白が無視されます。
+
+\m{text}の中で|\verb|コマンドと\texttt{verbatim}環境を使うときにとても便利です。
+また、``枠付きボックス''環境のような環境を定義することもできます。
+このときは、この環境の最初でテキストを\m{cmd}に保存し、
+|\fbox{\usebox{|\m{cmd}|}}|を呼び出します。
+
+次の例は、|fmpage|と呼ばれる環境を定義しています。
+この環境は|minipage|の枠付きバージョンです。
+\begin{verbatim}
+   \newsavebox{\fmbox}
+   \newenvironment{fmpage}[1]
+     {\begin{lrbox}{\fmbox}\begin{minipage}{#1}}
+     {\end{minipage}\end{lrbox}\fbox{\usebox{\fmbox}}}
+\end{verbatim}
+
+
+\subsection{長さ}
+
+これらのうち、最初のコマンドは\LaTeX~2.09にありました。
+二つの新しいコマンドはその関連コマンドです。
+
+\begin{decl}
+|\settowidth|  \arg{length-cmd} \arg{lr text} \\
+|\settoheight| \arg{length-cmd} \arg{lr text} \\
+|\settodepth|  \arg{length-cmd} \arg{lr text}
+\end{decl}
+
+\subsection{行末}
+
+\NEWdescription{1994/12/01}
+いろいろな場所で行末を示すために使われる、|\\|コマンドは、
+現在、節見出しなどの引数で使われたときrobustなコマンドです。
+
+そして、改行のために入力されたのかを見分けることもしばしば必要になるため、
+次の新コマンドを作りました。このコマンドは|\\|と同じ引数を持ちます。
+\begin{decl}[1994/12/01]
+|\tabularnewline| \oarg{vertical-space}
+\end{decl}
+これを使用する一つの例は、
+|tabular|環境の最後のカラム内のテキストが|\raggedright|に設定されているとき、
+|\tabularnewline|を|\tabular|の行の終りを示すために使うことができます。
+このとき、|\\|はそのカラムにある段落のテキストの行の終りを示すようになります。
+このコマンドは|array|環境でも|tabular|と同じように使うことができます。
+また、toolsコレクションの\textsf{array}と\textsf{longtable}パッケージによって
+提供された、これらの環境の拡張バージョンでも使えます。
+
+\subsection{ページ分割の制御}
+
+文書の最終バージョンを作るときに、
+\LaTeX{}がうまい具合にページを分割するのを``助け''る必要がときどきあります。
+\LaTeX~2.09では、このような状況のために|\clearpage|や|\pagebreak|など、
+さまざまなコマンドがありました。\LaTeXe{}ではさらに、
+長いページや短いページを作成するためのコマンドも提供しています。
+
+\begin{decl}
+|\enlargethispage| \arg{size} \\
+|\enlargethispage*| \arg{size}
+\end{decl}
+
+これらのコマンドは、指定された\m{size}の量によって、
+通常の|\textheight|の値よりもページの高さを増加させます。
+この変更はカレントページにのみ影響します。
+
+たとえば、ページにちょうど合うための特別な行を許し、
+負の長さとともに、通常よりも短いページを作成するために使うことができます。
+
+アスタリスク形式は、ページにある垂直スペースをできる限り縮め、
+ページにあるテキストの量を最も合うようにします。
+
+\subsection{フロート}
+
+フロート関連では、新しいコマンド|\suppressfloats|と
+新しい``フロート記述''があります。
+これらにより\LaTeX{}のフロートアルゴリズムをより制御できます。
+
+\begin{decl}
+|\suppressfloats| \oarg{placement}
+\end{decl}
+
+このコマンドは、いかなるフロート環境もカレントページ上に置くことを抑制します。
+オプション引数|t|または|b|のどちらかが指定されていると、
+ページの上部または下部にだけ置くようにします。
+ふつうならばこのページに置かれるフロートも、次のページに置かれます。
+
+\begin{decl}
+拡張されたフロート位置指定記述：\ \texttt{!}
+\end{decl}
+
+これはフロートの位置指定オプションで、\texttt{h}, \texttt{t}, \texttt{b},
+\texttt{p}の少なくとも一つと一緒に使います。
+
+\texttt{!}が指定されると、この特別なフロートだけ、
+次のフロートメカニズムを無視して処理されます。
+\begin{itemize}
+\item フロートが一度に現れることのできる数のすべての制限
+\item フロートによって占有されたり、テキストによって占有されることによる、
+   テキストページの空白量のすべての制限
+\end{itemize}
+しかしながら、このメカニズムもページのオーバフル、および
+同じタイプのフロートを正しい順序で出力することをまだチェックしています。
+
+これらがフロートページの生成には影響を持たないことに注意してください。
+
+\texttt{!}指定は、
+特定のフロートに対する|\suppressfloats|コマンドの影響を上書きします。
+
+\subsection{フォント変更：テキスト}
+
+\LaTeXe{}で用いられているフォント選択スキーマは、
+\LaTeX~2.09で使われたものと大きく異なります。
+この節では、新しいコマンドの概要を説明します。
+より詳細な説明と例は\emph{\LaTeXcomp}を参照してください。
+またクラスやパッケージ作成者のためのインターフェイスは、
+\emph{\fntguide}で説明されています。
+
+\begin{decl}
+|\rmfamily|\\
+|\sffamily|\\
+|\ttfamily|\\
+|\mdseries|\\
+|\bfseries|\\
+|\upshape|\\
+|\itshape|\\
+|\slshape|\\
+|\scshape|
+\end{decl}
+
+これらは|\rm|や|\bf|などのコマンドと同じようにう使うフォントコマンドです。
+違いは、それぞれのコマンドはただ一つだけのフォント属性を変更することです。
+変更される属性はコマンド名の一部です。この一つの結果として、たとえば、
+|\bfseries\itshape|はシリーズの変更と字形の変更の両方をし、
+ボールドイタリックフォントとなります。
+
+\begin{decl}
+|\textrm|\arg{text}\\
+|\textsf|\arg{text}\\
+|\texttt|\arg{text}\\
+|\textmd|\arg{text}\\
+|\textbf|\arg{text}\\
+|\textup|\arg{text}\\
+|\textit|\arg{text}\\
+|\textsl|\arg{text}\\
+|\textsc|\arg{text}\\
+|\emph|\arg{text}
+\end{decl}
+
+これらのコマンドは一つの引数を持ちます。
+その引数は、その特定の書体で組版するための文字です。
+また自動的にイタリック補整が適切な場所に挿入されます。
+この結果が気に入らなければ、|\/|によってイタリック補整を追加したり、
+|\nocorr|で取り除いたりしてください。
+|\nocorr|はいつでも、\arg{text}の最初か最後でなくてはいけません。
+
+\subsection{フォント変更：数式}
+
+数式モード内で使われる多くのフォントは、とくにinvokeする必要はありません。
+しかし、フォントの範囲で文字を使うために、
+次のコマンドのクラスが提供されています。
+
+\begin{decl}
+|\mathrm| \arg{letters}\\
+|\mathnormal| \arg{letters}\\
+|\mathcal| \arg{letters}\\
+|\mathbf| \arg{letters}\\
+|\mathsf| \arg{letters}\\
+|\mathtt| \arg{letters}\\
+|\mathit| \arg{letters}
+\end{decl}
+
+これらのコマンドは一つの引数を持ちます。
+その引数は、その特定の書体で組版するための文字です。
+引数が数式モードで処理されると、その引数内の空白は無視されます。
+書体が変更されるのは、文字、数字、アクセントだけです。たとえば、
+|$\mathbf{\tilde A \times 1}$|は$\mathbf{\tilde A \times 1}$となります。
+
+\subsection{数式モード}
+
+\begin{decl}
+|\ensuremath| \arg{math commands}
+\end{decl}
+
+\LaTeX~2.09では、
+数式モードとテキストモードの両方で動作するコマンドを作るとき、
+次のように定義するように推奨してきました。
+\begin{verbatim}
+   \newcommand{\Gp}{\mbox{$G_p$}}
+\end{verbatim}
+ところが、|\Gp|がサブスクリプトや分数で正しいサイズに変更するのを
+|\mbox|に妨げられます。
+
+\LaTeXe{}では、次のように定義できます。
+\begin{verbatim}
+   \newcommand{\Gp}{\ensuremath{G_p}}
+\end{verbatim}
+これで|\Gp|はすべての場所で正しく動作します。
+
+|\Gp|が数式モードで使われたときは、単に|G_p|を生成し、
+|\ensuremath|は何も行ないません。
+しかし|\Gp|がテキストモードで使われたときは、
+要求された数式モードに入り、そのモードを抜けます。
+
+\subsection{上付き文字の設定}
+
+\begin{decl}
+|\textsuperscript| \arg{text}
+\end{decl}
+
+\NEWfeature{1995/06/01} koko
+\LaTeX~2.09での、脚注記号のような上付き文字は、内部的に数式モードに入ったり、
+数式上付き文字として数値を組版することで生成されていました。
+これらはテキストフォントとしてコンピュータモダンフォントが使われ、
+数式フォントの数字が同じ場合は、とても見栄えが良く感じます。
+しかし、Timesのような別のフォントと組み合わせた場合、少し違和感があります。
+このような理由にｙとり、|\textsuperscript|コマンドが作られました。
+このコマンドは、引数をカレントテキストフォントで、
+上付き文字の位置へ適切なサイズで組版をします。
+
+
+\subsection{テキストコマンド：すべてのエンコード}
+ 
+\NEWdescription{1994/12/01}
+  \LaTeXe{}と\LaTeX~2.09の大きな違いの一つは、
+  \LaTeXe{}では特定の\emph{encoding}にあるフォントを扱えることです。
+  フォントエンコードはフォント内の文字の順序のことです。
+  たとえばCyrillicフォントとGreekフォントとは異なるエンコードです。
+   
+   英語やドイツ語のようなラテン系言語用エンコードで主となる二つは、
+   |OT1|と|T1|です。|OT1|はDonald Knuthの7ビットエンコードで、
+   \TeX{}で長い間使われています。|T1|は新しい8ビット`Cork'エンコードです。
+
+   \LaTeX~2.09は|OT1|エンコードだけをサポートしていました。
+   \LaTeXe{}は|OT1|と|T1|の両方をサポートしています。
+   |T1|エンコードフォントを用いる、新しいコマンドについての説明は
+   次節でしています。この節では、
+   すべてのエンコードで使用できる新しいコマンドについて説明をしています。
+   
+   これらのコマンドが提供する文字の大部分は、
+   すでに、\LaTeX~2.09で使用することができています。
+   たとえば、`全角ダッシュ（em dash）'となる|\textemdash|は、
+   \LaTeX~2.09では|---|と入力することで使用できました。
+   しかし、Greekフォントのような、いくつかのフォントでは、
+   |---|の合字を持っていないかもしれません。このときは、
+   |\textemdash|と入力すれば全角ダッシュにアクセスすることができます。
+ 
+\begin{decl}[1994/12/01]
+      |\r{<text>}|
+\end{decl}
+   このコマンドは`リング'アクセントを付けます。
+   たとえば|\r{o}|は`\r{o}'となります。
+ 
+\begin{decl}[1994/12/01]
+      |\SS|
+\end{decl}
+  このコマンドはドイツ語の`SS'（大文字の`\ss'）を生成します。
+  この文字は`SS'と異なりハイフネーションされますので、
+  ドイツ語ですべて大文字の部分で必要となります。
+ 
+\begin{decl}[1994/12/01]
+      |\textcircled{<text>}|
+\end{decl}
+  このコマンドは|\copyright|のような`丸付き文字'を作るために使います。
+  たとえば|\textcircled{a}|は\textcircled{a}となります。
+ 
+\begin{decl}[1994/12/01]
+      |\textcompwordmark|
+\end{decl}
+  このコマンドは、通常なら合字となる文字を離すために使います。
+  たとえば`f\textcompwordmark i'は|f\textcompwordmark i|から作られます。
+  `f'と`i'が`fi'の合字にならないことに注目してください。
+  これは英語ではあまり必要ありませんけれども（`shelf\textcompwordmark ful'は、
+  このコマンドを用いる珍しい例です）、ドイツ語のような言語では使われます。
+
+\begin{decl}[1994/12/01]
+      |\textvisiblespace|
+\end{decl}
+   このコマンドは`見える空白'文字`\textvisiblespace'を生成します。
+   この文字は、`type \textsf{hello\textvisiblespace world}'のように、
+   コンピュータリストでときどき使われます。
+ 
+\begin{decl}[1994/12/01]
+      |\textemdash|
+      |\textendash|
+      |\textexclamdown|
+      |\textquestiondown| \\
+      |\textquotedblleft|
+      |\textquotedblright|
+      |\textquoteleft|
+      |\textquoteright|
+\end{decl}
+   これらのコマンドは対応する合字の文字を生成します。
+   \begin{center}
+      \begin{tabular}{ccl}
+         \emph{合字} & \emph{文字} & \emph{コマンド} \\
+         |---| & --- & |\textemdash| \\
+         |--|  & --  & |\textendash| \\
+         |!`|  & !`  & |\textexclamdown| \\
+         |?`|  & ?`  & |\textquestiondown| \\
+         |``|  & ``  & |\textquotedblleft| \\
+         |''|  & ''  & |\textquotedblright| \\
+         |`|   & `   & |\textquoteleft| \\
+         |'|   & '   & |\textquoteright|
+      \end{tabular}
+   \end{center}
+  これらの文字に直接、アクセスすることを可能にした理由は、
+  これらの文字を持っていないエンコードでも動作するからです。
+ 
+\begin{decl}[1994/12/01]
+      |\textbullet| 
+      |\textperiodcentered|
+\end{decl}
+   これらの文字は、以前、数式モードでだけしか使えなかった文字にアクセスします。
+   \begin{center}
+      \begin{tabular}{lcl}
+         \emph{数式コマンド} & \emph{文字} & \emph{テキストコマンド} \\
+          |\bullet|   & $\bullet$   & |\textbullet| \\
+         |\cdot|     & $\cdot$     & |\textperiodcentered| \\
+      \end{tabular}
+   \end{center}
+ 
+\subsection{テキストコマンド：T1エンコード}
+ 
+\NEWdescription{1994/12/01}
+  |OT1|フォントエンコードは英語の組版をするためには素晴らしいものですが、
+  その他の言語を組版するには問題があります。
+  |T1|エンコードは、`eth'や`thorn'のような拡張文字を提供することによって、
+  これらの問題のいくつかを解決します。また、ハイフネーションされる
+  アクセント付き文字が単語に含まれていてもかまいません
+  （ただし、非米語ハイフネーション用の|babel|のようなパッケージが必要です）。
+   
+  この節では、
+  |T1|フォントを持っていれば使うことのできるコマンドについて説明をします。
+  これらを使うにはDCフォント、あるいはpsnfssによって使われる、
+  T1エンコードされたPostScriptフォントを得ることが必要です。
+  これらのフォントはすべて、Comprehensive \TeX{} Archiveからanonymous ftpで
+  得ることができます。また、\emph{4all \TeX}や\emph{Prime Time Freeware}の
+  CD-ROMにも入っています（どちらも\TeX{}ユーザグループから入手可能です）。
+   
+  |T1|フォントを選択するには次のようにします。
+\begin{verbatim}
+   \usepackage[T1]{fontenc}
+\end{verbatim}
+  これでこの節のコマンドを使えるようになります。
+   
+  \emph{注意：}この文書は、\LaTeX{}を更新している、どのようなサイトでも
+  処理できるようにしなくてはならないため、
+  |T1|エンコードフォントにだけ存在する文字を含めることができません。
+  したがって、この文書でこれらの字形がどのようなものかを見せることができません。
+  これらを見たいときは、\LaTeX{}で文書|fontsmpl|を処理し、
+  ファミリ名を聞かれたら`|cmr|'と答えます。
+ 
+\begin{decl}[1994/12/01]
+      |\k{<text>}|
+\end{decl}
+   このコマンドは`ogonek'アクセントを生成します。
+ 
+\begin{decl}[1994/12/01]
+      |\DH|
+      |\DJ|
+      |\NG|
+      |\TH|
+      |\dh|
+      |\dj|
+      |\ng|
+      |\th|
+\end{decl}
+  これらのコマンドは、`eth', `dbar', `eng', `thorn'文字を生成します。
+ 
+\begin{decl}[1994/12/01]
+      |\guillemotleft|
+      |\guillemotright|
+      |\guilsinglleft|
+      |\guilsinglright| \\
+      |\quotedblbase|
+      |\quotesinglbase|
+      |\textquotedbl|
+\end{decl}
+  このコマンドはいろいろな種類の括弧を生成します。大雑把に表せば、
+  $\ll$a$\gg$ $<$a$>$ ,,a'' ,a' and |"|a|"| のようになります。
+ 
+\subsection{ロゴ}
+
+\begin{decl}
+|\LaTeX|\\
+|\LaTeXe|
+\end{decl}
+
+|\LaTeX|（`\LaTeX'を生成）はまだ「メイン」ロゴコマンドです。
+しかし、新しい機能を参照する必要のあるときは、
+|\LaTeXe|（`\LaTeXe'を生成）と書くことができます。
+
+\subsection{描画コマンド}
+
+\begin{decl}
+   |\qbezier[<N>](<AX>,<AY>)(<BX>,<BY>)(<CX>,<CY>)| \\
+   | \bezier{<N>}(<AX>,<AY>)(<BX>,<BY>)(<CX>,<CY>)|
+\end{decl}
+|\qbezier|コマンドは、制御点|(<BX>,<BY>)|を用いて、
+位置|(<AX>,<AY>)|から|(<CX>,<CY>)|へのベジエ曲線を引くために、
+|picture|モード内で使うことができます。
+オプション引数\m{N}は曲線上のポイントの数を与えます。
+
+たとえば、次の図は、
+\begin{center}
+   \begin{picture}(50,50)
+      \thicklines
+      \qbezier(0,0)(0,50)(50,50)
+      \qbezier[20](0,0)(50,0)(50,50)
+      \thinlines
+      \put(0,0){\line(1,1){50}}
+   \end{picture}
+\end{center}
+このようにして作られています。
+\begin{verbatim}
+   \begin{picture}(50,50)
+      \thicklines
+      \qbezier(0,0)(0,50)(50,50)
+      \qbezier[20](0,0)(50,0)(50,50)
+      \thinlines
+      \put(0,0){\line(1,1){50}}
+   \end{picture}
+\end{verbatim}
+|\bezier|コマンドも同様ですが、引数\m{N}がオプションではありません。
+|\bezier|コマンドは、\LaTeX~2.09の|bezier|文書スタイルオプションとの
+互換を保つために提供されています。
+
+\subsection{昔のコマンド}
+
+\begin{decl}
+|\samepage|
+\end{decl}
+
+|\samepage|コマンドはまだ存在しますが、これ以上は保守されません。
+なぜなら、このコマンドは突飛な動作をするだけだからです。
+その範囲でページブレークが起こらないという保証がなく、
+脚注や傍注を間違った場所に置くこともあります。
+
+ページ分割を制御するコマンドとして|\enlargethispage|を使うことを薦めます。
+このコマンドは|\newpage|や|\pagebreak|のように、ページ分割を手助けします。
+
+\begin{decl}
+   |\SLiTeX|
+\end{decl}
+\SLiTeX{}がもはや存在しないため、
+そのロゴも\LaTeX{}カーネルで定義されていません。
+|\textsc{Sli\TeX}|に変更しました。
+\SLiTeX{}ロゴは\LaTeX~2.09互換モードで定義されています。
+
+\begin{decl}
+|\mho| |\Join| |\Box| |\Diamond| |\leadsto| \\
+|\sqsubset| |\sqsupset| |\lhd| |\unlhd| |\rhd| |\unrhd|
+\end{decl}
+
+これらの記号は\LaTeX{}シンボルフォントに含まれています。
+これらは\LaTeX~2.09では自動的にロードされていましたが、
+\TeX{}は数式フォントファミリには16種類だけの領域しか持っていません。
+したがって、多くのユーザは領域を越えてしまいます。
+そのため\LaTeX{}は|latexsym|パッケージを用いない限り、
+\LaTeX{}シンボルフォントをロードしません。
+
+これらの記号は、|amsfonts|パッケージによって、
+もっと多くの記号が定義されている別のフォントを使うことで代用することもできます。
+これは American Mathematical Society によって提供されています。
+
+|latexsym|パッケージは\LaTeX~2.09互換モードでは自動的にロードされます。
+
+\section{\LaTeX~2.09の文書}
+\label{Sec:209}
+
+\LaTeXe{}は\emph{\LaTeX~2.09互換モード}に入ることによって、
+（ほとんどの）\LaTeX~2.09文書を処理することができます。
+いつもしてきたのと同じように\LaTeX{}を動かすだけで、
+何も変更することなく、同じ結果を得ることができます。
+
+`ほとんど'と書いた理由は、いくつかの\LaTeX~2.09パッケージが、
+\LaTeX のサポートしていない低レベルな機能を使っているためです。
+このようなパッケージを見つけたら、
+\LaTeXe{}とともに更新されているかを調べてください。
+多くのパッケージは、まだ\LaTeXe{}で動作します
+---パッケージがまだ動作するかどうかを調べる手っ取り早い方法は、
+それを動かしてみることです！
+
+\LaTeX~2.09互換モードは\LaTeX~2.09のエミュレーションをしますが、
+時間がかかります。互換モードでの文書処理は、
+\LaTeX~2.09の下で動かしたときよりも50\%以上遅くなります。
+さらに\LaTeXe{}の新しい機能の多くは、\LaTeX~2.09互換モードではうまく動きません。
+
+
+\subsection{フォント選択での問題}
+\label{Sec:fsprob}
+
+互換モードで使用しているとき、いくつかの古い文書で、
+フォント変更コマンドに関する問題を見つける可能性があります。
+これらの問題には二通りあります。
+
+\begin{itemize}
+\item エラーメッセージが表示される
+\item 期待通りのフォント変更がされない
+\end{itemize}
+
+エラーメッセージの場合、その文書、または古いスタイルファイルで、
+もう定義されていない古い内部コマンドが使用されている可能性があります。
+この場合は、第\ref{Sec:oldinternals}節を参照してください。
+
+\LaTeX~2.09では、サイトが\LaTeX{}をカスタマイズして、
+異なる結果を生み出すために異なる\LaTeX{}をインストールすることを
+許可していました。\LaTeXe{}ではこのようなカスタマイズを許可して
+いませんけれども、古い文書の互換のために、
+ローカルなコンフィグレーションファイル|latex209.cfg|を使うことができます。
+このファイルは\LaTeXe{}が\LaTeX~2.09互換モードに入ったとき、毎回ロードされます。
+
+たとえば、|oldfont|オプションを
+新しいフォント選択スキーマ（\NFSS ）で使うようカスタマイズしていた場合、
+次の１行を含む|latex209.cfg|ファイルを作成することによって\LaTeXe{}で
+これをエミュレートすることができます。
+\begin{verbatim}
+\ExcuteOptions{oldlfont}\RequirePackage{oldlfont}
+\end{verbatim}
+同様に、|newlfont|オプションを指定して\NFSS{}をエミュレートするには、
+次の１行を含む|latex209.cfg|ファイルを作成します。
+\begin{verbatim}
+\ExcuteOptions{newlfont}\RequirePackage{newlfont}
+\end{verbatim}
+
+\subsection{ネイティブモード}
+\label{Sec:native}
+
+古い文書をより速く処理し、\LaTeXe{}の新しい機能を使うためには、
+\emph{\LaTeXe{}ネイティブモード}を試してみてください。
+これは
+\begin{quote}
+   |\documentstyle[|\m{options}|,|\m{packages}|]|\arg{class}
+\end{quote}
+を、次のように置換してから行ないます。
+\begin{quote}
+   |\documentclass|\oarg{options}\arg{class} \\
+   |\usepackage{latexsym,|\m{packages}|}|
+\end{quote}
+しかし、\LaTeX~2.09互換モードで処理できた文書もネイティブモードでは
+動作しないかもしれません。\LaTeX~2.09パッケージには
+\LaTeXe{}の2.09互換モードでしか動作しないものがあるためです。
+\LaTeXe{}のエラー検知が改善されたため、
+ある文書ではエラーが起きるかもしれません。
+
+しかし、たいていの\LaTeX~2.09文書は上記の変更をすれば\LaTeXe{}の
+ネイティブモードで処理することができます。
+文書がネイティブモードで動作するかどうかを調べる手っ取り早い方法は、
+それを動かしてみることです！
+
+\section{問題点}
+\label{Sec:problems}
+
+この節では、\LaTeXe を使ったとき誤りとなるいくつかの事柄、
+およびその対処方法について説明します。
+
+\subsection{新しいエラーメッセージ}
+
+\LaTeXe{}にはいくつかの新しいエラーメッセージがあります。
+エラープロンプトに|h|と応えることにより、
+多くのエラーメッセージは、より冗長な情報を出力します。
+
+\begin{decl}
+|Option clash for package |\m{package}|.|
+\end{decl}
+同じ名前のパッケージを異なるオプションで二度ロードしています。
+たとえば、次のように指定されていると、
+\begin{verbatim}
+   \usepackage[foo]{fred}
+   \usepackage[baz]{fred}
+\end{verbatim}
+次のようなエラーメッセージが表示されます。
+\begin{verbatim}
+   Option clash for package fred.
+\end{verbatim}
+|?|プロンプトの時点で、|h|をタイプすると、次のように表示されます。
+\begin{verbatim}
+   The package fred has already been loaded with options:
+     [foo]
+   There has now been an attempt to load it with options:
+     [baz]
+   Adding the line:
+     \usepackage[foo,baz]{fred}
+   to your document may fix this.
+   Try typing <<return>> to proceed.
+\end{verbatim}
+これを修正するには、示唆されたように、
+両方のオプションを設定してパッケージをロードします。
+\LaTeX{}パッケージは別のパッケージを呼ぶことができるため、
+明示的に同じパッケージを要求していなくても、
+パッケージオプションクラッシュが起きる可能性があることに注意してください。
+
+\begin{decl}
+   |Command |\m{command}| not provided in base NFSS.|
+\end{decl}
+\m{command}がデフォルトの\LaTeXe では提供されていません。
+このエラーは次のコマンドのいずれかを用いたときに表示されます。
+\begin{verbatim}
+   \mho \Join \Box \Diamond \leadsto
+   \sqsubset \sqsupset \lhd \unlhd \rhd \unrhd
+\end{verbatim}
+現在、これらは|latexsym|パッケージの一部です。
+修正するには、
+\begin{verbatim}
+   \usepackage{latexsym}
+\end{verbatim}
+を文書のプリアンブルに追加します。
+
+\begin{decl}
+   |LaTeX2e command <command> in LaTeX 2.09 document.|
+\end{decl}
+\LaTeX~2.09文書で\LaTeXe{}の\m{command}を使用したときに表示されます。
+修正するには、そのコマンドを\LaTeX~2.09のコマンドに置き換えるか、
+第\ref{Sec:native}節で述べられているようにネイティブモードで
+その文書を処理してください。
+
+\begin{decl}
+   |NFSS release 1 command \newmathalphabet found.|
+\end{decl}
+|\newmathalphabet|コマンドは、
+NFSS（新しいフォント選択スキーマ）リリース１で使われていましたが、
+現在、|\DeclareMathAlphabet|に置き変わっています。
+このコマンドの使い方は\emph{\fntguide}を参照してください。
+
+最もよい解決方法は、
+|\newmathalphabet|コマンドが含まれているパッケージを更新することです。
+そのパッケージの新しいリリースがあるか、または（そのパッケージを自分で作成した
+ならば）フォントコマンドの新しい構文を\emph{\fntguide}で確認してください。
+
+そのパッケージの更新バージョンがどこにもない場合は、|newlfont|または
+|oldlfont|パッケージを使うことでこのエラーを回避することができます。
+これらのパッケージは|\newmathflphabet|をエミュレートします。
+
+文書で|oldfont|を使わなくてはいけないとき、
+数式フォントの選択は次のような構文で行ないます。
+\begin{quote}
+  |{\cal A}|, etc.
+\end{quote}
+文書で|newlfont|を使うときの構文も似ています。
+\begin{quote}
+  |\cal{A}|, etc.
+\end{quote}
+
+
+\begin{decl}
+   |Text for \verb command ended by end of line.|
+\end{decl}
+|\verb|コマンドが開始されていますが、その行で終了していません。
+これは通常、|\verb|コマンドの終了文字を置き忘れています。
+
+\begin{decl}
+   |Illegal use of \verb command.|
+\end{decl}
+|\verb|コマンドは別のコマンドの引数の内部でも使われてきました。
+\LaTeXe{}ではこのようなことはできません。
+そして、エラーメッセージを出力します。
+しばしば何も警告を出さずにおかしな結果を出力することがあります。
+
+\subsection{昔の内部コマンド}
+\label{Sec:oldinternals}
+
+\LaTeX~2.09のいくつかの内部コマンドは取り除かれています。
+そして、これらの持っていた機能は異なる方法で提供されています。
+クラスやパッケージ作成者のためのインターフェイスをサポートする、
+新コマンドの詳細については\emph{\clsguide}を参照してください。
+
+\begin{decl}
+   |\tenrm| |\elvrm| |\twlrm| \dots\\
+   |\tenbf| |\elvbf| |\twlbf| \dots\\
+   |\tensf| |\elvsf| |\twlsf| \dots\\
+   $\vdots$
+\end{decl}
+これらのコマンドは\LaTeX~2.09によってプリロードされる70種類のフォントへの
+アクセスを提供しました。
+\LaTeXe{}ではふつう、最大で14種類のフォントをプリロードします。
+これはフォントメモリを節約します。その結果、
+フォントに直接アクセスするための上記のコマンドが使われている\LaTeX{}ファイルは、
+それ以上、処理することができません。
+
+これらを使うと、通常、次のようなエラーメッセージが生成されます。
+\begin{verbatim}
+   ! Undefined control sequence.
+   l.5 \tenrm
+\end{verbatim}
+このメッセージを回避するには、その文書を\LaTeXe によって提供されている
+フォント変更コマンドを使うように更新します。
+そのコマンドは\emph{\fntguide}で説明されています。
+
+この方法ができないときは、最後の手段として、
+|rawfonts|パッケージを使うことができます。
+このパッケージは、\LaTeX~2.09の70種類のフォントをロードし、
+古いコマンドで直接これらにアクセスするようにします。
+ただし、この方法は時間とメモリの両方を浪費します。
+70種類すべてのフォントをロードしたくない場合は、|rawfonts|に|only|オプションを
+使うことによって、数種類だけを選択することができます。
+たとえば、|tenrm|と|tenbf|だけをロードしたいときは、次のようにします。
+\begin{verbatim}
+   \usepackage[only,tenrm,tenbf]{rawfonts}
+\end{verbatim}
+
+|rawfonts|パッケージは\LaTeX{}toolsソフトウェアの一部として配布されています。
+第\ref{Sec:st-pack}節を参照してください。
+
+\subsection{昔のファイル}
+
+\LaTeX{}実行での一般的な間違いの一つは、新しいバージョンではなく
+古いバージョンのパッケージを読み込んでしまうことです。
+もし、標準パッケージでおかしなエラーメッセージが発せられたら、
+そのパッケージの最新バージョンをロードしているか確認してください。
+ログファイルの次のような行で、どのバージョンのパッケージがロードされている
+かを調べることができます。
+\begin{verbatim}
+   Package: fred 1994/06/01 v0.01 Fred's package.
+\end{verbatim}
+文書クラスやパッケージの適切な最新コピーを得ていることを確認するために、
+|\documentclass|や|\usepackage|に\m{release-date}オプションを使えます。
+これは、日付外のソフトウェアを持っている可能性のある別のサイトに
+文書を送るときに便利です。
+
+\subsection{これ以上のヘルプは}
+
+問題に対する答えをここで見つけられなければ、
+\emph{\LaTeXbook}や\emph{\LaTeXcomp}で探してみてください。
+\LaTeX のインストールに関する問題は、
+ディストリビューションに含まれるインストールガイドを参照してください。
+
+これでもだめでしたら、ローカルな\LaTeX{}guruか
+ローカルな\LaTeX メーリングリストにコンタクトしてください。
+
+バグを見つけたと思ったら、それをリポートしてください。
+サードパーティ製のパッケージやクラス（第\ref{Sec:class+packages}節で
+リストされているパッケージやクラス以外）のもので、その問題が起きたときは、
+\LaTeX3プロジェクトチームではなく、
+そのパッケージあるいはクラスの作成者にその問題をリポートしてください。
+
+もしそのバグが本当に\LaTeX{}のコア部分で起きたならば、
+その問題を見せられる\emph{短く}、\emph{自己に含まれている}文書を作成します。
+そのファイルを\LaTeX{}の\emph{最新}バージョン（少なくとも１年以内）で動作させ、
+次に\LaTeX{}で|latexbug.tex|を実行します。
+これで作成されるエラーレポートと一緒にサンプル文書とログファイルを
+\LaTeX{}バグアドレスに置くってください。
+アドレスは|latexbug.tex|か|bugs.txt|ファイルにあります。
+
+
+\section{さいごに}
+\label{Sec:enjoy}
+
+We certainly hope you will enjoy using the new standard \LaTeX{} but,
+if this is not possible, we hope that you will enjoy success and
+fulfillment as a result of the documents which it will help you to create.
+
+If you find that the contribution of \LaTeX{} to your life is such
+that you would like to support the work of the project team, 
+then please read Section~\ref{Sec:ltx3} and discover practical ways to do this.
+
+\begin{thebibliography}{1}
+
+\bibitem{A-W:GMS94}
+Michel Goossens, Frank Mittelbach and Alexander Samarin.
+\newblock {\em The {\LaTeX} Companion}.
+\newblock Addison-Wesley, Reading, Massachusetts, 1994.
+
+\bibitem{tub:DKn91}
+Donald~E. Knuth.
+\newblock {\em The \TeX book}.
+\newblock Addison-Wesley, Reading, Massachusetts, 1986.
+\newblock Revised to cover \TeX3, 1991.
+
+\bibitem{A-W:LLa94}
+Leslie Lamport.
+\newblock {\em {\LaTeX:} A Document Preparation System}.
+\newblock Addison-Wesley, Reading, Massachusetts, second edition, 1994.
+
+\end{thebibliography}
+
+\end{document}

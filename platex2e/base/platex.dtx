@@ -1,0 +1,935 @@
+% \iffalse meta-comment
+%%% $Id: platex.dtx,v 1.7 1995/04/26 13:30:54 ken-na Exp ken-na $
+%
+%  Copyright 1995 ASCII Corporation.
+%
+%  This file is part of pLaTeX2e system.
+%  -------------------------------------
+%
+% \fi
+% \CheckSum{360}
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+%
+% \setcounter{StandardModuleDepth}{1}
+% \def\chuui#1{\par\vskip.5\baselineskip
+%   \noindent\bfseries{注意：}\par
+%   \noindent\bgroup\bf#1}
+% \def\endchuui{\egroup\vskip.5\baselineskip}
+%
+% \StopEventually{}
+%
+% \iffalse
+% \changes{v1.0}{1995/05/08}{first edition}
+% \changes{v1.0a}{1995/08/25}{互換性について、\dst{}の使い方、参考文献を追加}
+% \fi
+%
+% \iffalse
+%<*driver>
+\NeedsTeXFormat{pLaTeX2e}
+% \fi
+\ProvidesFile{platex.dtx}[1995/08/25 v1.0a pLaTeX document file]
+% \iffalse
+\documentclass{jltxdoc}
+\GetFileInfo{platex.dtx}
+%
+\title{p\LaTeX について}
+\author{Ken Nakano}
+\date{作成日：\filedate}
+%
+\begin{document}
+   \MakeShortVerb{\+}
+   \maketitle
+   \DocInput{platex.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+%
+% \section{概要}\label{platex:intro}
+% この文書は、\LaTeX{}をp\LaTeX{}へ拡張したときのノートであり、
+% \LaTeX{}およびp\LaTeX{}についての説明書ではありません。
+%
+% \LaTeX{}の機能については、\cite{latex-book2}や\cite{latex-comp}などを
+% 参照してください。
+% 新しい機能については、\file{usrguide.tex}なども参照してください。
+%
+% 日本語\TeX{}については、\cite{jtex-tech}や
+% \cite{tate-book}を参照してください。
+% このバージョンでは、\cite{tate-book}のコマンドのいくつかを修正しています。
+% その詳細については、\file{plcmds.dtx}を参照してください。
+%
+% この文書の構成は次のようになっています。
+%
+% \begin{quote}
+% \begin{description}
+% \item[第\ref{platex:intro}節]
+%  この節です。この文書についての概要と、
+%  \dst{}のためのオプションについて述べています。
+%
+% \item[第\ref{platex:plcore}節]
+%  p\LaTeX{}で拡張した機能についての概要です。
+%  付属のクラスファイルやパッケージファイルについても簡単に
+%  説明しています。
+%
+% \item[第\ref{platex:compati}節]
+%  旧バージョンのp\LaTeX{}との互換性について述べています。
+%
+% \item[付録\ref{app:pldoc}]
+%  p\LaTeXe{}のソースファイルをまとめて組版するための、
+%  文書ファイルについて説明をしています。
+%
+% \item[付録\ref{app:shprog}]
+%  付録\ref{app:pldoc}の文書ファイルを組版するときに便利な、
+%  シェルスクリプトについて説明しています。
+%
+% \item[付録{app:plprog}]
+%  \dst{}文書ファイル内の入れ子の対応を調べるperlスクリプトです。
+% \end{description}
+% \end{quote}
+%
+%
+% \subsection{\dst{}プログラムのためのオプション}
+% この文書を\dst{}プログラムによって処理することによって、
+% いくつかの異なるファイルを生成することができます。
+%
+% この文書の\dst{}プログラムのためのオプションは、次のとおりです。
+%
+% \DeleteShortVerb{\|}
+% \begin{center}
+% \begin{tabular}{l|p{.8\linewidth}}
+% \emph{オプション} & \emph{意味}\\\hline
+% plcore & フォーマットファイルを作るためのファイルを生成\\
+% pldoc  & p\LaTeXe{}のソースファイルをまとめて組版するための
+%          文書ファイルを生成\\[2mm]
+% shprog & 上記のファイルを作成するためのshスクリプトを生成\\
+% shins  & 上記のshスクリプトを取り出すための\dst{}バッチファイルを生成\\
+% plprog & 入れ子構造を調べる簡単なperlスクリプトを生成\\
+% plins  & 上記のperlスクリプトを取り出すための\dst{}バッチファイルを生成\\
+% \end{tabular}
+% \end{center}
+% \MakeShortVerb{\|}
+%
+% \subsubsection{ファイルの取り出し方}
+%
+% この文書から、p\LaTeX のフォーマットファイル\file{platex.fmt}を
+% 作るためのソースファイルを生成したい場合、次のような操作を行ないます。
+%
+% \begin{enumerate}
+% \item platex docstrip
+% \item 入力ファイルの拡張子（dtx）を入力する。
+% \item 出力ファイルの拡張子（ltx）を入力する。
+% \item \dst{}オプション（plcore）を入力する。
+% \item 入力ファイル名（platex）を入力する。
+% \item \file{platex.ltx}が存在する場合は、確認を求めてくるので、
+%  ``y''を入力する。
+% \item 別の処理を行なうかを問われるので、``n''を入力する。
+% \end{enumerate}
+% これで、\file{platex.ltx}が作られます。
+%
+% あるいは、次のような内容のファイル\file{fmt.ins}を作成し、
+% |platex fmt.ins|することでも\file{platex.ltx}を作ることができます。
+%
+% \begin{verbatim}
+%   \def\batchfile{fmt.ins}
+%   \input docstrip.tex
+%   \generateFile{platex.ltx}{t}{\from{platex.dtx}{plcore}}
+% \end{verbatim}
+%
+%
+%
+% \section{p\LaTeX の機能について}\label{platex:plcore}
+% p\LaTeX{}の機能は、いくつものファイルに分割されて実装されています。
+% これらのファイルを、大きく分けると、
+% \begin{itemize}
+% \item フォーマットファイル
+% \item クラスファイル
+% \item パッケージファイル
+% \end{itemize}
+% の３つに分類することができます。
+%
+% フォーマットファイルには、基本的な機能が定義されており、
+% p\LaTeX{}の核となるファイルです。このファイルに定義されているマクロは、
+% 実行時の速度を高めるために、あらかじめ\TeX の内部形式の形で保存されて
+% います。
+%
+% \TeX{}は、基本機能をロードした後、文書ファイルを読み込み、
+% |\documentclass|コマンドで指定されているクラスファイルをロードします。
+% クラスファイルは、文書のレイアウトや文書構造などを定義している
+% マクロファイルです。
+%
+% そして、|\usepackage|コマンドで指定されているパッケージファイルを
+% ロードします。パッケージファイルは、フォーマットファイルやクラスファイル
+% で定義されていない機能を提供します。
+%
+%
+% ここでは、これらのファイルにどのような機能が定義されているかを
+% 説明しています。それらのコマンドの構文や使い方などについては、
+% それらが定義されているファイルを参照してください。
+%
+% \subsection{フォーマットファイル}
+% p\LaTeX{}の核となるフォーマットファイルについて説明をしています。
+%
+% フォーマットファイルには、基本的な機能が定義されていますが、
+% これらは\TeX{}の内部形式に変換された形式となっています。
+% フォーマットファイルを作成するには、
+% ソースファイル``platex.ltx''を|iniptex|プログラムで処理します。
+%
+% 次のリストが、その内容です。
+% このバージョンでは、\LaTeX{}からp\LaTeX{}への拡張を
+% \file{plcore.ltx}をロードすることで行ない、
+% \file{latex.ltx}には直接、手を加えないようにしています。
+% したがって\file{platex.ltx}は、次のようにとても短いものとなっています。
+% \file{latex.ltx}には\LaTeX{}のコマンドが、
+% \file{plcore.ltx}にはp\LaTeX{}で拡張したコマンドが定義されています。
+%
+%    \begin{macrocode}
+%<*plcore>
+\let\orgdump\dump
+\let\dump\relax
+\input latex.ltx
+\typeout{**************************^^J%
+         *^^J%
+         * making pLaTeX format^^J%
+         *^^J%
+         **************************}
+\makeatletter
+\input plcore.ltx
+\makeatother
+\the\everyjob
+\let\dump\orgdump
+\dump
+%<plcore>\endinput
+%</plcore>
+%    \end{macrocode}
+%
+% 実際にp\LaTeX{}への拡張を行なっている\file{plcore.ltx}は、
+% \dst{}プログラムによって、次のファイルの断片が連結されたものです。
+%
+% \begin{itemize}
+% \item \file{plvers.dtx}は、p\LaTeX{}のフォーマットバージョンを定義しています。
+% \item \file{plfonts.dtx}は、\NFSS2を拡張しています。
+% \item \file{plcmds.dtx}は、基本的なコマンドの拡張や追加を行なっています。
+% \item \file{ploutput.dtx}は、出力ルーチンに関わる部分を拡張しています。
+% \end{itemize}
+%
+% プリロードフォントや組版パラメータなどの設定は、
+% \file{pldefs.ltx}をロードすることで行なっています。
+% このファイルに記述されている設定を変更すれば、
+% p\LaTeX{}をカスタマイズすることができます。
+% カスタマイズする場合は、このファイルを直接、修正するのではなく、
+% \file{pldefs.cfg}という名前でコピーをして、そのファイルを編集します。
+% \file{pldefs.cfg}は\file{pldefs.ltx}の代わりに読み込まれます。
+%
+%
+% \subsubsection{バージョン}
+% p\LaTeX{}のバージョンは、\file{plvers.dtx}で定義しています。
+% また、フォーマットファイル名{\bf pLaTeX2e}を|\pfmtname|で定義しています。
+%
+% \subsubsection{\NFSS2コマンド}
+% \LaTeXe{}では、フォント選択機構として\NFSS2を用いています。
+% p\LaTeXe{}では、同様のインターフェイスで、和文フォントを選択できるように、
+% \file{plfonts.dtx}で\NFSS2を拡張しています。
+% \NFSS2についての詳細は、\file{fntguide.tex}を参照してください。
+%
+% また、このファイルには、プリロードフォントの設定、
+% 和文エンコードの定義、組版パラメータなどの設定、フォント定義ファイルなど
+% の記述も含まれています。
+%
+% p\LaTeX{}の\NFSS2は、フォントを切替えるコマンドを指定するときに、
+% それが欧文書体か和文書体のいずれかを対象とするものかを、
+% できるだけ意識しないようにする方向で拡張しています。
+% いいかえれば、コマンドが（可能な限りの）判断をします。
+% したがって、多くの英語版のクラスファイルやパッケージファイルなどの書体変更
+% コマンドを修正する必要はありません。
+%
+% \subsubsection{コマンドの拡張と追加}
+% \file{plcmds.dtx}は、次の項目について、拡張や追加を行なっています。
+%
+% \begin{itemize}
+% \item 表組環境
+% \item 段落ボックス環境
+% \item 作図環境
+% \item 連数字、漢数字、傍点、下線
+% \item 疑似タイプ入力
+% \item 参照番号
+% \item 支柱
+% \end{itemize}
+%
+% \paragraph{組方向オプションについて}
+% 上記の表組環境、段落ボックス環境、作図環境の次の環境やコマンドは、
+% 組方向オプションが追加され、拡張されています。
+% これらの書式については、\file{plcmds.dtx}を参照してください。
+%
+% \begin{itemize}
+% \item tabular環境、array環境
+% \item minipage環境、|\parbox|コマンド、|\pbox|コマンド
+% \item picture環境
+% \end{itemize}
+%
+% 組方向オプションには、"y", "t", "z"のいずれかを指定でき、
+% それぞれ、次の意味を持っています。
+%
+% \medskip
+% \DeleteShortVerb{\|}
+% \begin{center}
+% \begin{tabular}{c|l}
+% \emph{オプション} & \emph{意味}\\\hline
+% \texttt{y}& 横組で出力（横組モードでは何もしない）\\
+% \texttt{t}& 縦組で出力（縦組モードでは何もしない）\\
+% \texttt{z}& 90度回転して出力（横組モードでは何もしない）\\
+% \end{tabular}
+% \end{center}
+% \MakeShortVerb{\|}
+%
+% 組方向オプションを用いたサンプルを図\ref{fig:diroption}に示します。
+% 左から、``y'', ``t'', ``z''オプションを指定してあります。
+%
+% \begin{figure}[htb]
+% \begin{sample}{10zw}
+%  \parbox<z>{10zw}{たとえば、これはいったい何、いったいどうして、などと
+%   思えるようなことが世の中にはたくさんあります。}
+%
+%  \bigskip
+%  \parbox<t>{10zw}{たとえば、これはいったい何、いったいどうして、などと
+%   思えるようなことが世の中にはたくさんあります。}
+%
+%  \bigskip
+%  \parbox<y>{10zw}{たとえば、これはいったい何、いったいどうして、などと
+%   思えるようなことが世の中にはたくさんあります。}
+% \end{sample}
+% \caption{組方向オプションの使用例\label{fig:diroption}}
+% \end{figure}
+%
+%
+% \subsubsection{出力ルーチンとフロート}
+% \file{ploutput.dtx}は、次の項目について、拡張や追加を行なっています。
+%
+% \begin{itemize}
+% \item 改ページ
+% \item オブジェクトの出力順序
+% \item トンボ
+% \item フロートとキャプションの出力位置の指定
+% \item 脚注マクロ
+% \end{itemize}
+%
+% フロートとキャプションの出力位置の指定の項で定義されている、
+% |\layoutcaption|コマンドにも組方向オプションを指定することができます。
+% キャプションコマンドについての詳細は、\file{ploutput.dtx}を参照してください。
+%
+%
+% \subsection{クラスファイルとパッケージファイル}
+% クラスファイルとパッケージファイルは、従来、スタイルファイルと呼ばれていた
+% ものです。スタイルファイルのうち、
+% 主にレイアウトに関するものをクラスファイル、主にマクロの拡張をするものを
+% パッケージファイルと呼びます。
+%
+% クラスファイルやパッケージファイルのいくつかは、オリジナルの
+% ファイルを修正しています。
+% 修正箇所には``\texttt{platex}''条件が付けられています。
+% 
+% p\LaTeX{}に付属のクラスファイルは、次のとおりです。
+%
+% \begin{itemize}
+% \item jbook.cls,jarticle.cls,jreport.cls\par
+%   横組用の標準クラスファイル。\file{jclasses.dtx}から作成される。
+%
+% \item tbook.cls,tarticle.cls,treport.cls\par
+%   縦組用の標準クラスファイル。\file{jclasses.dtx}から作成される。
+%
+% \item jltxdoc.cls\par
+%   \file{.dtx}ファイルを組版するためのクラスファイル。
+%   \file{jltxdoc.dtx}から作成される。
+%
+% \item jltxguid.cls\par
+%   \file{usrguide.tex}や\file{fntguide.tex}などを組版するための
+%   クラスファイル。
+% \end{itemize}
+%
+% また、p\LaTeX{}に付属のパッケージファイルは、次のとおりです。
+%
+% \begin{itemize}
+% \item oldpfont.sty\par
+%    p\LaTeX209のフォントコマンドを提供するパッケージ。
+%    \file{oldpfont.dtx}から作成される。
+%
+% \item pl209.def\par
+%    p\LaTeX209互換モードで用いるパッケージ。
+%    \file{pl209.dtx}, \file{oldpfont.dtx}から作成される。
+%
+% \item ptrace.sty\par
+%   \file{tracefnt.sty}で再定義された\NFSS2コマンドをp\LaTeX{}用に
+%   再再定義するためのパッケージ。
+%
+% \item ascmac.sty, tascmac.sty\par
+%    旧バージョンのp\LaTeX{}で配布されていたファイル。
+%
+% \item skfonts.sty\par
+%   （株）写研製の書体を用いるためのパッケージ。
+%    \file{skfonts.fdd}から作成される。
+% \end{itemize}
+%
+%
+%
+% \section{旧バージョンとの互換性}\label{platex:compati}
+% ここでは、旧バージョンとの互換性について説明をしています。
+%
+% p\LaTeX{}は、\LaTeX{}の上位互換という形を取っていますが、
+% いくつかのパラメータなども変更しています。
+% したがって英文書など、\LaTeX{}でも処理できるファイルを
+% p\LaTeX{}で処理しても、完全に同じ結果になるとは限りません。
+% これは、英語版の\LaTeX{}でも同じです。
+% 詳細は、\file{usrguide.tex}を参照してください。
+%
+% 多くの英語版のクラスファイルやパッケージフィルはそのまま使えると思います。
+% ただし、それらがp\LaTeX{}で拡張しているコマンドと同じ名前のコマンドを
+% 再定義している場合は、どうなるかわかりません。
+% たとえば、英語版の\file{tracefnt.sty}は|\selectfont|を再定義していますので、
+% p\LaTeX{}のフォント選択機構がうまく働きません。
+%
+%
+%
+%
+% \appendix
+%
+% \section{文書ファイル}\label{app:pldoc}
+%
+% ここでは、前節で説明をしたファイルをまとめて\footnote{それぞれのファイルを
+% 個別に、独立した文書として組版することもできます。}組版をするための
+% 文書ファイルについて説明をしています。この文書は、およそ60ページになります。
+%
+%    \begin{macrocode}
+%<*pldoc>
+\documentclass{jltxdoc}
+\listfiles
+
+%    \end{macrocode}
+% いくつかの\TeX{}プリミティブとコマンドを索引に出力しないようにします。
+%    \begin{macrocode}
+\DoNotIndex{\def,\long,\edef,\xdef,\gdef,\let,\global}
+\DoNotIndex{\if,\ifnum,\ifdim,\ifcat,\ifmmode,\ifvmode,\ifhmode,%
+            \iftrue,\iffalse,\ifvoid,\ifx,\ifeof,\ifcase,\else,\or,\fi}
+\DoNotIndex{\box,\copy,\setbox,\unvbox,\unhbox,\hbox,%
+            \vbox,\vtop,\vcenter}
+\DoNotIndex{\@empty,\immediate,\write}
+\DoNotIndex{\egroup,\bgroup,\expandafter,\begingroup,\endgroup}
+\DoNotIndex{\divide,\advance,\multiply,\count,\dimen}
+\DoNotIndex{\relax,\space,\string}
+\DoNotIndex{\csname,\endcsname,\@spaces,\openin,\openout,%
+            \closein,\closeout}
+\DoNotIndex{\catcode,\endinput}
+\DoNotIndex{\jobname,\message,\read,\the,\m@ne,\noexpand}
+\DoNotIndex{\hsize,\vsize,\hskip,\vskip,\kern,\hfil,\hfill,\hss}
+\DoNotIndex{\m@ne,\z@,\z@skip,\@ne,\tw@,\p@}
+\DoNotIndex{\dp,\wd,\ht,\vss,\unskip}
+
+%    \end{macrocode}
+% 索引と変更履歴の見出しを\cs{part}を用いるように設定をします。
+%    \begin{macrocode}
+\IndexPrologue{\part*{索 引}%
+                 \markboth{索 引}{索 引}%
+                 \addcontentsline{toc}{part}{索 引}%
+イタリック体の数字は、その項目が説明されているページを示しています。
+下線の引かれた数字は、定義されているページを示しています。
+その他の数字は、その項目が使われているページを示しています。}
+%
+\GlossaryPrologue{\part*{変更履歴}%
+                 \markboth{変更履歴}{変更履歴}%
+                 \addcontentsline{toc}{part}{変更履歴}}
+
+%    \end{macrocode}
+% 標準の|\changes|コマンドを、複数ファイルの文書に合うように修正しています。
+%    \begin{macrocode}
+\makeatletter
+\def\changes@#1#2#3{%
+  \let\protect\@unexpandable@protect
+  \edef\@tempa{\noexpand\glossary{#2\space\currentfile\space#1\levelchar
+                                 \expandafter\@gobble
+                                 \saved@macroname\actualchar
+                                 \string\verb\quotechar*%
+                                 \verbatimchar\saved@macroname
+                                 \verbatimchar:\levelchar #3}}%
+  \@tempa\endgroup\@esphack}
+\makeatother
+\RecordChanges
+\CodelineIndex
+\EnableCrossrefs
+%    \end{macrocode}
+% ここからが本文ページとなります。
+%    \begin{macrocode}
+\begin{document}
+ \title{The p\LaTeXe\ Sources}
+ \author{Ken Nakano}
+
+% This command will be used to input the patch file
+% if that file exists.
+\newcommand{\includeltpatch}{%
+  \def\currentfile{pltpatch.ltx}
+  \part{pltpatch}
+  {\let\ttfamily\relax
+    \xdef\filekey{\filekey, \thepart={\ttfamily\currentfile}}}%
+  Things we did wrong\ldots
+  \IndexInput{pltpatch.ltx}}
+
+% Get the date from plvers.dtx
+\makeatletter
+\let\patchdate=\@empty
+\begingroup
+   \def\ProvidesFile#1\pfmtversion#2{\date{#2}\endinput}
+   \input{plvers.dtx}
+\global\let\X@date=\@date
+
+% Add the patch version if available.
+   \long\def\Xdef#1#2#3\def#4#5{%
+    \xdef\X@date{#2}%
+    \xdef\patchdate{#5}%
+    \endinput}%
+   \InputIfFileExists{pltpatch.ltx}
+    {\let\def\Xdef}{\global\let\includeltpatch\relax}
+\endgroup
+
+\ifx\@date\X@date
+   \edef\@date{\@date\space\patchdate}
+\else
+   \@warning{pltpatch.ltx does not match plvers.dtx!}
+   \let\includeltpatch\relax
+\fi
+\makeatother
+
+\settowidth\MacroIndent{\ttfamily\scriptsize 000\ }
+
+\pagenumbering{roman}
+\maketitle
+\renewcommand\maketitle{}
+
+\tableofcontents
+\clearpage
+
+\pagenumbering{arabic}
+
+\DocInclude{plvers}   % pLaTeX version
+
+\DocInclude{plfonts}  % NFSS2 commands
+
+\DocInclude{plcmds}   % pLaTeX basic commands
+
+\DocInclude{ploutput} % pLaTeX output routine
+
+\DocInclude{kinsoku}  % kinsoku parameter
+
+\includeltpatch       % patch file
+
+%    \end{macrocode}
+% \file{ltxdoc.cfg}に|\AtEndOfClass{\OnlyDescription}|が指定されている場合は、
+% ここで終了します。
+%    \begin{macrocode}
+\StopEventually{\end{document}}
+
+%    \end{macrocode}
+% 変更履歴と索引を組版します。
+% 変更履歴ファイルと索引の作り方の詳細については、
+% おまけ\ref{app:shprog}を参照してください。
+%    \begin{macrocode}
+\clearpage
+\pagestyle{headings}
+% Make TeX shut up.
+\hbadness=10000
+\newcount\hbadness
+\hfuzz=\maxdimen
+%
+\PrintChanges
+\clearpage
+%
+\begingroup
+  \def\endash{--}
+  \catcode`\-\active
+  \def-{\futurelet\temp\indexdash}
+  \def\indexdash{\ifx\temp-\endash\fi}
+
+  \PrintIndex
+\endgroup
+%    \end{doucment}
+% 最後に、索引が２度組版されないようにします。
+% \file{ltxdoc.cfg}に２度目の|\PrintIndex|が指定されているかも
+% しれないからです。
+%    \begin{doucment}
+\let\PrintChanges\relax
+\let\PrintIndex\relax
+\end{document}
+%</pldoc>
+%    \end{macrocode}
+%
+%
+%
+%
+% \section{シェルスクリプト\file{mkpldoc.sh}}\label{app:shprog}
+% ここでは、p\LaTeX{}のマクロ定義ファイルをまとめて組版するときに便利な、
+% シェルスクリプト\footnote{このシェルスクリプトはUNIX用です。
+% しかしrmコマンドをdeleteコマンドにするなどすれば、簡単にDOSなどのバッチ
+% ファイルに修正することができます。}について説明をしています。
+% また、このシェルスクリプトを取り出すための、
+% \dst{}バッチファイルについても説明をしています。
+%
+% このシェルスクリプトの使用方法は次のとおりです。
+%
+% |sh mkpldoc.sh|
+%
+% なお、日本語版のmakeindexでは変更履歴ファイルを作成できないため、
+% このスクリプトではmendexを用いています。
+% mendexはmakeindexの上位互換のファイル整形コマンドで、
+% 索引語の読みを自動的に付けるなどの機能があります。
+%
+% \subsection{\file{mkpldoc.sh}}
+% まず、\file{gind.ist}ファイルと\file{gglo.ist}ファイルをコピーします。
+% \texttt{TEXMF}の値は、インストールされているディレクトリ合わせて、
+% 適当に変更してください。
+%    \begin{macrocode}
+%<*shprog>
+set TEXMF /usr/local/lib/texmf
+cp $TEXMF/latex2e/base/gind.ist .
+cp $TEXMF/latex2e/base/gglo.ist .
+%    \end{macrocode}
+% 次に、以前に\file{pldoc.tex}を処理したときに作成された、
+% 目次ファイルや索引ファイルなどを削除します。
+%    \begin{macrocode}
+rm pldoc.toc pldoc.idx pldoc.glo
+%    \end{macrocode}
+% そして、\file{ltxdoc.cfg}を空にします。
+% このファイルは、\file{jltxdoc.cls}の定義を変更するものですが、
+% ここでは、変更されたくありません。
+%    \begin{macrocode}
+echo "" > ltxdoc.cfg
+%    \end{macrocode}
+% そして、\file{pldoc.tex}を処理します。
+%    \begin{macrocode}
+platex pldoc.tex
+%    \end{macrocode}
+% 索引と変更履歴を作成します。
+%
+% |-s|オプションは、索引ファイルを整形するためのスタイルオプションです。
+% 索引用の\file{gind.ist}と変更履歴用の\file{gglo.ist}は、
+% \LaTeX{}のディストリビューションに付属しています。
+%
+% |-o|は、出力するファイル名を指定するオプションです。
+%
+% |-f|は、項目に``読み''がなくてもエラーとしないオプションです。
+% makeindexコマンドには、このオプションがありません。
+%    \begin{macrocode}
+mendex -s gind.ist -o pldoc.ind pldoc.idx
+mendex -f -s gglo.ist -o pldoc.gls pldoc.glo
+%    \end{macrocode}
+% \file{ltxdoc.cfg}の内容を|\includeonly{}|にし、\file{pldoc.tex}を処理します。
+% このコマンドは、引数に指定されたファイルだけを``|\include|''するための
+% コマンドですが、ここでは何も|\include|したく\emph{ない}ので、
+% 引数には何も指定をしません。
+% しかし、|\input|で指定されているファイルは読み込まれます。
+% したがって、目次や索引や変更履歴のファイルが処理されます。
+% この処理は、主に、これらでエラーが出るかどうかの確認です。
+%    \begin{macrocode}
+echo "\includeonly{}" > ltxdoc.cfg
+platex pldoc.tex
+%    \end{macrocode}
+% 最後に、再び\file{ltxdoc.cfg}を空にして、\file{pldoc.tex}を処理をします。
+% 本文を１ページから開始していますので、この後、もう一度処理をする
+% 必要はありません。
+%    \begin{macrocode}
+echo "" > ltxdoc.cfg
+platex pldoc.tex
+# EOF
+%</shprog>
+%    \end{macrocode}
+%
+%
+% \subsection{\dst{}バッチファイル}
+% まず、\dst{}バッチファイルの名前を定義し、\dst{}プログラムをロードします。
+%    \begin{macrocode}
+%<*shins>
+\def\batchfile{omake-sh.ins}
+\input{docstrip}
+%    \end{macrocode}
+% \dst{}プログラムは、連続する二つのパーセント記号(\%\%)ではじまる行を
+% メタコメントとみなし、条件によらず出力をします。
+% しかし、この\TeX{}のコメントは、シェルにとってはエラーとなります。
+% そこで、メタコメントを出力するコマンドを再定義し、出力しないようにします。
+%    \begin{macrocode}
+\def\putMetaComment#1\endLine{\closeOption}
+%    \end{macrocode}
+% \dst{}プログラムは、ファイルの先頭に\dst{}オプションや作成日付などを
+% \TeX{}のコメントを付けて出力します。しかし、この有益なコメントも
+% シェルスクリプトにとっては、エラーを引き起こすだけです。
+% ここでは、先頭と末尾にテキストを出力するコマンドを無効にして、
+% これらが出力されないようにしています。
+%    \begin{macrocode}
+\let\WritePreamble\relax
+\let\WritePostamble\relax
+%    \end{macrocode}
+% |\keepsilent|は、実行しているときの経過を端末に出力しないように指定をする
+% コマンドです。
+% |\generateFile|で、どのファイルに、どのファイルのどの部分を出力するのか
+% を指定します。
+%    \begin{macrocode}
+\keepsilent
+\generateFile{mkpldoc.sh}{f}{\from{platex.dtx}{shprog}}
+%</shins>
+%    \end{macrocode}
+%
+%
+%
+%
+%
+% \section{perlスクリプト\file{dstcheck.pl}}\label{app:plprog}
+% \dst{}文書ファイルは、\LaTeX{}のソースとその文書を同時に管理する方法として、
+% とてもすぐれていると思います。しかし、たとえば\file{jclasses.dtx}のように、
+% 条件が多くなると、入れ子構造がわからなくなってしまいがちです。
+% \LaTeX{}で処理すれば、エラーによってわかりますが、
+% 文書ファイルが大きくなると面倒です。ファイルがまだ小さいうちは、
+% 何のツールの助けもなしに、済ませることができます。
+%
+% ここでは、\dst{}文書ファイルの入れ子構造を調べるのに便利な、
+% perlスクリプトについて説明をしています。
+% また、このperlスクリプトを取り出すための、
+% \dst{}バッチファイルについても説明をしています。
+%
+% このperlスクリプトの使用方法は次のとおりです。
+%
+% |perl dstcheck.pl \meta{file-name}|
+%
+% \subsection{\file{dstcheck.pl}}
+%
+% 次の部分は、コメントです。
+%    \begin{macrocode}
+%<*plprog>
+##
+## DOCSTRIP 文書内の環境と条件の入れ子を調べる perl スクリプト
+##
+%    \end{macrocode}
+% このスクリプトは、入れ子の対応を調べるために、次のスタックを用います。
+% \meta{条件}あるいは\meta{環境}を開始するコードが現れたときに、
+% それらはスタックにプッシュされ、終了するコードでポップされます。
+% したがって、現在の\meta{条件}あるいは\meta{環境}と、
+% スタックから取り出した\meta{条件}あるいは\meta{環境}と一致すれば、
+% 対応が取れているといえます。そうでなければエラーです。
+%
+% |@dst|スタックには、\meta{条件}が入ります。
+% 条件の開始は、``|%<*|\meta{条件}|>|''です。
+% 条件の終了は、``|%</|\meta{条件}|>|''です。
+% \meta{条件}には、|>|文字が含まれません。
+% |@env|スタックには、\meta{環境}が入ります。
+%
+% 先頭を明示的に示すために、ダミーの値を初期値として用います。
+% スタックは、\meta{条件}あるいは\meta{環境}の名前と、その行番号をペアにして
+% 操作をします。
+%    \begin{macrocode}
+push(@dst,"DUMMY"); push(@dst,"000");
+push(@env,"DUMMY"); push(@env,"000");
+%    \end{macrocode}
+% この|while|ループの中のスクリプトは、文書ファイルの１行ごとに実行をします。
+%    \begin{macrocode}
+while (<>) {
+%    \end{macrocode}
+% 入力行が条件を開始する行なのかを調べます。
+% 条件の開始行ならば、|@dst|スタックに\meta{条件}と行番号をプッシュします。
+%    \begin{macrocode}
+  if (/^%<\*([^>]+)>/) { # check conditions
+    push(@dst,$1);
+    push(@dst,$.);
+%    \end{macrocode}
+% そうでなければ、条件の終了行なのかを調べます。
+% 現在行が条件の終了を示している場合は、|@dst|スタックをポップします。
+%    \begin{macrocode}
+  } elsif (/^%<\/([^>]+)>/) {
+    $linenum = pop(@dst);
+    $conditions = pop(@dst);
+%    \end{macrocode}
+% 現在行の\meta{条件}と、スタックから取り出した\meta{条件}が一致しない場合、
+% その旨のメッセージを出力します。
+%
+% なお、|DUMMY|と一致した場合は、一番外側のループが合っていないと
+% いうことを示しています。このとき、これらのダミー値をスタックに戻します。
+% いつでもスタックの先頭をダミー値にするためです。
+%    \begin{macrocode}
+    if ($1 ne $conditions) {
+      if ($conditions eq "DUMMY") {
+        print "$ARGV: `</$1>' (l.$.) is not started.\n";
+        push(@dst,"DUMMY");
+        push(@dst,"000");
+      } else {
+        print "$ARGV: `<*$conditions>' (l.$linenum) is ended ";
+        print "by `<*$1>' (l.$.)\n";
+      }
+    }
+  }
+%    \end{macrocode}
+% 環境の入れ子も条件と同じように調べます。
+%
+% verbatim環境のときに、その内側をスキップしていることに注意をしてください。
+%    \begin{macrocode}
+  if (/^% *\\begin\{verbatim\}/) { # check environments
+    while(<>) {
+        last if (/^% *\\end\{verbatim\}/);
+    }
+  } elsif (/^% *\\begin\{([^{}]+)\}\{(.*)\}/) {
+    push(@env,$1);
+    push(@env,$.);
+  } elsif (/^% *\\begin\{([^{}]+)\}/) {
+    push(@env,$1);
+    push(@env,$.);
+  } elsif (/^% *\\end\{([^{}]+)\}/) {
+    $linenum = pop(@env);
+    $environment = pop(@env);
+    if ($1 ne $environment) {
+      if ($environment eq "DUMMY") {
+        print "$ARGV: `\\end{$1}' (l.$.) is not started.\n";
+        push(@env,"DUMMY");
+        push(@env,"000");
+      } else {
+        print "$ARGV: \\begin{$environement} (l.$linenum) is ended ";
+        print "by \\end{$1} (l.$.)\n";
+      }
+    }
+  }
+%    \end{macrocode}
+% ここまでが、最初の|while|ループです。
+%    \begin{macrocode}
+}
+%    \end{macrocode}
+% 文書ファイルを読み込んだ後、終了していない条件があるかどうかを確認します。
+% すべての条件の対応がとれていれば、この時点での|@dst|スタックには
+% ダミー値しか入っていません。したがって、対応が取れている場合は、
+% 最初の２つのポップによって、ダミー値が設定されます。
+% ダミー値でなければ、ダミー値になるまで、取り出した値を出力します。
+%    \begin{macrocode}
+$linenum = pop(@dst);
+$conditions = pop(@dst);
+while ($conditions ne "DUMMY") {
+    print "$ARGV: `<*$conditions>' (l.$linenum) is not ended.\n";
+    $linenum = pop(@dst);
+    $conditions = pop(@dst);
+}
+%    \end{macrocode}
+% 環境の入れ子についても、条件の入れ子と同様に確認をします。
+%    \begin{macrocode}
+$linenum = pop(@env);
+$environment = pop(@env);
+while ($environment ne "DUMMY") {
+    print "$ARGV: `\\begin{$environment}' (l.$linenum) is not ended.\n";
+    $linenum = pop(@env);
+    $environment = pop(@env);
+}
+exit;
+%</plprog>
+%    \end{macrocode}
+%
+% \subsection{\dst{}バッチファイル}
+% まず、バッチファイルの名前を定義し、\dst{}パッケージをロードします。
+%    \begin{macrocode}
+%<*plins>
+\def\batchfile{omake-pl.ins}
+\input{docstrip}
+%    \end{macrocode}
+%
+% \dst{}プログラムは、連続する二つのパーセント記号(\%\%)ではじまる行を
+% メタコメントとみなし、条件によらず出力をします。
+% しかし、この\TeX{}のコメントは、perlにとってはエラーとなります。
+% そこで、メタコメントを出力するコマンドを再定義し、出力しないようにします。
+%    \begin{macrocode}
+\def\putMetaComment#1\endLine{\closeOption}
+%    \end{macrocode}
+%
+% \dst{}プログラムは、ファイルの先頭に\dst{}オプションや作成日付などを
+% \TeX{}のコメントを付けて出力します。しかし、この有益なコメントも
+% perlスクリプトにとっては、エラーを引き起こすだけです。
+% そこで、このコメント記号をシャープ(\#)に変更します。
+% \#が\TeX{}のマクロの引数を示す記号の文字であることに注意をしてください。
+%    \begin{macrocode}
+\begingroup
+  \catcode`\#=12
+  \gdef\perCent{#}
+  \gdef\DoubleperCent{## }
+\endgroup
+%    \end{macrocode}
+% そして、最後に出力される|\endinput|を出力させないように、
+% |\WritePostamble|コマンドも再定義をします。
+%    \begin{macrocode}
+\def\WritePostamble{%
+  \WriteOut{\DoubleperCent End of file `\outFileName'.}}%
+}
+%    \end{macrocode}
+% |\keepsilent|は、実行しているときの経過を端末に出力しないように指定をする
+% コマンドです。
+% |\generateFile|で、どのファイルに、どのファイルのどの部分を出力するのか
+% を指定します。
+%    \begin{macrocode}
+\keepsilent
+\generateFile{dstcheck.pl}{f}{\from{platex.dtx}{plprog}}
+%</plins>
+%    \end{macrocode}
+%
+% \newpage
+% \begin{thebibliography}{1}
+% \bibitem{tex-book}
+% Donald~E. Knuth.
+% \newblock ``{\em The TeX Book}''.
+% \newblock Addison-Wesley, 1984.
+% \newblock (邦訳：斎藤信男監修, 鷺谷好輝訳,
+%             \TeX ブック 改訂新版, アスキー出版局, 1989)
+%
+% \bibitem{tate-book}
+% インプレス・ラボ監修, アスキー書籍編集部編
+% \newblock 『縦組対応 パーソナル日本語\TeX{}』
+% \newblock アスキー出版局, 1994
+%
+% \bibitem{latex-comp}
+% Michel Goossens, Frank Mittelbach, Alexander Samarin.
+% \newblock ``{\em The {\LaTeX} Companion}''.
+% \newblock Addison-Wesley, 1994.
+%
+% \bibitem{latex-book2}
+% Laslie Lamport.
+% \newblock ``{\em {\LaTeX:} A Document Preparation System}''.
+% \newblock Addison-Wesley, second edition, 1994.
+%
+% \bibitem{latex-book}
+% Laslie Lamport.
+% \newblock ``{\em {\LaTeX:} A Document Preparation System}''.
+% \newblock Addison-Wesley, 1986.
+% \newblock (邦訳：倉沢良一監修, 大野俊治・小暮博通・藤浦はる美訳,
+%            文書処理システム \LaTeX, アスキー出版局, 1990)
+%
+% \bibitem{jtex-tech}
+% アスキー出版技術部責任編集
+% \newblock 『日本語\TeX テクニカルブックI』
+% \newblock アスキー出版局, 1990.
+%
+% \bibitem{perl}
+% 河野真治著
+% \newblock 『入門perl』
+% \newblock アスキー出版局, 1994
+% \end{thebibliography}
+%
+% \iffalse
+% ここで、このあとに組版されるかもしれない文書のために、
+% 節見出しの番号を算用数字に戻します。
+% \fi
+%
+% \renewcommand{\thesection}{\arabic{section}}
+%
+%
+%
+%
+% \Finale
+%
+\endinput

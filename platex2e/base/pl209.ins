@@ -1,0 +1,57 @@
+\def\batchfile{pl209.ins}
+\input docstrip.tex
+\preamble
+
+Copyright 1994,1995 ASCII Corporation.
+
+Copyright 1994 the LaTeX3 project and the individual authors.
+All rights reserved. For further copyright information see the file
+legal.txt, and any other copyright indicated in this file.
+
+This file is part of the pLaTeX2e system.
+-----------------------------------------
+
+ This system is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+IMPORTANT NOTICE:
+
+For error reports in case of UNCHANGED versions see readme files.
+
+Please do not request updates from us directly.  Distribution is
+done through Mail-Servers and TeX organizations.
+
+You are not allowed to change this file.
+
+You are allowed to distribute this file under the condition that
+it is distributed together with all files mentioned in 00readme.txt.
+
+If you receive only some of these files from someone, complain!
+
+You are NOT ALLOWED to distribute this file alone.  You are NOT
+ALLOWED to take money for the distribution or use of either this
+file or a changed version, except for a nominal charge for copying
+etc.
+\endpreamble
+
+\keepsilent
+
+\Msg{*** Generating the pLaTeX compatible mode files ***}
+%
+% 互換モードファイル
+%
+\generateFile{pl209.def}{t}{%
+  \from{pl209.dtx}{head,platex}
+  \from{oldpfont.dtx}{latex209,platex}
+  \from{pl209.dtx}{tail,platex}}
+\generateFile{oldpfont.sty}{t}{\from{oldpfont.dtx}{package,platex}}
+\generateFile{jarticle.sty}{t}{\from{pl209.dtx}{jarticle,platex}}
+\generateFile{tarticle.sty}{t}{\from{pl209.dtx}{tarticle,platex}}
+\generateFile{jbook.sty}{t}{\from{pl209.dtx}{jbook,platex}}
+\generateFile{tbook.sty}{t}{\from{pl209.dtx}{tbook,platex}}
+\generateFile{jreport.sty}{t}{\from{pl209.dtx}{jreport,platex}}
+\generateFile{treport.sty}{t}{\from{pl209.dtx}{treport,platex}}
+
+\endinput

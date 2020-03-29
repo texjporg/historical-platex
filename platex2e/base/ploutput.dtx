@@ -1,0 +1,822 @@
+% \iffalse meta-comment
+%% File: ploutput.dtx
+%%% $Id: ploutput.dtx,v 1.1 1995/04/26 13:30:54 ken-na Exp ken-na $
+%
+%  Copyright 1994,1995 ASCII Corporation.
+%
+%  This file is part of pLaTeX2e system.
+%  -------------------------------------
+%
+% \fi
+% \CheckSum{1172}
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+%
+% \setcounter{StandardModuleDepth}{1}
+%
+% \StopEventually{}
+%
+% \iffalse
+% \changes{v1.1}{1995/04/12}{脚注マクロ修正}
+% \changes{v1.0}{1994/09/16}{first edition}
+% \fi
+%
+% \iffalse
+%<*driver>
+\NeedsTeXFormat{pLaTeX2e}
+% \fi
+\ProvidesFile{ploutput.dtx}[1995/04/12 v1.1 pLaTeX core file]
+% \iffalse
+\documentclass{jltxdoc}
+\GetFileInfo{ploutput.dtx}
+%
+\title{出力ルーチンとフロートの拡張\space\fileversion}
+\author{Ken Nakano}
+\date{作成日：\filedate}
+%
+\begin{document}
+   \maketitle
+   \DocInput{ploutput.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+%
+% \section{概要}\label{ploutput:intro}
+% ここでは、p\LaTeX{}で拡張をしたマクロのうち、
+% ページ出力とフロートに関する、次の事柄について説明をしています。
+%
+% \begin{itemize}
+% \item 改ページ
+% \item オブジェクトの出力順序
+% \item トンボ
+% \item フロートとキャプションの出力位置の指定
+% \item 脚注マクロ
+% \end{itemize}
+%
+%
+%
+% \section{コード}
+%
+% このファイルの内容は、p\LaTeX{}のコア部分です。
+%    \begin{macrocode}
+%<*plcore>
+%    \end{macrocode}
+%
+% \subsection{改ページ}
+% 縦組のときには、このコマンドの次の内容が、
+% 偶数ページ（右ページ）からはじまるように改ページをします。
+% 横組のときには、奇数ページ（右ページ）からはじまるようにしています。
+%
+% \begin{macro}{\cleardoublepage}
+% このコマンドによって出力される、白ページのページスタイルを
+% \pstyle{empty}にし、ヘッダとフッタが入らないようにしています。
+%    \begin{macrocode}
+\def\cleardoublepage{\clearpage\if@twoside
+  \ifodd\c@page
+    \iftdir
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \else
+    \ifydir
+      \hbox{}\thispagestyle{empty}\newpage
+      \if@twocolumn\hbox{}\newpage\fi
+    \fi
+  \fi\fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{オブジェクトの出力順序}
+% オリジナルの\LaTeX{}は、トップフロート、本文、脚注、ボトムフロート
+% の順番で出力しますけれども、日本語組版では、トップフロート、本文、
+% ボトムフロート、脚注という順番の方が一般的ですので、
+% このような順番になるよう修正をします。
+%
+% したがって、文書ファイルによっては、\LaTeX{}の組版結果と異なる場合が
+% ありますので、注意をしてください。
+%
+% \begin{macro}{\@makecol}
+% このマクロが組み立てる部分の中心となります。
+%    \begin{macrocode}
+\def\@makecol{%
+   \setbox\@outputbox\box\@cclv%
+   \xdef\@freelist{\@freelist\@midlist}%
+   \global \let \@midlist \@empty
+   \@combinefloats
+   \ifvbox\@kludgeins
+     \@makespecialcolbox
+   \else
+     \setbox\@outputbox \vbox to\@colht {%
+       \boxmaxdepth \@maxdepth
+       \@texttop
+       \dimen@ \dp\@outputbox
+       \unvbox \@outputbox
+       \vskip -\dimen@
+       \@textbottom
+       \ifvoid\footins\else % for pLaTeX
+         \vskip \skip\footins
+         \color@begingroup
+            \normalcolor
+            \footnoterule
+            \unvbox \footins
+         \color@endgroup
+       \fi
+       }%
+   \fi
+   \global \maxdepth \@maxdepth
+}
+%</plcore>
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@makespecialcolbox}
+% 本文（あるいはボトムフロート）と脚注の間に|\@textbottom|を入れたいので、
+% |\@makespecialcolbox|コマンドも修正をします。
+%
+% このマクロは、|\enlargedthispage|が使われたときに、
+% |\@makecol|マクロから呼び出されます。
+%    \begin{macrocode}
+%<*plcore|fltrace>
+\def\@makespecialcolbox{%
+%<*trace>
+   \tr@ce{Krudgeins ht \the\ht\@kludgeins\space
+                    dp \the\dp\@kludgeins\space
+                    wd \the\wd\@kludgeins}%
+%</trace>
+   \setbox\@outputbox \vbox {%
+     \@texttop
+     \dimen@ \dp\@outputbox
+     \unvbox\@outputbox
+     \vskip-\dimen@
+     }%
+   \@tempdima \@colht
+   \ifdim \wd\@kludgeins>\z@
+     \advance \@tempdima -\ht\@outputbox
+     \advance \@tempdima \pageshrink
+%<*trace>
+   \tr@ce {Natural ht of col: \the\ht\@outputbox}%
+   \tr@ce {\string \@colht: \the\@colht}%
+   \tr@ce {Pageshirink added: \the\pageshrink}%
+   \tr@ce {Hence, space added: \the\@tempdima}%
+%</trace>
+     \setbox\@outputbox \vbox to \@colht {%
+       \unvbox\@outputbox
+       \vskip \@tempdima
+       \@textbottom
+       \ifvoid\footins\else % for pLaTeX
+         \color@begingroup
+            \normalcolor
+            \footnoterule
+            \unvbox \footins
+         \color@endgroup
+       \fi
+       }%
+   \else
+     \advance \@tempdima -\ht\@kludgeins
+%<*trace>
+   \tr@ce {Natural ht of col: \the\ht\@outputbox}%
+   \tr@ce {\string \@colht: \the\@colht}%
+   \tr@ce {Extra size added: \the\@kludgeins}%
+   \tr@ce {Hence, height of inner box: \the\@tempdima}%
+   \tr@ce {Max? pageshrink available: \the\pageshrink}%
+%</trace>
+     \setbox \@outputbox \vbox to \@colht {%
+       \vbox to \@tempdima {%
+         \unvbox\@outputbox
+         \@textbottom
+         \ifvoid\footins\else % for pLaTeX
+           \color@begingroup
+              \normalcolor
+              \footnoterule
+              \unvbox \footins
+           \color@endgroup
+       \fi
+       }\vss}%
+   \fi
+   {\setbox \@tempboxa \box \@kludgeins}%
+}
+%</plcore|fltrace>
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@reinserts}
+% このマクロは、|\@specialoutput|マクロから呼び出されます。
+% ボックス|footins|が組み立てられたモードに合わせて
+% 縦モードか横モードで|\unvbox|をします。
+%    \begin{macrocode}
+%<*plcore>
+\def\@reinserts{%
+  \ifvoid\footins\else\insert\footins{%
+    \iftbox\footins\tate\else\yoko\fi\unvbox\footins}\fi
+  \ifvbox\@kludgeins\insert\@kludgeins{\unvbox\@kludgeins}\fi
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{トンボ}
+% ここではトンボを出力するためのマクロを定義しています。
+%
+% \begin{macro}{\iftombow}
+% トンボを出力するには、|\documentclass|のオプションで|tombow|を指定します。
+%    \begin{macrocode}
+\newif\iftombow \tombowfalse
+%    \end{macrocode}
+% \end{macro}
+%
+% トンボ用の罫線を定義します。
+%
+% \begin{macro}{\@TL}
+% \begin{macro}{\@Tl}
+% \begin{macro}{\@TC}
+% \begin{macro}{\@TR}
+% \begin{macro}{\@Tr}
+% 天側：左、中、右
+%    \begin{macrocode}
+\newbox\@TL\newbox\@Tl
+\newbox\@TC
+\newbox\@TR\newbox\@Tr
+%
+\setbox\@TL\hbox to\z@{\yoko\hss
+      \vrule width13mm height.1\p@
+      \vrule height10mm width.1\p@}
+\setbox\@Tl\hbox to\z@{\yoko\hss
+      \vrule width10mm height.1\p@
+      \vrule height13mm width.1\p@}
+\setbox\@TC\hbox{\yoko
+      \vrule width10mm height.1\p@
+      \vrule height10mm width.1\p@
+      \vrule width10mm height.1\p@}
+\setbox\@TR\hbox to\z@{\yoko
+      \vrule height10mm width.1\p@
+      \vrule width13mm height.1\p@\hss}
+\setbox\@Tr\hbox to\z@{\yoko
+      \vrule height13mm width.1\p@
+      \vrule width10mm height.1\p@\hss}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@BL}
+% \begin{macro}{\@Bl}
+% \begin{macro}{\@BC}
+% \begin{macro}{\@BR}
+% \begin{macro}{\@Br}
+% 地側：左、中、右
+%    \begin{macrocode}
+\newbox\@BL\newbox\@Bl
+\newbox\@BC
+\newbox\@BR\newbox\@Br
+%
+\setbox\@BL\hbox to\z@{\yoko\hss
+      \vrule width13mm depth.1\p@
+      \vrule depth10mm width.1\p@}
+\setbox\@Bl\hbox to\z@{\yoko\hss
+      \vrule width10mm depth.1\p@
+      \vrule depth13mm width.1\p@}
+\setbox\@BC\hbox{\yoko
+      \vrule width10mm depth.1\p@
+      \vrule depth10mm width.1\p@
+      \vrule width10mm depth.1\p@}
+\setbox\@BR\hbox to\z@{\yoko
+      \vrule depth10mm width.1\p@
+      \vrule width13mm depth.1\p@\hss}
+\setbox\@Br\hbox to\z@{\yoko
+      \vrule depth13mm width.1\p@
+      \vrule width10mm depth.1\p@\hss}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@CL}
+% \begin{macro}{\@CR}
+% 天地中央：左と右
+%    \begin{macrocode}
+\newbox\@CL
+\setbox\@CL\hbox to\z@{\yoko\hss
+      \vrule width10mm height.05\p@ depth.05\p@
+      \vrule height10mm depth10mm width.1\p@}
+%
+\newbox\@CR
+\setbox\@CR\hbox to\z@{\yoko
+      \vrule height10mm depth10mm width.1\p@
+      \vrule height.05\p@ depth.05\p@ width10mm\hss}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@@paperheight}
+% \begin{macro}{\@@paperwidth}
+% \begin{macro}{\@@topmargin}
+% |\@@pageheight|は、用紙の縦の長さにトンボの長さを加えた長さになります。
+%
+% |\@@pagewidth|は、用紙の横の長さにトンボの長さを加えた長さになります。
+%
+% |\@@topmargin|は、現在のトップマージンに1インチ加えた長さになります。
+%    \begin{macrocode}
+\newdimen\@@paperheight
+\newdimen\@@paperwidth
+\newdimen\@@topmargin
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\@shipoutsetup}
+% |\@shipoutsetup|マクロは、|\shipout|から呼び出されます。
+% このマクロ内で、用紙サイズにトンボの大きさを加えた大きさを計算します。
+%    \begin{macrocode}
+\def\@shipoutsetup{%
+     \@resetactivechars
+     \let\-\@dischyph
+     \let\'\@acci\let\`\@accii\let\=\@acciii
+     \let\\\@normalcr
+     \if@specialpage
+       \global\@specialpagefalse\@nameuse{ps@\@specialstyle}%
+     \fi
+     \if@twoside
+       \ifodd\count\z@ \let\@thehead\@oddhead \let\@thefoot\@oddfoot
+          \iftdir\let\@themargin\oddsidemargin
+          \else\let\@themargin\evensidemargin\fi
+       \else \let\@thehead\@evenhead
+          \let\@thefoot\@evenfoot
+           \iftdir\let\@themargin\evensidemargin
+           \else\let\@themargin\oddsidemargin\fi
+     \fi\fi
+\iftombow
+     \@@paperwidth\paperwidth \advance\@@paperwidth 6mm\relax
+     \@@paperheight\paperheight \advance\@@paperheight 16mm\relax
+     \@@topmargin\topmargin \advance\@@topmargin 1in\relax
+     \advance\@themargin 1in\relax
+\fi
+     \reset@font
+     \normalsize
+     \baselineskip\z@skip \lineskip\z@skip \lineskiplimit\z@
+     \let\par\@@par          %% 15 Sep 87
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@outputpage}
+% |\textwidth|と|\textheight|の交換は、|\@shipoutsetup|内では行ないません。
+% なぜなら、|\@shipoutsetup|マクロが実行されるときは、
+% |\shipout|されるvboxの中であり、このときは横組モードですので、
+% つねに|\iftdir|は偽と判断され、縦と横のサイズを交換できないからです。
+%
+% なお、この変更をローカルなものにするために、
+% |\begingroup|と|\endgroup|で囲みます。
+%    \begin{macrocode}
+\def\@outputpage{%
+ \let \protect \noexpand
+ \begingroup% for pLaTeX
+ \iftdir
+   \dimen\z@\textwidth
+   \textwidth\textheight
+   \textheight\dimen\z@
+ \fi
+ \shipout\vbox{\yoko
+  \set@typeset@protect
+  \aftergroup\set@typeset@protect
+  \@shipoutsetup
+  \@begindvi
+%    \end{macrocode}
+% トンボの出力部分です。
+%    \begin{macrocode}
+\iftombow
+  \vbox to\z@{\kern-13mm\relax
+     \moveleft3mm\vbox to\@@paperheight{%
+       \hbox to\@@paperwidth{\hskip3mm\relax
+          \copy\@TL\hfill\copy\@TC\hfill\copy\@TR\hskip3mm}%
+       \kern-10mm
+       \hbox to\@@paperwidth{\copy\@Tl\hfill\copy\@Tr}%
+       \vfill
+       \hbox to\@@paperwidth{\copy\@CL\hfill\copy\@CR}%
+       \vfill
+       \hbox to\@@paperwidth{\copy\@Bl\hfill\copy\@Br}%
+       \kern-10mm
+       \hbox to\@@paperwidth{\hskip3mm\relax
+          \copy\@BL\hfill\copy\@BC\hfill\copy\@BR\hskip3mm}%
+  }\vss}%
+\fi
+%    \end{macrocode}
+% 以降は、最初の|\begingroup|を閉じるための|\endgroup|を追加しただけです。
+%    \begin{macrocode}
+     \vskip \@@topmargin
+     \moveright\@themargin \vbox {%
+      \setbox\@tempboxa \vbox to\headheight{%
+        \vfil
+        \color@hbox
+          \normalcolor
+          \hbox to\textwidth {%
+            \let \label \@gobble
+            \let \index \@gobble
+            \let \glossary \@gobble %% 21 Jun 91
+            \@thehead
+            }%
+        \color@endbox
+        }%                        %% 22 Feb 87
+      \dp\@tempboxa \z@
+      \box\@tempboxa
+      \vskip \headsep
+      \box\@outputbox
+      \baselineskip\footskip
+      \color@hbox
+        \normalcolor
+        \hbox to\textwidth{%
+          \let \label \@gobble
+          \let \index \@gobble      %% 22 Feb 87
+          \let \glossary \@gobble   %% 21 Jun 91
+          \@thefoot
+          }%
+      \color@endbox
+      }%
+    }%
+  \endgroup% for pLaTeX
+  \global \@colht \textheight
+  \stepcounter{page}%
+  \let\firstmark\botmark
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{フロートとキャプションの出力位置}
+% キャプションとフロートは、
+% 出力位置の指定や大きさの指定などができるように拡張しています。
+% 詳細は、\tlatexbook{}を参照してください。
+%
+% |\layoutfloat|コマンドで作られるボックスです。
+%    \begin{macrocode}
+\newbox\@floatbox
+%    \end{macrocode}
+% フロートオブジェクトの幅と高さです。
+%    \begin{macrocode}
+\newdimen\floatwidth
+\newdimen\floatheight
+%    \end{macrocode}
+% フロートオブジェクトのまわりに引かれる罫線の太さです。
+%    \begin{macrocode}
+\newdimen\floatruletick \floatruletick=0.4pt
+%    \end{macrocode}
+% フロートオブジェクトとキャプションの間のアキです。
+%    \begin{macrocode}
+\newdimen\captionfloatsep \captionfloatsep=10pt
+%    \end{macrocode}
+% |\caption@dir|には、キャプションを組む方向を示すオプションが格納されます。
+% |\captiondir|は|\caption@dir|の値と現在の組み方向によって、
+% |\yoko|, |\tate|, |\relax|のいずれかに設定されます。
+%    \begin{macrocode}
+\def\caption@dir{Z}
+\let\captiondir\relax
+%    \end{macrocode}
+% キャプションの幅と高さです。
+%    \begin{macrocode}
+\newdimen\captionwidth \captionwidth\z@
+%    \end{macrocode}
+% キャプションを付ける位置を指定します。
+%    \begin{macrocode}
+\def\caption@posa{Z}
+\def\caption@posb{Z}
+%    \end{macrocode}
+% 組み立てられたキャプションが格納されるボックスです。
+%    \begin{macrocode}
+\newbox\@captionbox
+%    \end{macrocode}
+% キャプションに使われる文字です。
+%    \begin{macrocode}
+\def\captionfontsetup{\small\normalfont}
+%    \end{macrocode}
+%
+% \begin{macro}{\layoutfloat}
+% \begin{macro}{\X@layoutfloat}
+% \begin{macro}{\@layoutfloat}
+% |\layoutfloat|は図表類の大きさと位置を指定するのに使います。
+% 大きさを省略するか、負の値を指定すると、
+% そのオブジェクトの自然な長さになります。このときは、罫が引かれません。
+% 正の大きさを指定すると、|\floatruletick|の太さの罫で囲まれます。
+%
+% 位置指定を省略した場合、中央揃えになるようにしています。
+%    \begin{macrocode}
+\def\layoutfloat{\@ifnextchar(%)
+   {\X@layoutfloat}{\X@layoutfloat(-5\p@,-5\p@)}}
+%
+\def\X@layoutfloat(#1,#2){\@ifnextchar[%]
+   {\@layoutfloat(#1,#2)}{\@layoutfloat(#1,#2)[c]}}
+%
+\long\def\@layoutfloat(#1,#2)[#3]#4{%
+  \setbox\z@\hbox{#4}%
+  \floatwidth=#1 \floatheight=#2 \edef\float@pos{#3}%
+  \ifdim\floatwidth<\z@
+     \floatwidth\wd\z@\floatruletick\z@
+  \fi
+  \ifdim\floatheight<\z@
+     \floatheight\ht\z@\advance\floatheight\dp\z@\relax
+     \floatruletick\z@
+  \fi
+  \setbox\@floatbox\vbox to\floatheight{\offinterlineskip
+    \hrule width\floatwidth height\floatruletick depth\z@
+    \vss\hbox to\floatwidth{%
+      \vrule width\floatruletick height\floatheight depth\z@
+      \hss\vbox to\floatheight{\hsize\floatwidth\vss#4\vss}\hss
+      \vrule width\floatruletick height\floatheight depth\z@
+    }\hrule width\floatwidth height\floatruletick depth\z@}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\DeclareLayoutCaption}
+% |\DeclareLayoutCaption|コマンドは、キャプションの組方向、付ける位置や幅の
+% デフォルトをフロートのタイプごとに設定することができます。
+% このコマンドでデフォルト値が設定されていないと、
+% |\pcaption|コマンドでエラーが発せられます。
+% このコマンドはプリアンブルでのみ、使用できます。
+%
+% \DescribeMacro\DeclareLayoutCaption
+% |\DeclareLayoutCaption|\meta{type}^^A
+%         |<|\meta{dir}|>(|\meta{width}|)[|\meta{pos1}\meta{pos2}|]|
+%
+% コマンド引数を省略することはできません。
+% \meta{dir}には、`|y|', `|t|', `|z|', `|n|'のいずれかを指定します。
+% `|n|'と指定をすると、本文の組み方向と同じ方向でキャプションが組まれます。
+% これがデフォルトです。
+%
+% \meta{width}には、キャプションを折り返す長さを指定します。
+% `|(12zw)|'と指定をすると、漢字12文字分の長さで折り返されます。
+% `|(\floatwidth)|'と指定をすると、
+% キャプションの幅はフロートオブジェクトの幅となります。
+% これがデフォルトです。なお、`|(\floatheigt)|'と指定をすると、
+% キャプションの幅はフロートオブジェクトの高さとなります。
+%
+% \meta{pos1}と\meta{pos2}には、キャプションを出力する位置を指定します。
+% \meta{pos1}は、`|c|', `|t|', `|b|'のいずれかです。
+% \meta{pos2}は、`|u|', `|d|', `|l|', `|r|'のいずれかです。
+% デフォルトは、|figure|タイプが`|cd|'、|table|タイプは`|cu|'です。
+%    \begin{macrocode}
+\def\DeclareLayoutCaption#1<#2>(#3)[#4#5]{%
+  \expandafter
+  \ifx\csname #1@layoutcaption\endcsname\relax \else
+    \@latex@info{Redeclaring capiton layout setting of '#1'}%
+  \fi
+  \expandafter
+  \def\csname #1@layoutcaption\endcsname{%
+     \if Z\caption@dir\def\caption@dir{#2}\fi
+     \ifdim\captionwidth=\z@ \captionwidth=#3\relax\fi
+     \if Z\caption@posa\def\caption@posa{#4}\fi
+     \if Z\caption@posb\def\caption@posb{#5}\fi}}
+\@onlypreamble\DeclareLayoutCaption
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\layoutcaption}
+% \begin{macro}{\X@layoutcaption}
+% \begin{macro}{\@ilayoutcaption}
+% \begin{macro}{\@iilayoutcaption}
+% |\DeclareLayoutCaption|コマンドで設定をした、デフォルト値とは異なる設定で
+% 組みたい場合は、|\layoutcaption|コマンドを使用します。
+% 
+% |\layoutcaption<|\meta{dir}|>(|\meta{width}|)[|\meta{pos}|]|
+%
+% なお、|\layoutcaption|に組み方向オプションを付けましたので、
+% |\captiondir|で組み方向を指定する必要はありません。
+% また、|\captiondir|で指定をしても、その値は無視されます。
+%    \begin{macrocode}
+\def\layoutcaption{\def\caption@dir{Z}\captionwidth\z@
+  \def\caption@posa{Z}\def\caption@posb{Z}%
+  \@ifnextchar<\X@layoutcaption{%
+    \@ifnextchar(\@ilayoutcaption{%
+      \@ifnextchar[\@iilayoutcaption\relax}}}
+%
+\def\X@layoutcaption<#1>{\def\caption@dir{#1}%
+  \@ifnextchar(\@ilayoutcaption{%
+    \@ifnextchar[\@iilayoutcaption\relax}}
+%
+\def\@ilayoutcaption(#1){\setlength\captionwidth{#1}%
+  \@ifnextchar[{\@iilayoutcaption}{\relax}}
+%
+\def\@iilayoutcaption[#1#2]{%
+  \def\caption@posa{#1}\def\caption@posb{#2}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\pcaption}
+% \begin{macro}{\@pcaption}
+% キャプションを図表類の天地左右の指定箇所に付けるには|\pcaption|コマンドで
+% 指定をします。位置の指定は|\layoutcaption|コマンドで行ないます。
+% |\layoutcaption|コマンドが省略された場合は、|\DeclareLayoutCaption|コマンド
+% で設定されているデフォルト値が使われます。
+%    \begin{macrocode}
+\def\pcaption{\refstepcounter\@captype \@dblarg{\@pcaption\@captype}}
+%
+\long\def\@pcaption#1[#2]#3{%
+  \addcontentsline{\csname ext@#1\endcsname}{#1}{%
+    \protect\numberline{\csname the#1\endcsname}{\ignorespaces#2}}%
+  \ifvoid\@floatbox
+     \latex@error{Use with `\protect\layoutfloat'.}\@eha
+  \fi
+  \make@pcaptionbox{#3}%
+  \@pboxswfalse
+  \setbox\@tempboxa\vbox{\hbox to\hsize{\if l\float@pos\else\hss\fi
+    \if l\caption@posb\box\@captionbox\kern\captionfloatsep\fi
+    \if t\caption@posa\vtop
+    \else\if b\caption@posa\vbox
+    \else\ifmmode\vcenter \else\@pboxswtrue $\vcenter \fi\fi\fi
+    {\if u\caption@posb\box\@captionbox\kern\captionfloatsep\fi
+     \unvbox\@floatbox
+     \if d\caption@posb\kern\captionfloatsep\box\@captionbox\fi}%
+    \if r\caption@posb\kern\captionfloatsep\box\@captionbox\fi
+    \if@pboxsw \m@th$\fi \if r\float@pos\else\hss\fi}}%
+  \par\vskip.25\baselineskip
+  \box\@tempboxa}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\make@pcaptionbox}
+% キャプションを組み立て、|\@captionbox|を作成します。
+%    \begin{macrocode}
+\def\make@pcaptionbox#1{%
+%    \end{macrocode}
+% まず、デフォルトの設定がされているかを確認します。
+% 設定されていない場合は、警告メッセージを出力し、
+% 現在の組モードでのデフォルト値を使用します。
+% 設定されていれば、そのデフォルト値にします。
+%    \begin{macrocode}
+  \expandafter
+  \ifx\csname\@captype @layoutcaption\endcsname\relax
+     \latex@warning{Default caption layout of `\@captype' unknown.}%
+       \def\caption@dir{Z}\captionwidth\z@
+       \def\caption@posa{Z}\def\caption@posb{Z}%
+  \else
+     \csname \@captype @layoutcaption\endcsname
+  \fi
+%    \end{macrocode}
+% 次に、組み方向を設定します。 
+% 基本組の組み方向とキャプションの組み方向を変える場合には、
+% |\@tempswa|を真とします。文字を回転させるときは|\@rotsw|を真にします。
+%    \begin{macrocode}
+  \@rotswfalse \@tempswafalse
+  \iftdir\if y\caption@dir \let\captiondir\yoko \@tempswatrue
+    \else\if z\caption@dir \let\captiondir\relax \@rotswtrue
+    \else\let\captiondir\tate\fi\fi
+  \else\if t\caption@dir\let\captiondir\tate \@tempswatrue
+    \else\let\captiondir\yoko\fi
+  \fi
+%    \end{macrocode}
+% キャプションを組み立てる前に、まず、キャプション文字列がどの程度の長さを
+% 持っているのかを確認するために、|\hbox|に入れます。
+%    \begin{macrocode}
+  \setbox0\hbox{\if@rotsw $\fi\hbox{\captiondir
+     \captionfontsetup\parindent\z@\inhibitglue
+     \csname fnum@\@captype\endcsname\char\euc"A1A1\relax#1}%
+  \if@rotsw \m@th$\fi}%
+%    \end{macrocode}
+% キャプションの幅に合わせるため、再び、ボックスを組み立てます。
+%
+% キャプションを折り返さなくてもよい場合、|\@tempdima|をキャプションの長さに
+% します。ただし、キャプションの組み方向が基本組の組み方向と異なる場合
+% （|\@tempswa|が真）は、ボックス０の幅ではなく、高さに設定をします。
+% |\captionwidth|の値が、キャプションの幅よりも長い場合、
+% 折り返さなくてはなりませんので、|\@tempdima|を|\captionwidth|にします。
+%    \begin{macrocode}
+  \if@tempswa \@tempdima\ht0 \else\@tempdima\wd0 \fi
+  \ifdim\@tempdima>\captionwidth \@tempdima\captionwidth \fi
+  \@pboxswfalse
+  \setbox0\hbox{\if@rotsw\ifmmode\@rotswfalse \else $\fi\fi
+    \if u\caption@posb\vbox
+    \else\if d\caption@posb\vbox
+    \else\if t\caption@posa\vtop
+    \else\if b\caption@posa\vbox
+    \else\ifmmode\vcenter\else\@pboxswtrue $\vcenter\fi
+    \fi\fi\fi\fi
+    {\hsize\@tempdima\kern\z@
+    \vbox{\captiondir\hsize\@tempdima
+      \captionfontsetup\parindent\z@\inhibitglue
+      \csname fnum@\@captype\endcsname\char\euc"A1A1\relax#1}\kern\z@
+    }\if@pboxsw \m@th$\fi \if@rotsw \m@th$\fi}%
+%    \end{macrocode}
+% 最後に|\@captionbox|を組み立てます。
+%
+% 位置２オプションが`|u|'か`|d|'の場合、
+% このボックスの幅をフロートオブジェクトの幅と同じ長さにし、
+% 位置１オプションでの揃えに組み立てます。
+%
+% 位置２オプションが`|l|'か`|r|'の場合は、キャプションの幅です。
+% このときの位置１オプションの揃えは、この前の段階で準備をしておき、
+% |\@pcaption|で最終的にフロートオブジェクトと組み合わせるときになされます。
+%    \begin{macrocode}
+  \let\to@captionboxwidth\relax
+  \if l\caption@posb \else\if r\caption@posb\else
+  \def\to@captionboxwidth{to\floatwidth}\fi\fi
+  \setbox\@captionbox\hbox\to@captionboxwidth{%
+     \if t\caption@posa\else\hss\fi
+     \unhbox0\relax
+     \if b\caption@posa\else\hss\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{脚注マクロ}
+% 脚注を組み立てる部分のマクロを再定義します。
+% 主な修正点は、縦組モードでの動作の追加です。
+%
+% これらのマクロは、\file{ltfloat.dtx}で定義されていたものです。
+%
+% \begin{macro}{\thempfn}
+% 本文で使われる脚注記号です。
+%
+% \changes{v1.0a}{1995/04/12}{Removed \texttt{\protect\bslash thempfn}}
+%    \begin{macrocode}
+%\def\thempfn{%
+%  \ifydir\thefootnote\else\hbox{\yoko\thefootnote}\fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\thempfootnote}
+% minipage環境で使われる脚注記号です。
+%
+% \changes{v1.0a}{1995/04/12}{Removed \texttt{\protect\bslash thempfootnote}}
+%    \begin{macrocode}
+%\def\thempfootnote{%
+%  \ifydir\alph{mpfootnote}\else\hbox{\yoko\alph{mpfootnote}}\fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@makefnmark}
+% 脚注記号を作成するマクロです。
+%
+% \changes{v1.0a}{1995/04/12}{縦組でも上付き数字を使うように修正}
+%    \begin{macrocode}
+\def\@makefnmark{\hbox{\ifydir $\m@th^{\@thefnmark}$
+  \else\hbox{\yoko$\m@th^{\@thefnmark}$}\fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@footnotetext}
+% インサートボックス|\footins|に脚注のテキストを入れます。
+%
+% \changes{v1.0a}{1995/04/07}{組方向の判定をボックスの外でするようにした}
+%    \begin{macrocode}
+\long\def\@footnotetext#1{%
+  \ifydir\def\@tempa{\yoko}\else\def\@tempa{\tate}\fi
+  \insert\footins{\@tempa%
+    \reset@font\footnotesize
+    \interlinepenalty\interfootnotelinepenalty
+    \splittopskip\footnotesep
+    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+    \hsize\columnwidth \@parboxrestore
+    \protected@edef\@currentlabel{%
+       \csname p@footnote\endcsname\@thefnmark
+    }%
+    \color@begingroup
+      \@makefntext{%
+        \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}
+    \color@endgroup}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@footnotemark}
+% 脚注記号を出力します。
+%
+% \changes{v1.0a}{1995/04/12}{脚注記号の出力位置の調整}
+%    \begin{macrocode}
+\def\@footnotemark{\leavevmode
+  \ifhmode\edef\@x@sf{\the\spacefactor}\fi
+  \ifydir\@makefnmark
+  \else\hbox to\z@{\hskip-.25zw\raise2\cht\@makefnmark\hss}\fi
+  \ifhmode\spacefactor\@x@sf\fi\relax}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+%    \begin{macrocode}
+%</plcore>
+%    \end{macrocode}
+%
+% \Finale
+\endinput
