@@ -1,7 +1,7 @@
 % \iffalse
 %%File: nidanfloat.dtx
 %
-% Copyright 1994,1997 Ken Nakano (ken-na@ascii.co.jp)
+% Copyright 1994,1997,2000,2001 ASCII Co.
 %
 % \fi
 % \CheckSum{1633}
@@ -29,6 +29,10 @@
 % \iffalse
 % \changes{v1.10}{1994/04/07}{platex2.09用}
 % \changes{v2.2}{1997/10/22}{platex2e用に修正}
+% \changes{v2.3}{2000/12/20}{一段抜きのフロートを混ぜるとエラーに
+%    なるのを修正（ありがとう、倉沢＠QUIPUさん）}
+% \changes{v2.4}{2001/02/19}{最終ページで左右の行間が揃わない部分を修正}
+% \changes{v2.4}{2001/02/19}{柱が出ないのを修正}
 % \fi
 %
 % \iffalse
@@ -37,7 +41,7 @@
 \ProvidesFile{nidanfloat.dtx}
 %</driver>
 %<core>\ProvidesPackage{nidanfloat}%
-  [1997/10/22 v2.2 'Put double-floats at top/bottom within twocolumn mode']
+  [2001/02/19 v2.4 'Put double-floats at top/bottom within twocolumn mode']
 %
 %<*driver>
 \documentclass{jltxdoc}
@@ -251,6 +255,8 @@
 %
 % \begin{macro}{\@addtotoporbot}
 % フロートを保持しているリスト変数の修正。
+% \changes{v2.3}{2000/12/20}{%
+%    タイプミスの修正と\cs{@flcheckspace}の呼び出しを変更}
 %    \begin{macrocode}
 \def\@addtotoporbot{%
   \@getfpsbit \tw@
@@ -258,9 +264,9 @@
     \@flsetnum\@topnum
     \ifnum\@topnum>\z@
       \@tempswafalse
-      \@flcheckspace\@toproom{\@toplist\L@toplist\R@toplis}
+      \@flcheckspace\@toproom\@toplist\L@toplist\R@toplist
       \if@tempswa
-        \@bitor\@currtype{\@midlist\L@botlist\R@botlist}
+        \@bitor\@currtype{\@midlist\L@botlist\R@botlist}%
         \if@test\else
           \if@firstcolumn
             \@flupdates \@topnum \@toproom \L@toplist
@@ -279,6 +285,7 @@
 %
 % \begin{macro}{\@addtobot}
 % フロートを保持しているリスト変数の修正。
+% \changes{v2.3}{2000/12/20}{\cs{@flcheckspace}の呼び出しを変更}
 %    \begin{macrocode}
 \def\@addtobot{%
   \@getfpsbit 4\relax
@@ -286,7 +293,7 @@
     \@flsetnum\@botnum
     \ifnum\@botnum>\z@
       \@tempswafalse
-      \@flcheckspace\@botroom{\@botlist\L@botlist\R@botlist}
+      \@flcheckspace\@botroom\@botlist\L@botlist\R@botlist
       \if@tempswa
         \global\maxdepth\z@
         \if@firstcolumn
@@ -326,7 +333,7 @@
 % |\@dbldeferlist|に登録する。
 %
 % まず|@insert|フラグを偽にする。そして、フロートタイプを|\@fpstype|に得る。
-% フロートタイプが8または24の場合、位置オプションは`!p'か`!p'だけであるので、
+% フロートタイプが8または24の場合、位置オプションは`!p'か`p'だけであるので、
 % 無条件に|\@dbldeferlist|に加える。
 %    \begin{macrocode}
 \def\@addtodblcol{%
@@ -473,6 +480,33 @@
 %    \begin{macrocode}
 \global\newdimen\@floatht \@floatht\z@
 %    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@flcheckspace}
+% \changes{v2.3}{2000/12/20}{状況別に場合わけするようにした}
+%     \begin{macrocode}
+\def \@flcheckspace #1#2#3#4{%
+   \advance \@reqcolroom
+  \if@twocolumn
+    \if@firstcolumn
+      \ifx #3\@empty \textfloatsep \else \floatsep \fi
+    \else
+      \ifx #4\@empty \textfloatsep \else \floatsep \fi
+    \fi
+  \else
+     \ifx #2\@empty \textfloatsep \else \floatsep \fi
+  \fi
+   \ifdim \@colroom>\@reqcolroom
+     \ifdim #1>\ht\@currbox
+       \@tempswatrue
+     \else
+       \ifnum \@fpstype<\sixt@@n
+         \@tempswatrue
+       \fi
+     \fi
+   \fi
+}
+%     \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\@dblflcheckspace}
@@ -670,14 +704,6 @@
         \advance\@fixht-\@tempdima
         \advance\@fixht\maxdepth
 %    \end{macrocode}
-% 分割した部分を右側カラムと接続するために、行送りを計算する。
-%    \begin{macrocode}
-        \setbox\z@=\hbox{漢}%
-        \@tempdima\baselineskip
-        \advance\@tempdima-\topskip
-        \advance\@tempdima-\dp\z@
-        %\advance\@tempdima-\ht\z@
-%    \end{macrocode}
 % |\@fixht|分のテキストをボックス０に格納する。
 %    \begin{macrocode}
         \vbadness=\@M \splittopskip=\topskip \splitmaxdepth=\maxdepth
@@ -686,8 +712,11 @@
 % 移動する部分は|\@leftcolumn|に残っているので、
 % それを右カラム（|\@outputbox|）に入れる。
 % また、ボックス０の内容を左カラムに戻す。
+% \changes{v2.4}{2001/02/19}{行間が揃わない部分を修正}
+% \changes{v2.4}{2001/02/19}{柱が出ないのを修正}
 %    \begin{macrocode}
         \advance\@fixht-\maxdepth
+        \@tempdima\baselineskip \advance\@tempdima-\topskip
         \setbox\@outputbox=\vbox to\@fixht{%
             \ifvoid\@leftcolumn
             \else
@@ -695,7 +724,6 @@
             \fi\relax
             \unvbox\@outputbox\vss}%
         \setbox\@leftcolumn=\vbox to\@fixht{\unvbox\z@\vss}%
-        \let\botmark\splitbotmark
       \fi
 %    \end{macrocode}
 % 左右、それぞれテキストとカラム幅フロートを組み立てる。
@@ -723,6 +751,7 @@
 % \begin{macro}{\R@cflt}
 % \begin{macro}{\R@cflb}
 % 左カラムと右カラムを組み立てるのに用いる。
+% \changes{v2.3}{2000/12/20}{\cs{gdef}を\cs{global}\cs{let}に変更}
 %    \begin{macrocode}
 \def\L@cflt{%
   \let\@elt\@comflelt\setbox\@tempboxa\vbox{}\L@toplist
@@ -731,7 +760,7 @@
       \vskip-\floatsep\topfigrule\vskip\textfloatsep\unvbox\@leftcolumn
       \vss}%
   \let\@elt\relax
-  \xdef\@freelist{\@freelist\L@toplist}\gdef\L@toplist\@empty
+  \xdef\@freelist{\@freelist\L@toplist}\global\let\L@toplist\@empty
 }
 \def\L@cflb{%
   \let\@elt\@comflelt\setbox\@tempboxa\vbox{}\L@botlist
@@ -740,7 +769,7 @@
       \vskip\textfloatsep\botfigrule\unvbox\@tempboxa\vskip-\floatsep
       \vss}%
   \let\@elt\relax
-  \xdef\@freelist{\@freelist\L@botlist}\gdef\L@botlist\@empty
+  \xdef\@freelist{\@freelist\L@botlist}\global\let\L@botlist\@empty
 }
 \def\R@cflt{%
   \let\@elt\@comflelt\setbox\@tempboxa\vbox{}\R@toplist
@@ -749,7 +778,7 @@
       \vskip-\floatsep\topfigrule\vskip\textfloatsep\unvbox\@outputbox
       \vss}%
   \let\@elt\relax
-  \xdef\@freelist{\@freelist\R@toplist}\gdef\R@toplist\@empty
+  \xdef\@freelist{\@freelist\R@toplist}\global\let\R@toplist\@empty
 }
 \def\R@cflb{%
   \let\@elt\@comflelt\setbox\@tempboxa\vbox{}\R@botlist
@@ -758,7 +787,7 @@
       \vskip\textfloatsep\botfigrule\unvbox\@tempboxa\vskip-\floatsep
       \vss}%
   \let\@elt\relax
-  \xdef\@freelist{\@freelist\R@botlist}\gdef\R@botlist\@empty
+  \xdef\@freelist{\@freelist\R@botlist}\global\let\R@botlist\@empty
 }
 %    \end{macrocode}
 % \end{macro}
@@ -821,6 +850,8 @@
 %    \end{macrocode}
 % 左カラムを組み立てただけの時点では、それを|\@leftcolumn|に格納するだけで
 % 出力はしない。
+% \changes{v2.4}{2001/02/19}{最終ページで左右の行間が揃わない部分を修正}
+% \changes{v2.4}{2001/02/19}{柱が出ないのを修正}
 %    \begin{macrocode}
 \def\@outputdblcol{%
   \if@firstcolumn
@@ -828,14 +859,11 @@
     \global\setbox\@leftcolumn\box\@outputbox
     \@colht\textheight
     \@chkdblfloatht\global\advance\@colht-\@floatht
-    \mark{\firstmark}
   \else
     \global\@firstcolumntrue
     \if@balance % 左右カラムを均等に分割
-      \setbox\z@=\hbox{漢}%
       \@tempdima\baselineskip
-      \advance\@tempdima-\dp\z@
-      \advance\@tempdima-\ht\z@
+      \advance\@tempdima-\topskip
       % 連結
       \setbox\@combinebox=\vbox{%
           \unvbox\@leftcolumn\vskip\@tempdima\unvbox\@outputbox}%
@@ -847,7 +875,6 @@
       \setbox\@leftcolumn=\vsplit\@combinebox to\@tempdima
       \setbox\@outputbox=\vtop{\unvbox\@combinebox}
       \setbox\@leftcolumn=\vtop{\unvbox\@leftcolumn}
-      \let\botmark\splitbotmark
     \fi
     % 整形
     \@tempdima\ht\@leftcolumn
