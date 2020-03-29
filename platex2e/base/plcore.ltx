@@ -41,7 +41,7 @@
 %%   Right brace   \}     Tilde         \~}
 %%
 \def\pfmtname{pLaTeX2e}
-\def\pfmtversion{2006/01/04}
+\def\pfmtversion{2006/11/10}
 %% File: plfonts.dtx
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -308,23 +308,45 @@
    \endgroup
   }
 \def\reDeclareMathAlphabet#1#2#3{%
-  \DeclareRobustCommand{#1}[1]{%
-    \ifmmode
-      \ifx\math@bgroup\@empty % 2.09 compatibility
-        #2\relax#3\relax##1\relax
-      \else % native mode
-        \ifx\math@bgroup\relax % oldstyle
-          #2\relax\@fontswitch\relax{#3}##1\relax
-        \else
-          #2{#3{##1}}%
-        \fi
-      \fi
-    \else
-      #2{##1}%
-    \fi
+  \edef#1{\noexpand\protect\expandafter\noexpand\csname%
+    \expandafter\@gobble\string#1\space\space\endcsname}%
+  \edef\@tempa{\expandafter\@gobble\string#2}%
+  \edef\@tempb{\expandafter\@gobble\string#3}%
+  \edef\@tempc{\string @\expandafter\@gobbletwo\string#2}%
+  \ifx\@tempc\@tempa%
+    \edef\@tempa{\expandafter\@gobbletwo\string#2}%
+    \edef\@tempb{\expandafter\@gobbletwo\string#3}%
+  \fi
+  \expandafter\edef\csname\expandafter\@gobble\string#1\space\space\endcsname%
+    {\noexpand\DualLang@mathalph@bet%
+      {\expandafter\noexpand\csname\@tempa\space\endcsname}%
+      {\expandafter\noexpand\csname\@tempb\space\endcsname}%
   }%
 }
 \@onlypreamble\reDeclareMathAlphabet
+\def\DualLang@mathalph@bet#1#2{%
+  \relax\ifmmode
+    \ifx\math@bgroup\bgroup%     2e normal style     (\mathrm{...})
+      \bgroup\let\DualLang@Mfontsw\DLMfontsw@standard
+    \else
+      \ifx\math@bgroup\relax%    2e two letter style (\rm->\mathrm)
+        \let\DualLang@Mfontsw\DLMfontsw@oldstyle
+      \else
+        \ifx\math@bgroup\@empty% 2.09 oldlfont style ({\mathrm ...})
+          \let\DualLang@Mfontsw\DLMfontsw@oldlfont
+        \else%                   panic! assume 2e normal style
+          \bgroup\let\DualLang@Mfontsw\DLMfontsw@standard
+        \fi
+      \fi
+    \fi
+  \else
+    \let\DualLang@Mfontsw\@firstoftwo
+  \fi
+  \DualLang@Mfontsw{#1}{#2}%
+}
+\def\DLMfontsw@standard#1#2#3{#1{#2{#3}}\egroup}
+\def\DLMfontsw@oldstyle#1#2{#1\relax\@fontswitch\relax{#2}}
+\def\DLMfontsw@oldlfont#1#2{#1\relax#2\relax}
 \def\all@shape{all}%
 \def\DeclareRelationFont#1#2#3#4#5#6#7#8{%
   \def\rel@shape{#4}%
@@ -603,7 +625,7 @@
     \romanseries{\seriesdefault}%
     \romanshape{\shapedefault}%
     \selectfont\ignorespaces}
-\adjustbaseline
+	\adjustbaseline
 \let\reset@font\normalfont
 \DeclareRobustCommand\mcfamily
         {\not@math@alphabet\mcfamily\mathmc
@@ -740,7 +762,7 @@
        \vskip \@tempdima
        \@textbottom
        \ifvoid\footins\else % for pLaTeX
- \vskip\skip\footins
+		 \vskip\skip\footins
          \color@begingroup
             \normalcolor
             \footnoterule
@@ -755,7 +777,7 @@
          \unvbox\@outputbox
          \@textbottom
          \ifvoid\footins\else % for pLaTeX
-   \vskip\skip\footins
+		   \vskip\skip\footins
            \color@begingroup
               \normalcolor
               \footnoterule

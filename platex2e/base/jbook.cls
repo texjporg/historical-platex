@@ -39,7 +39,7 @@
 %%
 \NeedsTeXFormat{pLaTeX2e}
 \ProvidesClass{jbook}
-  [2002/04/09 v1.4
+  [2006/06/27 v1.6
  Standard pLaTeX class]
 \newcounter{@paper}
 \newif\if@landscape \@landscapefalse
@@ -54,6 +54,7 @@
 \minute\time \advance\minute-\@tempcnta
 \newif\if@stysize \@stysizefalse
 \newif\if@enablejfam \@enablejfamtrue
+\newif\if@mathrmmc \@mathrmmcfalse
 \DeclareOption{a4paper}{\setcounter{@paper}{1}%
   \setlength\paperheight {297mm}%
   \setlength\paperwidth  {210mm}}
@@ -144,8 +145,10 @@
       }%
    \renewcommand\newblock{\par}}}
 \if@compatibility
+  \@mathrmmctrue
 \else
   \DeclareOption{disablejfam}{\@enablejfamfalse}
+  \DeclareOption{mathrmmc}{\@mathrmmctrue}
 \fi
 \DeclareOption{draft}{\setlength\overfullrule{5pt}}
 \DeclareOption{final}{\setlength\overfullrule{0pt}}
@@ -671,13 +674,19 @@
 \renewcommand{\theequation}{%
   \ifnum\c@chapter>\z@\thechapter.\fi \@arabic\c@equation}
 \if@enablejfam
-  \DeclareSymbolFont{mincho}{JY1}{mc}{m}{n}
-  \DeclareSymbolFontAlphabet{\mathmc}{mincho}
-  \SetSymbolFont{mincho}{bold}{JY1}{gt}{m}{n}
-  \DeclareMathAlphabet{\mathgt}{JY1}{gt}{m}{n}
-  \reDeclareMathAlphabet{\mathrm}{\@mathrm}{\@mathmc}
-  \reDeclareMathAlphabet{\mathbf}{\@mathbf}{\@mathgt}
-  \jfam\symmincho
+  \if@compatibility\else
+    \DeclareSymbolFont{mincho}{JY1}{mc}{m}{n}
+    \DeclareSymbolFontAlphabet{\mathmc}{mincho}
+    \SetSymbolFont{mincho}{bold}{JY1}{gt}{m}{n}
+    \jfam\symmincho
+    \DeclareMathAlphabet{\mathgt}{JY1}{gt}{m}{n}
+  \fi
+  \if@mathrmmc
+    \AtBeginDocument{%
+    \reDeclareMathAlphabet{\mathrm}{\mathrm}{\mathmc}
+    \reDeclareMathAlphabet{\mathbf}{\mathbf}{\mathgt}
+  }%
+  \fi
 \else
   \DeclareRobustCommand{\mathmc}{%
     \@latex@error{Command \noexpand\mathmc invalid with\space

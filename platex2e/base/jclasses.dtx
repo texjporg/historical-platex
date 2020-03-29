@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{4401}
+% \CheckSum{4413}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -72,6 +72,7 @@
 %   \cs{@afterindenttrue}に変更。
 %   \cs{section},\cs{subsection},\cs{subsubsection}の前後空きの伸縮幅を修正。
 %   (ありがとうございます、鈴木た＠MILNさん)}
+% \changes{v1.6}{2006/06/27}{フォントコマンドを修正。ありがとう、ymtさん。}
 % \fi
 %
 % \iffalse
@@ -101,7 +102,7 @@
 %<11pt&bk>\ProvidesFile{tbk11.clo}
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
-  [2002/04/09 v1.4
+  [2006/06/27 v1.6
 %<article|report|book> Standard pLaTeX class]
 %<10pt|11pt|12pt>  Standard pLaTeX file (size option)]
 %<*driver>
@@ -231,6 +232,12 @@
 % 日本語ファミリを宣言するために用いるフラグです。
 %    \begin{macrocode}
 \newif\if@enablejfam \@enablejfamtrue
+%    \end{macrocode}
+% 和欧文両対応の数式文字コマンドを有効にするときに用いるフラグです。
+% マクロの展開順序が複雑になるのを避けるため、
+% デフォルトではfalseとしてあります。
+%    \begin{macrocode}
+\newif\if@mathrmmc \@mathrmmcfalse
 %    \end{macrocode}
 % \end{macro}
 %
@@ -418,22 +425,28 @@
    \renewcommand\newblock{\par}}}
 %    \end{macrocode}
 %
-% \subsection{日本語ファミリ宣言の抑制}
+% \subsection{日本語ファミリ宣言の抑制、和欧文両対応の数式文字}
 % p\LaTeXe{}は、このあと、数式モードで直接、日本語を記述できるように
 % 数式ファミリを宣言します。しかし、\TeX{}で扱える数式ファミリの数が
-% 16個なので、その他のパッケージと組み合わせた場合、数式ファミリを宣言する
-% 領域を超えてしまう場合があるかもしれません。そのときには、残念ですが、
-% そのパッケージか、数式内に直接、日本語を記述するのか、どちらかを断念
-% しなければなりません。このクラスオプションは、数式内に日本語を記述する
-% のをあきらめる場合に用います。
+% 16個なので、その他のパッケージと組み合わせた場合、
+% 数式ファミリを宣言する領域を超えてしまう場合があるかもしれません。
+% そのときには、残念ですが、そのパッケージか、数式内に直接、
+% 日本語を記述するのか、どちらかを断念しなければなりません。
+% このクラスオプションは、
+% 数式内に日本語を記述するのをあきらめる場合に用います。
 %
 % |disablejfam|オプションを指定しても|\textmc|や|\textgt|などを用いて、
 % 数式内に日本語を記述することは可能です。
+%
+% |mathrmmc|オプションは、
+% |\mathrm|と|\mathbf|を和欧文両対応にするためのクラスオプションです。
 % \changes{v1.1d}{1992/02/04}{disablejfamの判断を間違えてたのを修正}
 %    \begin{macrocode}
 \if@compatibility
+  \@mathrmmctrue
 \else
   \DeclareOption{disablejfam}{\@enablejfamfalse}
+  \DeclareOption{mathrmmc}{\@mathrmmctrue}
 \fi
 %    \end{macrocode}
 %
@@ -3372,17 +3385,43 @@
 %
 %
 % \section{フォントコマンド}
-% 数式内に日本語を直接、記述するために数式記号用文字に``JY1/mc/m/n''を
-% 登録します。数式バージョンがboldの場合は、``JY1/gt/m/n''を用います。
+% |disablejfam|オプションが指定されていない場合には、以下の設定がなさ
+% れます。
+% まず、数式内に日本語を直接、記述するために数式記号用文字に
+% ``JY1/mc/m/n''を登録します。数式バージョンがboldの場合は、
+% ``JY1/gt/m/n''を用います。
+% これらは、|\mathmc|, |\mathgt|として登録されます。
+% また、日本語数式ファミリとして|\symmincho|がこの段階で設定されます。
+% |mathrmmc|オプションが指定されていた場合には、これに引き続き
+% |\mathrm|と|\mathbf|を和欧文両対応にするための作業がなされます。この際、
+% 他のマクロとの衝突を避けるため|\AtBeginDocument|
+% を用いて展開順序を遅らせる必要があります。
+%
+% |disablejfam|オプションが指定されていた場合には、
+% |\mathmc|と|\mathgt|に対してエラーを出すだけのダミーの定義を
+% 与える設定のみが行われます。
+%
+%   \textbf{変更}
+%
+% \changes{v1.6}{2006/06/27}{フォントコマンドを修正。ありがとう、ymtさん。}
+%    p\LaTeX{} 2.09
+%    compatibility mode では和文数式フォントfam が2重定義されていた
+%    ので、その部分を変更しました。
 %    \begin{macrocode}
 \if@enablejfam
-  \DeclareSymbolFont{mincho}{JY1}{mc}{m}{n}
-  \DeclareSymbolFontAlphabet{\mathmc}{mincho}
-  \SetSymbolFont{mincho}{bold}{JY1}{gt}{m}{n}
-  \DeclareMathAlphabet{\mathgt}{JY1}{gt}{m}{n}
-  \reDeclareMathAlphabet{\mathrm}{\@mathrm}{\@mathmc}
-  \reDeclareMathAlphabet{\mathbf}{\@mathbf}{\@mathgt}
-  \jfam\symmincho
+  \if@compatibility\else
+    \DeclareSymbolFont{mincho}{JY1}{mc}{m}{n}
+    \DeclareSymbolFontAlphabet{\mathmc}{mincho}
+    \SetSymbolFont{mincho}{bold}{JY1}{gt}{m}{n}
+    \jfam\symmincho
+    \DeclareMathAlphabet{\mathgt}{JY1}{gt}{m}{n}
+  \fi
+  \if@mathrmmc
+    \AtBeginDocument{%
+    \reDeclareMathAlphabet{\mathrm}{\mathrm}{\mathmc}
+    \reDeclareMathAlphabet{\mathbf}{\mathbf}{\mathgt}
+  }%
+  \fi
 \else
   \DeclareRobustCommand{\mathmc}{%
     \@latex@error{Command \noexpand\mathmc invalid with\space

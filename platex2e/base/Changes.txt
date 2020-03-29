@@ -1,3 +1,16 @@
+<2006/11/10>
+  * plfonts.dtx: $a^\mathrm{b}, a_\mathrm{b}$のような記述をした場合に
+      エラーになる問題に対処。（ありがとうございます、ymtさん）
+  * jclasses.dtx: 解説を追加。（ありがとうございます、ymtさん）
+----------------
+<2006/06/27>
+  * plfonts.dtx: \reDeclareMathAlphabetをLaTeX <2005/12/01>で数式用書
+      体変更命令がrubustになったのに対応。（ありがとうございます、ymtさん）
+  * jclasses.dtx: pLaTeX 209互換モードで数式famが重複使用されていたの
+      を解消。（ありがとうございます、ymtさん）
+  * tascmac.sty: itembox,screen環境で罫線がずれるバグを修正。
+      （ありがとうございます、北見さん）
+----------------
 <2006/01/04>
   * nidanfloat.dtx: 必須フォーマットファイルをpLaTeX2eからLaTeX2eへ変更。
   * plfonts.dtx: \DeclareFontEncoding@ 中で \LastDeclaredEncodeng の再定義が

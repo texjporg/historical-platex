@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{1584}
+% \CheckSum{1685}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -57,13 +57,17 @@
 % \changes{v1.3o}{2005/01/04}{\cs{fontfamily}中のフラグ修正}
 % \changes{v1.3p}{2006/01/04}{\cs{DeclareFontEncoding@}中で
 %    \cs{LastDeclaredEncodeng}の再定義が抜けていたので追加}
+% \changes{v1.4}{2006/06/27}{\cs{reDeclareMathAlphabet}を修正。
+%    ありがとう、ymtさん。}
+% \changes{v1.5}{2006/11/10}{\cs{reDeclareMathAlphabet}を修正。
+%    ありがとう、ymtさん。}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plfonts.dtx}[2004/08/10 v1.3n pLaTeX New Font Selection Scheme]
+\ProvidesFile{plfonts.dtx}[2006/11/10 v1.5 pLaTeX New Font Selection Scheme]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plfonts.dtx}
@@ -754,6 +758,10 @@
 % \begin{macro}{\reDeclareMathAlphabet}
 % \changes{v1.0}{1997/01/30}{\cs{reDeclareMathAlphabet}を追加。
 %    ありがとう、ymtさん。}
+% \changes{v1.4}{2006/06/27}{\cs{reDeclareMathAlphabet}を修正。
+%    ありがとう、ymtさん。}
+% \changes{v1.5}{2006/11/10}{\cs{reDeclareMathAlphabet}を修正。
+%    ありがとう、ymtさん。}
 % 数式モード内で、数式文字用の和欧文フォントを同時に切り替えるコマンドです。
 %
 % p\LaTeXe{}には、本来の動作モードと2.09互換モードの二つがあり、
@@ -764,30 +772,113 @@
 % グルーピングの範囲で反映されます。二文字コマンドは、ネイティブモード
 % でも使えるようになっていて、動作も2.09互換モードのコマンドと同じです。
 %
-% しかし、内部的には|\@math??|という一つのコマンドがすべての動作を受け持ち、
+% しかし、内部的には|\math??|という一つのコマンドがすべての動作を受け持ち、
 % |\math??|コマンドや|\??|コマンドから呼び出された状態に応じて、動作を変え
 % ています。したがって、欧文フォントと和文フォントの両方を一度に変更する、
 % 数式文字変更コマンドを作るとき、それぞれの状態に合った動作で動くように
 % フォント切り替えコマンドを実行させる必要があります。
+%
+%   \textbf{使い方}
+% \begin{verbatim}
+% usage: \reDeclareMathAlphabet{\mathAA}{\mathBB}{\mathCC}
+% \end{verbatim}
+%   欧文・和文両用の数式文字変更コマンド |\mathAA| を(再)定義します。
+%   欧文用のコマンド |\mathBB| と、和文用の |\mathCC| を (p)\LaTeX{} 標準の
+%   方法で定義しておいた後、上のように記述します。なお、|{\mathBB}{\mathCC}|
+%   の部分については |{\@mathBB}{\@mathCC}| のように @ をつけた記述
+%   をしてもかまいません(互換性のため)。上のような命令を発行すると、
+%   |\mathAA| が、欧文に対しては |\mathBB|、 和文に対しては |\mathCC| の意味を
+%   持つようになります。
+%   通常は、|\reDeclareMathAlphabet{\mathrm}{\mathrm}{\mathmc}| のように
+%   |AA=BB| として用います。また、|\mathrm| は \LaTeX{} kernel において
+%   標準のコマンドとして既に定義されているので、この場合は |\mathrm| の
+%   再定義となります。native mode での |\rm| のような two letter command
+%   (old font command) に対しても同様なことが引きおこります。つまり、
+%   数式モードにおいて、新たな |\rm| は、\LaTeX{} original の |\rm| と |\mc|
+%   (正確に言えば |\mathrm| と |\mathmc| であるが)の意味を合わせ持つように
+%   なります。
+%
+%   \textbf{補足}
+% \begin{itemize}
+% \item
+%   |\mathAA| を再定義する他の命令(|\DeclareSymbolFontAlphabet| を用いる
+%     パッケージの使用等)との衝突を避けるためには、|\AtBeginDocument| を併用
+%     するなどして展開位置の制御を行ってください。
+% \item
+%   テキストモード時のエラー表示用に |\mathBB| のみを用いることを除いて、
+%     |\mathBB| と |\mathCC| の順は実際には意味を持ちません。和文、欧文の順に
+%     定義しても問題はありません。
+% \item
+%   第2,3引き数には |{\@mathBB}{\@mathCC}| のように |@| をつけた記述も
+%     行えます。ただし、形式は統一してください。判断は第2引き数で行って
+%     いるため、 |{\@mathBB}{\mathCC}| のような記述ではうまく動作しません。
+%     また、|\makeatletter| な状態で |{\@mathBB }{\@mathCC  }| のような |@| と
+%     余分なスペースをつけた場合には無限ループを引き起こすことがあります。
+%     このような記述は避けるようにして下さい。
+% \item
+%   |\reDeclareMathAlphabet| を実行する際には、|\mathBB|, |\mathCC| が定義
+%     されている必要はありません。実際に |\mathAA| を用いる際にはこれらの
+%     |\mathBB|, |\mathCC| が (p)\LaTeX{}標準の方法で定義されている必要があります。
+% \item
+%   他の部分で |\mathAA| を全く定義しない場合を除き、|\mathAA| は
+%     |\reDeclareMathAlphabet| を実行する以前で (p)\LaTeX{}標準の方法で定義され
+%     ている必要があります(|\mathrm| や |\mathbf| の標準的なコマンドは、
+%     \LaTeX{} kernel で既に定義されています)。
+%     |\DeclareMathAlphabet| の場合には、|\reDeclareMathAlphabet| よりも前で1度
+%     |\mathAA| を定義してあれば、|\reDeclareMathAlphabet| の後ろで再度
+%     |\DeclareMathAlphabet| を用いて |\mathAA| の内部の定義内容を変更すること
+%     には問題ありません。
+%     |\DeclareSymbolFontAlphabet| の場合、再定義においても |\mathAA| が直接
+%     定義されるので、|\mathAA| に対する最後の |\DeclareSymbolFontAlphabet| の
+%     さらに後で |\reDeclareMathAlphabet| を実行しなければ有効とはなりません。
+% \item
+%   |\documentstyle| の互換モードの場合、|\rm| 等の two letter command
+%     (old font command) は、|\reDeclareMathAlphabet| とは関連することのない
+%     別個のコマンドとして定義されます。従って、この場合には
+%     |\reDeclareMathAlphabet| を用いても |\rm| 等は数式モードにおいて
+%     欧文・和文両用のものとはなりません。
+% \end{itemize}
 %    \begin{macrocode}
 \def\reDeclareMathAlphabet#1#2#3{%
-  \DeclareRobustCommand{#1}[1]{%
-    \ifmmode
-      \ifx\math@bgroup\@empty % 2.09 compatibility
-        #2\relax#3\relax##1\relax
-      \else % native mode
-        \ifx\math@bgroup\relax % oldstyle
-          #2\relax\@fontswitch\relax{#3}##1\relax
-        \else
-          #2{#3{##1}}%
-        \fi
-      \fi
-    \else
-      #2{##1}%
-    \fi
+  \edef#1{\noexpand\protect\expandafter\noexpand\csname%
+    \expandafter\@gobble\string#1\space\space\endcsname}%
+  \edef\@tempa{\expandafter\@gobble\string#2}%
+  \edef\@tempb{\expandafter\@gobble\string#3}%
+  \edef\@tempc{\string @\expandafter\@gobbletwo\string#2}%
+  \ifx\@tempc\@tempa%
+    \edef\@tempa{\expandafter\@gobbletwo\string#2}%
+    \edef\@tempb{\expandafter\@gobbletwo\string#3}%
+  \fi
+  \expandafter\edef\csname\expandafter\@gobble\string#1\space\space\endcsname%
+    {\noexpand\DualLang@mathalph@bet%
+      {\expandafter\noexpand\csname\@tempa\space\endcsname}%
+      {\expandafter\noexpand\csname\@tempb\space\endcsname}%
   }%
 }
 \@onlypreamble\reDeclareMathAlphabet
+\def\DualLang@mathalph@bet#1#2{%
+  \relax\ifmmode
+    \ifx\math@bgroup\bgroup%     2e normal style     (\mathrm{...})
+      \bgroup\let\DualLang@Mfontsw\DLMfontsw@standard
+    \else
+      \ifx\math@bgroup\relax%    2e two letter style (\rm->\mathrm)
+        \let\DualLang@Mfontsw\DLMfontsw@oldstyle
+      \else
+        \ifx\math@bgroup\@empty% 2.09 oldlfont style ({\mathrm ...})
+          \let\DualLang@Mfontsw\DLMfontsw@oldlfont
+        \else%                   panic! assume 2e normal style
+          \bgroup\let\DualLang@Mfontsw\DLMfontsw@standard
+        \fi
+      \fi
+    \fi
+  \else
+    \let\DualLang@Mfontsw\@firstoftwo
+  \fi
+  \DualLang@Mfontsw{#1}{#2}%
+}
+\def\DLMfontsw@standard#1#2#3{#1{#2{#3}}\egroup}
+\def\DLMfontsw@oldstyle#1#2{#1\relax\@fontswitch\relax{#2}}
+\def\DLMfontsw@oldlfont#1#2{#1\relax#2\relax}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -798,8 +889,8 @@
 % ある和文書体とペアになる欧文書体のことです。
 % 主に多書体パッケージ|skfonts|を用いるための仕組みです。
 %
-% |\DeclareRelationFont|コマンドの最初の４つの引数の組が和文書体の属性、
-% その後の４つの引数の組が従属書体の属性です。
+% |\DeclareRelationFont|コマンドの最初の4つの引数の組が和文書体の属性、
+% その後の4つの引数の組が従属書体の属性です。
 % \begin{verbatim}
 %    \DeclareRelationFont{JY1}{mc}{m}{n}{OT1}{cmr}{m}{n}
 %    \DeclareRelationFont{JY1}{gt}{m}{n}{OT1}{cmr}{bx}{n}
@@ -1624,7 +1715,7 @@
 % \begin{macro}{\emph}
 % \changes{v1.3d}{1997/06/25}{\cs{em},\cs{emph}で和文を強調書体に}
 % 従来は|\em|, |\emph|で和文フォントの切り替えは行っていませんでしたが、
-% 和文フォントも|\gtfamily|に切り替えるようにしました．
+% 和文フォントも|\gtfamily|に切り替えるようにしました。
 %    \begin{macrocode}
 \DeclareRobustCommand\em
         {\@nomath\em \ifdim \fontdimen\@ne\font >\z@ 

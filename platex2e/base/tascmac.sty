@@ -2,6 +2,7 @@
 %
 % Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
 %
+% 2006/07/14 (ST): itembox, screen environment bug fix.
 % 2002/04/01 (KN): ASCII logo macros
 % 1998/11/27 (KN and FTEXers): itembox
 % 1998/02/27 (KN): set \tbaselineshift in minipage environment.
@@ -58,7 +59,7 @@
 \def\@r{6}\def\@s{2.8pt}\def\@sx{3pt}\else
 \def\@r{4}\def\@s{1.8pt}\def\@sx{2pt}\fi
 \par\vspace{.3\baselineskip}\@scw\linewidth \advance\@scw -\@r pt
-\setbox\scb@x=\hbox\bgroup\begin{minipage}{\@scw}% (KN:1998/02/27)
+\setbox\scb@x=\hbox to\@scw\bgroup\begin{minipage}{\@scw}% (KN:1998/02/27)
   \tbaselineshift\@savetbaselineshift}%
 \def\endscreen{\end{minipage}\egroup%
 \setbox\scscb@x=\hbox to\linewidth{\hfil\vbox{\offinterlineskip%
@@ -79,7 +80,7 @@
   \setbox\@iboxstr=\hbox{#2}\@itemh\ht\@iboxstr\advance\@itemh\dp\@iboxstr
   \vspace{.5\@itemh}\bgroup\@scw\linewidth
   \advance\@scw-20pt\@iboxpos={#1}%
-  \setbox\scb@x=\hbox\bgroup\begin{minipage}{\@scw}%
+  \setbox\scb@x=\hbox to\@scw\bgroup\begin{minipage}{\@scw}%
   \tbaselineshift\@savetbaselineshift% (KN:1998/02/27)
   \vspace*{.5\@itemh}}%
 \def\enditembox{\end{minipage}\egroup%
