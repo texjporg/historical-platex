@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{4398}
+% \CheckSum{4404}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -46,8 +46,12 @@
 % \changes{v1.1d}{1997/01/29}{2eモードでa4jなどのオプションに対応}
 % \changes{v1.1e}{1997/04/08}{トップマージンの値を修正}
 % \changes{v1.1f}{1997/07/08}{縦組クラスでベースラインがおかしいのを修正}
-% \changes{v1.1g}{1997/08/25}{sectinレベルが出力されないのを修正}
+% \changes{v1.1g}{1997/08/25}{片面印刷のとき、sectionレベルが出力されない
+%      のを修正}
 % \changes{v1.1h}{1997/09/03}{landscape指定時の値を修正}
+% \changes{v1.1i}{1997/12/12}{report, bookクラスで片面印刷時に、
+%      bothstyleスタイルにすると、コンパイルエラーになるのを修正}
+% \changes{v1.1j}{1998/02/03}{互換モード時のa5pのトップマージンを0.7in増加}
 % \fi
 %
 % \iffalse
@@ -1113,7 +1117,7 @@
 \if@compatibility
 %<*yoko>
   \if@stysize
-     \setlength\topmargin{-.3in}
+    \setlength\topmargin{-.3in}
   \else
 %<!bk>    \setlength\topmargin{27\p@}
 %<10pt&bk>    \setlength\topmargin{.75in}
@@ -1145,12 +1149,17 @@
 %<tate>  \addtolength\topmargin{-\textwidth}
 %<yoko>  \addtolength\topmargin{-\textheight}
   \addtolength\topmargin{-\footskip}
-  \if@stysize
 %    \end{macrocode}
 % \changes{v1.1e}{1997/04/08}{横組クラスでの調整量を
 %      -2.4インチから-2.0インチにした。}
+% \changes{v1.1j}{1998/02/03}{互換モード時のa5pのトップマージンを0.7in増加}
 %    \begin{macrocode}
-    \addtolength\topmargin{-2.0in}
+  \if@stysize
+    \ifnum\c@@paper=2 % A5
+      \addtolength\topmargin{-1.3in}
+    \else
+      \addtolength\topmargin{-2.0in}
+    \fi
   \else
 %<yoko>    \addtolength\topmargin{-2.0in}
 %<tate>    \addtolength\topmargin{-2.8in}
@@ -1737,7 +1746,8 @@
   }
 %    \end{macrocode}
 % 片面印刷の場合：
-% \changes{v1.1g}{1997/08/25}{sectinレベルが出力されないのを修正}
+% \changes{v1.1g}{1997/08/25}{片面印刷のとき、sectionレベルが出力されない
+%      のを修正}
 %    \begin{macrocode}
 \else % if not twoside
   \def\ps@headings{\let\ps@jpl@in\ps@headnombre
@@ -1773,7 +1783,6 @@
 % このスタイルは、両面印刷と片面印刷とで形式が異なります。
 % \changes{v1.0d}{1995/08/23}{横組の evenfoot が中央揃えになっていたのを修正}
 % \changes{v1.0d}{1996/03/05}{横組で偶数ページと奇数ページの設定が逆なのを修正}
-% \changes{v1.1g}{1997/08/25}{sectinレベルが出力されないのを修正}
 %    \begin{macrocode}
 \if@twoside
   \def\ps@bothstyle{\let\ps@jpl@in\ps@footnombre
@@ -1811,6 +1820,12 @@
      ##1}}%
 %</report|book>
   }
+%    \end{macrocode}
+% \changes{v1.1g}{1997/08/25}{片面印刷のとき、sectionレベルが出力されない
+%      のを修正}
+% \changes{v1.1i}{1997/12/12}{report, bookクラスで片面印刷時に、
+%      bothstyleスタイルにすると、コンパイルエラーになるのを修正}
+%    \begin{macrocode}
 \else % if one column
   \def\ps@bothstyle{\let\ps@jpl@in\ps@footnombre
 %<yoko>    \def\@oddhead{\hfil\rightmark}%
@@ -1824,7 +1839,7 @@
      ##1}}%
 %</article>
 %<*report|book>
-  \def\chaptermark##1{\markboth{%
+  \def\chaptermark##1{\markright{%
      \ifnum \c@secnumdepth >\m@ne
 %<book>         \if@mainmatter
          \@chapapp\thechapter\@chappos\hskip1zw
@@ -3318,7 +3333,7 @@
   \DeclareSymbolFont{mincho}{JY1}{mc}{m}{n}
   \DeclareSymbolFontAlphabet{\mathmc}{mincho}
   \SetSymbolFont{mincho}{bold}{JY1}{gt}{m}{n}
-  \DeclareMathAlphabet\mathgt{JY1}{gt}{m}{n}
+  \DeclareMathAlphabet{\mathgt}{JY1}{gt}{m}{n}
   \reDeclareMathAlphabet{\mathrm}{\@mathrm}{\@mathmc}
   \reDeclareMathAlphabet{\mathbf}{\@mathbf}{\@mathgt}
   \jfam\symmincho

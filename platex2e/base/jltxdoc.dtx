@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{147}
+% \CheckSum{150}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -32,12 +32,13 @@
 % \iffalse
 % \changes{v1.0a}{1997/01/23}{\LaTeX \texttt{!<1996/12/01!>}への対応に
 %     合わせて修正}
+% \changes{v1.0b}{1997/07/29}{\cs{}と\texttt{"}の\cs{xspcode}を変更}
 % \fi
 %
 % \iffalse
 %<*class>
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesFile{jltxdoc.dtx}[1997/01/23 v1.0a Standard pLaTeX file]
+\ProvidesFile{jltxdoc.dtx}[1997/07/29 v1.0b Standard pLaTeX file]
 %</class>
 %<*driver>
 \documentclass{jltxdoc}
@@ -177,9 +178,19 @@
 \def\DisableCrossrefs{\@bsphack\scan@allowedfalse\@esphack}
 \def\EnableCrossrefs{\@bsphack\scan@allowedtrue
    \def\DisableCrossrefs{\@bsphack\scan@allowedfalse\@esphack}\@esphack}
-%</class>
 %    \end{macrocode}
 % \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\xspcode}
+% コマンド名の|\|と16進数を示すための|"|の前にもスペースが入るよう、
+% これらの|\xspcode|の値を変更します。
+% \changes{v1.0b}{1997/07/29}{\cs{}と\texttt{"}の\cs{xspcode}を変更}
+%    \begin{macrocode}
+\xspcode"5C=3 %% \
+\xspcode"22=3 %% "
+%</class>
+%    \end{macrocode}
 % \end{macro}
 %
 % \Finale

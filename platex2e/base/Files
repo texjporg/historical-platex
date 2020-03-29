@@ -1,8 +1,11 @@
 Changes.txt
+Copyright
 Files
 README.txt
+README2.txt
 ascmac.sty
 docstrip.cfg
+hyphen.cfg
 jclasses.dtx
 jltxdoc.dtx
 kinsoku.dtx
@@ -19,6 +22,7 @@ plfonts.dtx
 plnews.cls
 plnews01.tex
 plnews02.tex
+plnews03.tex
 plpatch.ltx
 plvers.dtx
 tascmac.sty

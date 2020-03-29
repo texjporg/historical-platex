@@ -40,6 +40,7 @@
 % \changes{v1.3b}{1997/01/28}{\cs{textmc}, \cs{textgt}の動作修正}
 % \changes{v1.3c}{1997/04/08}{和文エンコード関連の修正}
 % \changes{v1.3d}{1997/06/25}{\cs{em},\cs{emph}で和文を強調書体に}
+% \changes{v1.3e}{1997/07/10}{fdファイル名の小文字化が効いていなかったのを修正}
 % \fi
 %
 % \iffalse
@@ -255,7 +256,7 @@
 % |\fontname\font|で返される外部フォント名を用いて、
 % \LaTeX{}フォント名を定義しています。したがって、|\font|をそのまま使うと、
 % 和文フォント名に欧文の外部フォントが登録されたり、
-% 縦組のフォント名が横組用の外部フォントに割り付けられたりしますので、
+% 縦組フォント名に横組用の外部フォントが割り付けられたりしますので、
 % |\jfont|か|\tfont|を用いるようにします。
 % |\afont|は、|\font|コマンドの保存用です。
 %    \begin{macrocode}
@@ -456,6 +457,7 @@
 % \begin{macro}{\DeclareFontEncoding}
 % \begin{macro}{\DeclareFontEncoding@}
 % 欧文エンコードを宣言するためのコマンドです。
+% \file{ltfssbas.dtx}で定義されているものを、
 % |\fenc@list|を作るように再定義をしています。
 %    \begin{macrocode}
 \def\DeclareFontEncoding{%
@@ -1154,7 +1156,7 @@
 %
 % \changes{v1.2}{1995/11/21}{代用フォントが使われないバグを修正}
 %    \begin{macrocode}
-\def\fontfamily#1{%
+\DeclareRobustCommand\fontfamily[1]{%
   \edef\tmp@item{{#1}}%
   \@notkfamfalse
   \@notffamfalse
@@ -1195,14 +1197,16 @@
 % 値を入れます。
 % \changes{v1.3c}{1997/04/24}%
 %    {フォント定義ファイル名を小文字に変換してから探すようにした。}
+% \changes{v1.3e}{1997/07/10}{fdファイル名の小文字化が効いていなかったのを
+%    修正。ありがとう、大岩さん}
 %    \begin{macrocode}
     \else
       \@tempswafalse
       \def\fam@elt{\noexpand\fam@elt}%
       \message{(I search kanjifont definition file:}%
       \def\enc@elt<##1>{\message{.}%
-         \edef\@temptokena{\expandafter\string\lowercase{##1#1.fd}}%
-         \IfFileExists{\@temptokena}{\@tempswatrue}{}}%
+        \edef\reserved@a{\lowercase{\noexpand\IfFileExists{##1#1.fd}}}%
+        \reserved@a{\@tempswatrue}{}\relax}%
       \kenc@list
       \message{)}%
       \if@tempswa
@@ -1224,6 +1228,7 @@
   \fi\fi
 %    \end{macrocode}
 % 欧文ファミリの場合も、和文ファミリと同様の方法で確認をします。
+% \changes{v1.3e}{1997/07/10}{fdファイル名の小文字化が効いていなかったのを修正}
 %    \begin{macrocode}
   \expandafter\expandafter\expandafter
   \inlist@\expandafter\tmp@item\expandafter{\ffam@list}%
@@ -1235,8 +1240,8 @@
       \def\fam@elt{\noexpand\fam@elt}%
       \message{(I search font definition file:}%
       \def\enc@elt<##1>{\message{.}%
-         \edef\@temptokena{\expandafter\string\lowercase{##1#1.fd}}%
-         \IfFileExists{\@temptokena}{\@tempswatrue}{}}%
+        \edef\reserved@a{\lowercase{\noexpand\IfFileExists{##1#1.fd}}}%
+        \reserved@a{\@tempswatrue}{}\relax}%
       \fenc@list
       \message{)}%
       \if@tempswa
@@ -1271,7 +1276,7 @@
 %    \begin{macrocode}
 \DeclareRobustCommand\romanseries[1]{\edef\f@series{#1}}
 \DeclareRobustCommand\kanjiseries[1]{\edef\k@series{#1}}
-\def\fontseries#1{\kanjiseries{#1}\romanseries{#1}}
+\DeclareRobustCommand\fontseries[1]{\kanjiseries{#1}\romanseries{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1286,7 +1291,7 @@
 %    \begin{macrocode}
 \DeclareRobustCommand\romanshape[1]{\edef\f@shape{#1}}
 \DeclareRobustCommand\kanjishape[1]{\edef\k@shape{#1}}
-\def\fontshape#1{\kanjishape{#1}\romanshape{#1}}
+\DeclareRobustCommand\fontshape[1]{\kanjishape{#1}\romanshape{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}

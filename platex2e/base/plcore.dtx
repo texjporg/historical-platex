@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{892}
+% \CheckSum{857}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -42,18 +42,19 @@
 % \changes{v1.1f}{1996/07/10}{トンボまわりを修正}
 % \changes{v1.1g}{1997/01/16}{\LaTeX\ \textt{!<1996/06/01!>}に対応}
 % \changes{v1.1h}{1997/06/25}{\LaTeX\ の改行マクロの変更に対応}
+% \changes{v1.1i}{1998/02/03}{\cs{@shipoutsetup}を\cs{@outputpage}内に入れた}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plcore.dtx}[1997/06/25 v1.1h pLaTeX core file]
+\ProvidesFile{plcore.dtx}[1998/02/03 v1.1i pLaTeX core file]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plcore.dtx}
 \title{p\LaTeXe{}の拡張\space\fileversion}
-\author{Ken Nakano \& Hidaki Togashi}
+\author{Ken Nakano \& Hideaki Togashi}
 \date{作成日：\filedate}
 \begin{document}
    \maketitle
@@ -140,7 +141,7 @@
 % \LaTeX~2.09互換モードに入ります。このとき、
 % オリジナルの\LaTeX{}では\file{latex209.def}を読み込みますが、
 % p\LaTeXe{}では\file{pl209.def}を読み込みます。
-% このコマンドは\file{ltmiscen.dtx}で定義されています。
+% このコマンドは\file{ltclass.dtx}で定義されています。
 %    \begin{macrocode}
 \def\documentstyle{%
   \makeatletter\input{pl209.def}\makeatother
@@ -157,6 +158,7 @@
 % \begin{macro}{\cleardoublepage}
 % このコマンドによって出力される、白ページのページスタイルを
 % \pstyle{empty}にし、ヘッダとフッタが入らないようにしています。
+% \file{ltoutput.dtx}の定義を、縦組、横組に合わせて、定義しなおしたものです。
 %    \begin{macrocode}
 \def\cleardoublepage{\clearpage\if@twoside
   \ifodd\c@page
@@ -193,10 +195,12 @@
 %
 % なお、|\newline|マクロは\file{ltspaces.dtx}で定義されています。
 %
-% \changes{v1.1h}{1997/06/25}{\LaTeX\ の改行マクロの変更に対応}
+% \changes{v1.1h}{1997/06/25}{\LaTeX\ の改行マクロの変更に対応。
+%    ありがとう、奥村さん。}
 % \LaTeX\ \texttt{!<1996/12/01!>}で改行マクロが変更され、|\\|が
 % |\newline|を呼び出さなくなったため、変更された改行マクロに対応しまし
 % た。|\mbox{}|の挿入位置は同じです。
+% \file{ltspace.dtx}の定義を上記に合わせて、定義しなおしました。
 %    \begin{macrocode}
 \def\@gnewline #1{%
   \ifvmode
@@ -217,8 +221,9 @@
 %
 % \begin{macro}{\@makecol}
 % このマクロが組み立てる部分の中心となります。
+% \file{ltoutput.dtx}で定義されているものです。
 %    \begin{macrocode}
-\def\@makecol{%
+\gdef\@makecol{%
    \setbox\@outputbox\box\@cclv%
    \xdef\@freelist{\@freelist\@midlist}%
    \global \let \@midlist \@empty
@@ -227,7 +232,7 @@
      \@makespecialcolbox
    \else
      \setbox\@outputbox \vbox to\@colht {%
-       \boxmaxdepth \@maxdepth
+%       \boxmaxdepth \@maxdepth		% comment out on LaTeX 1997/12/01
        \@texttop
        \dimen@ \dp\@outputbox
        \unvbox \@outputbox
@@ -253,12 +258,13 @@
 % \begin{macro}{\@makespecialcolbox}
 % 本文（あるいはボトムフロート）と脚注の間に|\@textbottom|を入れたいので、
 % |\@makespecialcolbox|コマンドも修正をします。
+% やはり、\file{ltoutput.dtx}で定義されているものです。
 %
 % このマクロは、|\enlargedthispage|が使われたときに、
 % |\@makecol|マクロから呼び出されます。
 %    \begin{macrocode}
 %<*plcore|fltrace>
-\def\@makespecialcolbox{%
+\gdef\@makespecialcolbox{%
 %<*trace>
    \tr@ce{Krudgeins ht \the\ht\@kludgeins\space
                     dp \the\dp\@kludgeins\space
@@ -275,12 +281,13 @@
      \advance \@tempdima -\ht\@outputbox
      \advance \@tempdima \pageshrink
 %<*trace>
-   \tr@ce {Natural ht of col: \the\ht\@outputbox}%
-   \tr@ce {\string \@colht: \the\@colht}%
-   \tr@ce {Pageshirink added: \the\pageshrink}%
-   \tr@ce {Hence, space added: \the\@tempdima}%
+     \tr@ce {Natural ht of col: \the\ht\@outputbox}%
+     \tr@ce {\string \@colht: \the\@colht}%
+     \tr@ce {Pageshrink added: \the\pageshrink}%
+     \tr@ce {Hence, space added: \the\@tempdima}%
 %</trace>
      \setbox\@outputbox \vbox to \@colht {%
+%       \boxmaxdepth \maxdepth                 
        \unvbox\@outputbox
        \vskip \@tempdima
        \@textbottom
@@ -291,13 +298,13 @@
             \unvbox \footins
          \color@endgroup
        \fi
-       }%
+     }%
    \else
      \advance \@tempdima -\ht\@kludgeins
 %<*trace>
    \tr@ce {Natural ht of col: \the\ht\@outputbox}%
    \tr@ce {\string \@colht: \the\@colht}%
-   \tr@ce {Extra size added: \the\@kludgeins}%
+   \tr@ce {Extra size added: -\the \ht \@kludgeins}%
    \tr@ce {Hence, height of inner box: \the\@tempdima}%
    \tr@ce {Max? pageshrink available: \the\pageshrink}%
 %</trace>
@@ -311,7 +318,7 @@
               \footnoterule
               \unvbox \footins
            \color@endgroup
-       \fi
+         \fi
        }\vss}%
    \fi
    {\setbox \@tempboxa \box \@kludgeins}%
@@ -329,7 +336,8 @@
 %<*plcore>
 \def\@reinserts{%
   \ifvoid\footins\else\insert\footins{%
-    \iftbox\footins\tate\else\yoko\fi\unvbox\footins}\fi
+    \iftbox\footins\tate\else\yoko\fi
+    \unvbox\footins}\fi
   \ifvbox\@kludgeins\insert\@kludgeins{\unvbox\@kludgeins}\fi
 }
 %    \end{macrocode}
@@ -531,15 +539,36 @@
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\@shipoutsetup}
-% |\@shipoutsetup|マクロは、|\shipout|から呼び出されます。
-% このマクロ内で、用紙サイズにトンボの大きさを加えた大きさを計算します。
+%  \begin{macro}{\@shipoutsetup}
+% \changes{v1.1i}{1998/02/03}{Command removed}
+% |\@outputpage|内に挿入したので削除しました。
+%  \end{macro}
+%
+% \begin{macro}{\@outputpage}
+% |\textwidth|と|\textheight|の交換は、|\@shipoutsetup|内では行ないません。
+% なぜなら、|\@shipoutsetup|マクロが実行されるときは、
+% |\shipout|されるvboxの中であり、このときは横組モードですので、
+% つねに|\iftdir|は偽と判断され、縦と横のサイズを交換できないからです。
+%
+% なお、この変更をローカルなものにするために、
+% |\begingroup|と|\endgroup|で囲みます。
 %    \begin{macrocode}
-\def\@shipoutsetup{%
-     \@resetactivechars
-     \let\-\@dischyph
-     \let\'\@acci\let\`\@accii\let\=\@acciii
-     \let\\\@normalcr
+\def\@outputpage{%
+\begingroup % the \endgroup is put in by \aftergroup
+  \iftdir
+    \dimen\z@\textwidth \textwidth\textheight \textheight\dimen\z@
+  \fi
+  \let \protect \noexpand
+  \@resetactivechars
+  \@parboxrestore
+  \shipout\vbox{\yoko
+    \set@typeset@protect
+    \aftergroup\endgroup
+    \aftergroup\set@typeset@protect
+%    \end{macrocode}
+% \changes{v1.1g}{1998/02/03}{\cs{@shipoutsetup}を\cs{@outputpage}内に入れた}
+% ここから|\@shipoutsetup|の内容。
+%    \begin{macrocode}
      \if@specialpage
        \global\@specialpagefalse\@nameuse{ps@\@specialstyle}%
      \fi
@@ -562,40 +591,21 @@
 % \changes{v1.1a}{1995/11/10}{\cs{topmargin}が反映されないバグを修正}
 %    \begin{macrocode}
      \@@topmargin\topmargin
-\iftombow
-     \@@paperwidth\paperwidth \advance\@@paperwidth 6mm\relax
-     \@@paperheight\paperheight \advance\@@paperheight 16mm\relax
-     \advance\@@topmargin 1in\relax \advance\@themargin 1in\relax
-\fi
+     \iftombow
+       \@@paperwidth\paperwidth \advance\@@paperwidth 6mm\relax
+       \@@paperheight\paperheight \advance\@@paperheight 16mm\relax
+       \advance\@@topmargin 1in\relax \advance\@themargin 1in\relax
+     \fi
      \reset@font
      \normalsize
+     \normalsfcodes
+     \let\label\@gobble
+     \let\index\@gobble
+     \let\glossary\@gobble
      \baselineskip\z@skip \lineskip\z@skip \lineskiplimit\z@
-     \let\par\@@par          %% 15 Sep 87
-}
 %    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\@outputpage}
-% |\textwidth|と|\textheight|の交換は、|\@shipoutsetup|内では行ないません。
-% なぜなら、|\@shipoutsetup|マクロが実行されるときは、
-% |\shipout|されるvboxの中であり、このときは横組モードですので、
-% つねに|\iftdir|は偽と判断され、縦と横のサイズを交換できないからです。
-%
-% なお、この変更をローカルなものにするために、
-% |\begingroup|と|\endgroup|で囲みます。
+% ここまでが|\@shipoutsetup|の内容。
 %    \begin{macrocode}
-\def\@outputpage{%
-  \let \protect \noexpand
-  \begingroup% for pLaTeX
-  \iftdir
-    \dimen\z@\textwidth
-    \textwidth\textheight
-    \textheight\dimen\z@
-  \fi
-  \shipout\vbox{\yoko
-    \set@typeset@protect
-    \aftergroup\set@typeset@protect
-    \@shipoutsetup
     \@begindvi
     \@outputtombow
     \vskip \@@topmargin
@@ -604,31 +614,21 @@
         \vfil
         \color@hbox
           \normalcolor
-          \hbox to\textwidth {%
-            \let \label \@gobble
-            \let \index \@gobble
-            \let \glossary \@gobble %% 21 Jun 91
-            \@thehead
-            }%
+          \hb@xt@\textwidth{\@thehead}%
         \color@endbox
-        }%                        %% 22 Feb 87
+      }%                        %% 22 Feb 87
       \dp\@tempboxa \z@
       \box\@tempboxa
       \vskip \headsep
       \box\@outputbox
-      \baselineskip\footskip
+      \baselineskip \footskip
       \color@hbox
         \normalcolor
-        \hbox to\textwidth{%
-          \let \label \@gobble
-          \let \index \@gobble      %% 22 Feb 87
-          \let \glossary \@gobble   %% 21 Jun 91
-          \@thefoot
-          }%
+        \hb@xt@\textwidth{\@thefoot}%
       \color@endbox
     }%
   }%
-  \endgroup% for pLaTeX
+%  \endgroup now inserted by \aftergroup
   \global \@colht \textheight
   \stepcounter{page}%
   \let\firstmark\botmark
@@ -645,6 +645,8 @@
 %
 % \begin{macro}{\thempfn}
 % 本文で使われる脚注記号です。
+%
+% |\@footnotemark|で縦横の判断をするようにしたため、削除。
 %
 % \changes{v1.0a}{1995/04/12}{Removed \texttt{\protect\bslash thempfn}}
 %    \begin{macrocode}
@@ -694,7 +696,7 @@
     }%
     \color@begingroup
       \@makefntext{%
-        \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}
+        \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
     \color@endgroup}}
 %    \end{macrocode}
 % \end{macro}
@@ -721,6 +723,7 @@
 % よって出力された番号と続く２バイト文字との間に|\xkanjiskip|が入りません。
 % これは、|\null|が|\hbox{}|と定義されているためです。
 % そこで|\null|を取り除きます。
+% このコマンドは、\file{ltxref.dtx}で定義されているものです。
 %    \begin{macrocode}
 \def\@setref#1#2#3{%
   \ifx#1\relax
@@ -752,7 +755,7 @@
 \def\verb{\relax\ifmmode\hbox\else\leavevmode\fi
   \bgroup
     \verb@eol@error \let\do\@makeother \dospecials
-    \verbatim@font
+    \verbatim@font\@noligs
     \@ifstar\@sverb\@verb}
 \fi
 %    \end{macrocode}
@@ -764,6 +767,7 @@
 % 相互参照や疑似タイプ入力では、和欧文間スペースが入らないので、|\null|を
 % 取り除きましたが、|tabbing|環境では、逆に|\null|がないため、
 % 和欧文間スペースが入ってしまうので、それを追加します。
+% \file{lttab.dtx}で定義されているものです。
 %    \begin{macrocode}
 \gdef\@stopfield{\null\color@endgroup\egroup}
 %    \end{macrocode}
@@ -793,14 +797,10 @@
 % 何時か（|\hour|）を得るには、|\time|を60で割った商をそのまま用います。
 % 何分か（|\minute|）は、|\hour|に60を掛けた値を|\time|から引いて算出します。
 % ここではカウンタを宣言するだけです。実際の計算は、クラスやパッケージの中
-% で行なわなくてはなりません。そうでなければ、フォーマットファイルを作成
-% した時間に設定されるだけです。
+% で行なっています。
 %    \begin{macrocode}
 \newcount\hour
 \newcount\minute
-%\hour\time \divide\hour by 60\relax
-%\@tempcnta\hour \multiply\@tempcnta 60\relax
-%\minute\time \advance\minute-\@tempcnta
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
