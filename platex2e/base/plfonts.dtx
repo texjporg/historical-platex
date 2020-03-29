@@ -1,14 +1,14 @@
 % \iffalse meta-comment
 %% File: plfonts.dtx
 %
-%  Copyright 1994-1997 ASCII Corporation.
+%  Copyright 1994-1998 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
 %
-% \CheckSum{1433}
+% \CheckSum{1431}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -41,13 +41,15 @@
 % \changes{v1.3c}{1997/04/08}{和文エンコード関連の修正}
 % \changes{v1.3d}{1997/06/25}{\cs{em},\cs{emph}で和文を強調書体に}
 % \changes{v1.3e}{1997/07/10}{fdファイル名の小文字化が効いていなかったのを修正}
+% \changes{v1.3f}{1998/08/10}{\cs{DeclareFixedCommand}を\cs{@onlypreamble}に
+%	してしまっていたのを修正}
 % \fi
 %
 % \iffalse
 %<*driver>
 \NeedsTeXFormat{pLaTeX2e}
 % \fi
-\ProvidesFile{plfonts.dtx}[1997/06/25 v1.3d pLaTeX New Font Selection Scheme]
+\ProvidesFile{plfonts.dtx}[1998/08/10 v1.3f pLaTeX New Font Selection Scheme]
 % \iffalse
 \documentclass{jltxdoc}
 \GetFileInfo{plfonts.dtx}
@@ -696,6 +698,7 @@
 %
 % \changes{v1.2}{1995/11/09}{\cs{DeclareFixedFont}の日本語化}
 % \changes{v1.3c}{1997/04/09}{縦横エンコード・リストの分離による拡張}
+% \changes{v1.3f}{1998/08/10}{プリアンブル・コマンドにしてしまっていたのを解除}
 %    \begin{macrocode}
 \def\DeclareFixedFont#1#2#3#4#5#6{%
    \begingroup
@@ -724,7 +727,6 @@
       \let\font\afont
    \endgroup
   }
-\@onlypreamble\DeclareFixedFont
 %    \end{macrocode}
 % \end{macro}
 %

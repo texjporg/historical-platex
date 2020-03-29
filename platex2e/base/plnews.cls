@@ -68,6 +68,27 @@
 \setlength{\headsep}{0pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% itemize
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewenvironment{itemize}
+  {\ifnum \@itemdepth >3\relax\@toodeep\else
+   \advance\@itemdepth\@ne
+   \edef\@itemitem{labelitem\romannumeral\the\@itemdepth}%
+   \expandafter
+   \list{\csname \@itemitem\endcsname}{%
+      \iftdir
+         \ifnum \@listdepth=\@ne \topsep.5\normalbaselineskip
+           \else\topsep\z@\fi
+         \labelwidth1zw \labelsep.3zw
+         \ifnum \@itemdepth =\@ne \leftmargin1zw\relax
+           \else\leftmargin\leftskip\fi
+         \advance\leftmargin 1zw
+      \fi
+      \parskip\z@ \itemsep\z@ \parsep\z@ % KN 1998/08/10
+      \def\makelabel##1{\hss\llap{##1}}}%
+   \fi}{\endlist}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % misc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \def\file#1{\textsf{#1}}
