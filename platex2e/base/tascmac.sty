@@ -1,7 +1,9 @@
 % "tascmac" document style option for tate gumi.
 %
 % Copyright (C) by 1993, ASCII Corporation & Impress Corporation.
-
+%
+% 1998/02/27 (KN): set \tbaselineshift in minipage environment.
+%
 % ascmac.sty 10/28 '88
 % ASCII special macros
 \newdimen\@savetbaselineshift
@@ -28,7 +30,8 @@
 \setbox\@nbox=\hbox to\hsize{\@ascgrp\unhbox\@nbox \hss a\hss b%
 \vrule width1.08pt depth35pt}
 \@bw=\wd\@nbox\advance\@bw -40pt
-\savebox{\@nbody}\bgroup\begin{minipage}{\@bw\tbaselineshift\@savetbaselineshift}}%
+\savebox{\@nbody}\bgroup\begin{minipage}{\@bw}% (KN:1998/02/27)
+  \tbaselineshift\@savetbaselineshift}%
 \def\endboxnote{\end{minipage}\egroup
 \vbox{\parindent=0pt\offinterlineskip\copy\@nbox
 \hbox to\wd\@nbox{\vrule width1.08pt\hfil\box\@nbody\hfil\vrule width1.08pt}
@@ -52,7 +55,8 @@
 \def\@r{6}\def\@s{2.8pt}\def\@sx{3pt}\else
 \def\@r{4}\def\@s{1.8pt}\def\@sx{2pt}\fi
 \par\vspace{.3\baselineskip}\@scw\linewidth \advance\@scw -\@r pt
-\setbox\scb@x=\hbox\bgroup\begin{minipage}{\@scw\tbaselineshift\@savetbaselineshift}}%
+\setbox\scb@x=\hbox\bgroup\begin{minipage}{\@scw}% (KN:1998/02/27)
+  \tbaselineshift\@savetbaselineshift}%
 \def\endscreen{\end{minipage}\egroup%
 \setbox\scscb@x=\hbox to\linewidth{\hfil\vbox{\offinterlineskip%
 \thinlines\setlength{\unitlength}{1pt}\hrule\kern\@s%
@@ -70,8 +74,8 @@
 \global\@itemh\ht0\global\advance\@itemh\dp0}%
 \vspace{.5\@itemh}\bgroup\@scw\linewidth
 \advance\@scw -20pt\@iboxpos={#1}\@iboxstr={#2}%
-\setbox\scb@x=\hbox\bgroup\begin{minipage}{\@scw
-\tbaselineshift\@savetbaselineshift}\vspace*{.5\@itemh}}%
+\setbox\scb@x=\hbox\bgroup\begin{minipage}{\@scw}% (KN:1998/02/27)
+  \tbaselineshift\@savetbaselineshift\vspace*{.5\@itemh}}%
 \def\enditembox{\end{minipage}\egroup%
 \setbox\scscb@x=\hbox to\linewidth{\hfil\vbox{\offinterlineskip%
 \thicklines\setlength{\unitlength}{1pt}%
