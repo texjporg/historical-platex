@@ -1,14 +1,14 @@
 % \iffalse meta-comment
 %% File: plext.dtx
 %
-%  Copyright 1994,1995,1996 ASCII Corporation.
+%  Copyright 2001 ASCII Corporation.
 %
 %  This file is part of pLaTeX2e system.
 %  -------------------------------------
 %
 % \fi
 %
-% \CheckSum{1842}
+% \CheckSum{1845}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -42,6 +42,8 @@
 % \changes{v1.1g}{1996/01/12}{minipage環境の中で\cs{parbox}を回転オプション
 %   付きで使用するとエラーとなるバグを修正}
 % \changes{v1.1h}{1996/01/30}{キャプション拡張マクロを追加}
+% \changes{v1.1i}{2001/05/10}{縦組でzを指定するとエラーになるのを修正。
+%    ありがとう、大石さん}
 % \fi
 %
 % \iffalse
@@ -49,7 +51,8 @@
 %<*driver>
 \ProvidesFile{plext.dtx}
 %</driver>
-%<plcore>\ProvidesPackage{plext}[1996/01/30 v1.1h pLaTeX package file]
+%<plcore>\ProvidesPackage{plext}
+  [2001/05/10 v1.1i pLaTeX package file]
 %<*driver>
 \documentclass{jltxdoc}
 \usepackage{plext}
@@ -909,12 +912,13 @@
 %
 % \begin{macro}{\@iimakePbox}
 % |\pbox|の内部形式です。
+% \changes{v1.1i}{2001/05/10}{縦組でzを指定するとエラーになるのを修正。}
 %    \begin{macrocode}
 \def\@iimakePbox<#1>#2[#3]#4{%
   \bgroup \@rotswfalse \@pboxswfalse
   \iftdir
     \if #1y\relax\let\box@dir\yoko
-    \else\if #1z\relax\@rotswtrue
+    \else\if #1z\relax\@rotswtrue \let\box@dir\relax
     \else\let\box@dir\tate
     \fi\fi
   \else
@@ -1226,8 +1230,8 @@
 % \file{ltthm.dtx}で定義されています。
 %    \begin{macrocode}
 \def\@thmcounter#1{\noexpand\rensuji{\noexpand\arabic{#1}}}
-%    \end{macrocode}
 %</plcore>
+%    \end{macrocode}
 % \end{macro}
 %
 %

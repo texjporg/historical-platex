@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{858}
+% \CheckSum{867}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -43,6 +43,9 @@
 % \changes{v1.1g}{1997/01/16}{\LaTeX\ \textt{!<1996/06/01!>}に対応}
 % \changes{v1.1h}{1997/06/25}{\LaTeX\ の改行マクロの変更に対応}
 % \changes{v1.1i}{1998/02/03}{\cs{@shipoutsetup}を\cs{@outputpage}内に入れた}
+% \changes{v1.1j}{2001/05/10}{\cs{@makecol}で組み立てられる
+%    \cs{@outputbox}の大きさが、縦組で中身が空のボックスだけの場合も適正になる
+%    ように修正}
 % \fi
 %
 % \iffalse
@@ -239,7 +242,17 @@
        \@texttop
        \dimen@ \dp\@outputbox
        \unvbox \@outputbox
-       \vskip -\dimen@
+%    \end{macrocode}
+% 縦組の際に|\@outputbox|の内容が空のボックスだけの場合に、|\wd\@outputbox|が
+% 0ptになってしまい、結果としてフッタの位置がくるってしまっていた。
+% 0の|\hskip|を発生させると|\wd\@outputbox|の値が期待したものとなるので、
+% 縦組の場合はその方法で対処する。
+% \changes{v1.1j}{2001/05/10}{\cs{@makecol}で組み立てられる
+%    \cs{@outputbox}の大きさが、縦組で中身が空のボックスだけの場合も適正になる
+%    ように修正}
+%    \begin{macrocode}
+       \iftdir\hskip\z@
+       \else\vskip -\dimen@\fi
        \@textbottom
        \ifvoid\footins\else % for pLaTeX
          \vskip \skip\footins
@@ -632,6 +645,10 @@
     }%
   }%
 %  \endgroup now inserted by \aftergroup
+%    \end{macrocode}
+% |\if@newlist|を初期化。
+%    \begin{macrocode}
+  \global\let\if@newlist\@@if@newlist
   \global \@colht \textheight
   \stepcounter{page}%
   \let\firstmark\botmark

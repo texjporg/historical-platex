@@ -124,7 +124,7 @@
     \cvs\normalbaselineskip
     \chs\cwd
     \cHT\cht \advance\cHT\cdp
-  \setbox\adjust@box\hbox{/}%
+  \setbox\adjust@box\hbox{\tbaselineshift\z@ M}%
   \adjust@dimen\ht\adjust@box
   \advance\adjust@dimen\dp\adjust@box
   \advance\adjust@dimen-\cHT
@@ -132,8 +132,9 @@
   \advance\adjust@dimen\cdp
   \advance\adjust@dimen-\dp\adjust@box
     \tbaselineshift\adjust@dimen
-\ifnum \tracingfonts>\tw@
-  \@font@info{baselineshift:\the\adjust@dimen}\fi
+  \ifnum \tracingfonts>\tw@
+    \typeout{baselineshift:\the\tbaselineshift}
+  \fi
   \fi}
 \endinput
 %%

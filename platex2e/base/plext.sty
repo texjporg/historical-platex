@@ -38,7 +38,8 @@
 %%   Right brace   \}     Tilde         \~}
 %%
 \NeedsTeXFormat{pLaTeX2e}
-\ProvidesPackage{plext}[1996/01/30 v1.1h pLaTeX package file]
+\ProvidesPackage{plext}
+  [2001/05/10 v1.1i pLaTeX package file]
 \newif\if@rotsw
 \def\array{\let\@acol\@arrayacol \let\@classz\@arrayclassz
  \let\@classiv\@arrayclassiv
@@ -435,7 +436,7 @@
   \bgroup \@rotswfalse \@pboxswfalse
   \iftdir
     \if #1y\relax\let\box@dir\yoko
-    \else\if #1z\relax\@rotswtrue
+    \else\if #1z\relax\@rotswtrue \let\box@dir\relax
     \else\let\box@dir\tate
     \fi\fi
   \else

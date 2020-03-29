@@ -49,6 +49,7 @@
 %    入らないのを修正}
 % \changes{v1.3j}{2000/10/24}{\cs{adjustbaseline}で余分なアキが入らない
 %    ようにした}
+% \changes{v1.3k}{2001/05/10}{\cs{adjustbaseline}の調整量}
 % \fi
 %
 % \iffalse
@@ -993,6 +994,12 @@
 % \cs{tbaselineshift}を連続して変更した後に鈎括弧類を使うと余計なアキが
 % でる問題が起こるため、\cs{tbaselineshift}をゼロクリアする処理を削除し
 % ました。
+%
+% しかし、それではベースラインシフトを調整済みの欧文ボックスと比較して
+% しまうため、計算した値が大きくなってしまいます。そこで、このボックス
+% の中でゼロにするようにしました。また、``/''と比較していたのを``M''に 
+% しました。
+% \changes{v1.3k}{2001/05/10}{\cs{adjustbaseline}の調整量}
 %    \begin{macrocode}
 \newbox\adjust@box
 \newdimen\adjust@dimen
@@ -1021,7 +1028,7 @@
 % \end{eqnarray*}
 %
 %    \begin{macrocode}
-  \setbox\adjust@box\hbox{/}%
+  \setbox\adjust@box\hbox{\tbaselineshift\z@ M}%
   \adjust@dimen\ht\adjust@box
   \advance\adjust@dimen\dp\adjust@box
   \advance\adjust@dimen-\cHT
@@ -1029,8 +1036,9 @@
   \advance\adjust@dimen\cdp
   \advance\adjust@dimen-\dp\adjust@box
     \tbaselineshift\adjust@dimen
-%<trace>\ifnum \tracingfonts>\tw@
-%<trace>  \@font@info{baselineshift:\the\adjust@dimen}\fi
+%<trace>  \ifnum \tracingfonts>\tw@
+%<trace>    \typeout{baselineshift:\the\tbaselineshift}
+%<trace>  \fi
   \fi}
 %</plcore|trace>
 %<*plcore>
@@ -1357,6 +1365,7 @@
     \romanseries{\seriesdefault}%
     \romanshape{\shapedefault}%
     \selectfont\ignorespaces}
+	\adjustbaseline
 \let\reset@font\normalfont
 %    \end{macrocode}
 % \end{macro}
