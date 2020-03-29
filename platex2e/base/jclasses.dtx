@@ -8,7 +8,7 @@
 %
 % \fi
 %
-% \CheckSum{4279}
+% \CheckSum{4398}
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -45,12 +45,15 @@
 % \changes{v1.1b}{1997/01/28}{日本語ファミリの宣言を再度、実装}
 % \changes{v1.1d}{1997/01/29}{2eモードでa4jなどのオプションに対応}
 % \changes{v1.1e}{1997/04/08}{トップマージンの値を修正}
+% \changes{v1.1f}{1997/07/08}{縦組クラスでベースラインがおかしいのを修正}
+% \changes{v1.1g}{1997/08/25}{sectinレベルが出力されないのを修正}
+% \changes{v1.1h}{1997/09/03}{landscape指定時の値を修正}
 % \fi
 %
 % \iffalse
 \NeedsTeXFormat{pLaTeX2e}
 %<*driver>
-\ProvidesFile{jclasses.dtx}[1997/04/08 v1.1e Standard pLaTeX class]
+\ProvidesFile{jclasses.dtx}[1997/09/03 v1.1h Standard pLaTeX class]
 %</driver>
 %<*yoko>
 %<article>\ProvidesClass{jarticle}
@@ -74,8 +77,8 @@
 %<11pt&bk>\ProvidesFile{tbk11.clo}
 %<12pt&bk>\ProvidesFile{tbk12.clo}
 %</tate>
-%<article|report|book>  [1997/04/08 v1.1e Standard pLaTeX class]
-%<10pt|11pt|12pt>  [1997/04/08 v1.1e Standard pLaTeX file (size option)]
+%<article|report|book>  [1997/09/03 v1.1h Standard pLaTeX class]
+%<10pt|11pt|12pt>  [1997/09/03 v1.1h Standard pLaTeX file (size option)]
 %<*driver>
 \documentclass{jltxdoc}
 \GetFileInfo{jclasses.dtx}
@@ -271,12 +274,13 @@
 %
 % \subsection{横置きオプション}
 % このオプションが指定されると、用紙の縦と横の長さを入れ換えます。
-% このオプションを処理したときに、長さを入れ換えるのでは\emph{ない}ので、
-% オプションの順番を気にする必要がありません。
+% \changes{v1.1h}{1997/09/03}{オプションの処理時に縦横の値を交換}
+% \changes{v1.1h}{1997/09/03}{landscapeオプションを互換モードでも有効に}
 %    \begin{macrocode}
-\if@compatibility\else
-  \DeclareOption{landscape}{\@landscapetrue}
-\fi
+\DeclareOption{landscape}{\@landscapetrue
+  \setlength\@tempdima{\paperheight}%
+  \setlength\paperheight{\paperwidth}%
+  \setlength\paperwidth{\@tempdima}}
 %    \end{macrocode}
 %
 % \subsection{トンボオプション}
@@ -316,8 +320,12 @@
 % このオプションが指定されると、縦組で組版をします。
 % \changes{v1.0g}{1997/01/25}{Insert \cs{hbox}, to switch tate-mode.}
 % \changes{v1.1d}{1997/02/05}{開始ページがおかしくなるのを修正}
+% \changes{v1.1f}{1997/07/08}{縦組時にベースラインがおかしくなるのを修正}
 %    \begin{macrocode}
-\DeclareOption{tate}{\AtBeginDocument{\tate\message{《縦組モード》}}}
+\DeclareOption{tate}{%
+  \AtBeginDocument{\tate\message{《縦組モード》}%
+                   \adjustbaseline}%
+}
 %    \end{macrocode}
 %
 % \subsection{両面、片面オプション}
@@ -663,32 +671,13 @@
 %
 % \subsection{用紙サイズの決定}
 %
-% \begin{macro}{\paperheight}
-% \begin{macro}{\paperwidth}
-% \changes{v1.0b}{1995/11/08}{landscape時の本文領域のスワッピング}
-% landscape オプションが指定されたときは、用紙サイズと本文領域の縦横の
-% 値を交換します。指定されていなければ、そのままです。
-% デフォルトは、A4用紙です。
-%    \begin{macrocode}
-%<*article|report|book>
-\if@landscape
-  \setlength\@tempdima{\paperheight}
-  \setlength\paperheight{\paperwidth}
-  \setlength\paperwidth{\@tempdima}
-  \setlength\@tempdima{\textheight}
-  \setlength\textheight{\textwidth}
-  \setlength\textwidth{\@tempdima}
-\fi
-%    \end{macrocode}
-% \end{macro}
-% \end{macro}
-%
 % \begin{macro}{\columnsep}
 % \begin{macro}{\columnseprule}
 % |\columnsep|は、二段組のときの、左右（あるいは上下）の段間の幅です。
 % このスペースの中央に|\columnseprule|の幅の罫線が引かれます。
 % \changes{v1.0g}{1997/01/25}{\cs{columnsep}: 10pt to 3\cs{Cwd} or 2\cs{Cwd}.}
 %    \begin{macrocode}
+%<*article|report|book>
 \if@stysize
 %<tate>  \setlength\columnsep{3\Cwd}
 %<yoko>  \setlength\columnsep{2\Cwd}
@@ -848,37 +837,74 @@
 \if@compatibility
 %    \end{macrocode}
 % \changes{v1.1a}{1997/01/25}{Add paper option with compatibility mode.}
+% \changes{v1.1h}{1997/09/03}{landscapeでの指定を追加}
 % 互換モード：|a4j|や|b5j|のクラスオプションが指定された場合の設定：
 %    \begin{macrocode}
   \if@stysize
     \ifnum\c@@paper=2 % A5
-%<10pt&yoko>    \setlength\textwidth{28\Cwd}
-%<11pt&yoko>    \setlength\textwidth{25\Cwd}
-%<12pt&yoko>    \setlength\textwidth{24\Cwd}
-%<10pt&tate>    \setlength\textwidth{46\Cwd}
-%<11pt&tate>    \setlength\textwidth{42\Cwd}
-%<12pt&tate>    \setlength\textwidth{38\Cwd}
+      \if@landscape
+%<10pt&yoko>        \setlength\textwidth{47\Cwd}
+%<11pt&yoko>        \setlength\textwidth{42\Cwd}
+%<12pt&yoko>        \setlength\textwidth{40\Cwd}
+%<10pt&tate>        \setlength\textwidth{27\Cwd}
+%<11pt&tate>        \setlength\textwidth{25\Cwd}
+%<12pt&tate>        \setlength\textwidth{23\Cwd}
+      \else
+%<10pt&yoko>        \setlength\textwidth{28\Cwd}
+%<11pt&yoko>        \setlength\textwidth{25\Cwd}
+%<12pt&yoko>        \setlength\textwidth{24\Cwd}
+%<10pt&tate>        \setlength\textwidth{46\Cwd}
+%<11pt&tate>        \setlength\textwidth{42\Cwd}
+%<12pt&tate>        \setlength\textwidth{38\Cwd}
+      \fi
     \else\ifnum\c@@paper=3 % B4
-%<10pt&yoko>    \setlength\textwidth{60\Cwd}
-%<11pt&yoko>    \setlength\textwidth{55\Cwd}
-%<12pt&yoko>    \setlength\textwidth{50\Cwd}
-%<10pt&tate>    \setlength\textwidth{85\Cwd}
-%<11pt&tate>    \setlength\textwidth{76\Cwd}
-%<12pt&tate>    \setlength\textwidth{69\Cwd}
+      \if@landscape
+%<10pt&yoko>        \setlength\textwidth{75\Cwd}
+%<11pt&yoko>        \setlength\textwidth{69\Cwd}
+%<12pt&yoko>        \setlength\textwidth{63\Cwd}
+%<10pt&tate>        \setlength\textwidth{53\Cwd}
+%<11pt&tate>        \setlength\textwidth{49\Cwd}
+%<12pt&tate>        \setlength\textwidth{44\Cwd}
+      \else
+%<10pt&yoko>        \setlength\textwidth{60\Cwd}
+%<11pt&yoko>        \setlength\textwidth{55\Cwd}
+%<12pt&yoko>        \setlength\textwidth{50\Cwd}
+%<10pt&tate>        \setlength\textwidth{85\Cwd}
+%<11pt&tate>        \setlength\textwidth{76\Cwd}
+%<12pt&tate>        \setlength\textwidth{69\Cwd}
+      \fi
     \else\ifnum\c@@paper=4 % B5
-%<10pt&yoko>    \setlength\textwidth{37\Cwd}
-%<11pt&yoko>    \setlength\textwidth{34\Cwd}
-%<12pt&yoko>    \setlength\textwidth{31\Cwd}
-%<10pt&tate>    \setlength\textwidth{55\Cwd}
-%<11pt&tate>    \setlength\textwidth{51\Cwd}
-%<12pt&tate>    \setlength\textwidth{47\Cwd}
+      \if@landscape
+%<10pt&yoko>        \setlength\textwidth{60\Cwd}
+%<11pt&yoko>        \setlength\textwidth{55\Cwd}
+%<12pt&yoko>        \setlength\textwidth{50\Cwd}
+%<10pt&tate>        \setlength\textwidth{34\Cwd}
+%<11pt&tate>        \setlength\textwidth{31\Cwd}
+%<12pt&tate>        \setlength\textwidth{28\Cwd}
+      \else
+%<10pt&yoko>        \setlength\textwidth{37\Cwd}
+%<11pt&yoko>        \setlength\textwidth{34\Cwd}
+%<12pt&yoko>        \setlength\textwidth{31\Cwd}
+%<10pt&tate>        \setlength\textwidth{55\Cwd}
+%<11pt&tate>        \setlength\textwidth{51\Cwd}
+%<12pt&tate>        \setlength\textwidth{47\Cwd}
+      \fi
     \else % A4 ant other
-%<10pt&yoko>    \setlength\textwidth{47\Cwd}
-%<11pt&yoko>    \setlength\textwidth{43\Cwd}
-%<12pt&yoko>    \setlength\textwidth{40\Cwd}
-%<10pt&tate>    \setlength\textwidth{67\Cwd}
-%<11pt&tate>    \setlength\textwidth{61\Cwd}
-%<12pt&tate>    \setlength\textwidth{57\Cwd}
+      \if@landscape
+%<10pt&yoko>        \setlength\textwidth{73\Cwd}
+%<11pt&yoko>        \setlength\textwidth{68\Cwd}
+%<12pt&yoko>        \setlength\textwidth{61\Cwd}
+%<10pt&tate>        \setlength\textwidth{41\Cwd}
+%<11pt&tate>        \setlength\textwidth{38\Cwd}
+%<12pt&tate>        \setlength\textwidth{35\Cwd}
+      \else
+%<10pt&yoko>        \setlength\textwidth{47\Cwd}
+%<11pt&yoko>        \setlength\textwidth{43\Cwd}
+%<12pt&yoko>        \setlength\textwidth{40\Cwd}
+%<10pt&tate>        \setlength\textwidth{67\Cwd}
+%<11pt&tate>        \setlength\textwidth{61\Cwd}
+%<12pt&tate>        \setlength\textwidth{57\Cwd}
+      \fi
     \fi\fi\fi
   \else
 %    \end{macrocode}
@@ -956,37 +982,74 @@
 \if@compatibility
 %    \end{macrocode}
 % \changes{v1.1a}{1997/01/25}{Add paper option with compatibility mode.}
+% \changes{v1.1f}{1997/09/03}{landscapeでの指定を追加}
 % 互換モード：|a4j|や|b5j|のクラスオプションが指定された場合の設定：
 %    \begin{macrocode}
   \if@stysize
     \ifnum\c@@paper=2 % A5
-%<10pt&yoko>      \setlength\textheight{28\Cvs}
-%<11pt&yoko>      \setlength\textheight{25\Cvs}
-%<12pt&yoko>      \setlength\textheight{24\Cvs}
-%<10pt&tate>      \setlength\textheight{16\Cvs}
-%<11pt&tate>      \setlength\textheight{16\Cvs}
-%<12pt&tate>      \setlength\textheight{15\Cvs}
+      \if@landscape
+%<10pt&yoko>        \setlength\textheight{17\Cvs}
+%<11pt&yoko>        \setlength\textheight{17\Cvs}
+%<12pt&yoko>        \setlength\textheight{16\Cvs}
+%<10pt&tate>        \setlength\textheight{26\Cvs}
+%<11pt&tate>        \setlength\textheight{26\Cvs}
+%<12pt&tate>        \setlength\textheight{25\Cvs}
+      \else
+%<10pt&yoko>        \setlength\textheight{28\Cvs}
+%<11pt&yoko>        \setlength\textheight{25\Cvs}
+%<12pt&yoko>        \setlength\textheight{24\Cvs}
+%<10pt&tate>        \setlength\textheight{16\Cvs}
+%<11pt&tate>        \setlength\textheight{16\Cvs}
+%<12pt&tate>        \setlength\textheight{15\Cvs}
+      \fi
     \else\ifnum\c@@paper=3 % B4
-%<10pt&yoko>      \setlength\textheight{57\Cvs}
-%<11pt&yoko>      \setlength\textheight{55\Cvs}
-%<12pt&yoko>      \setlength\textheight{52\Cvs}
-%<10pt&tate>      \setlength\textheight{33\Cvs}
-%<11pt&tate>      \setlength\textheight{33\Cvs}
-%<12pt&tate>      \setlength\textheight{31\Cvs}
+      \if@landscape
+%<10pt&yoko>        \setlength\textheight{38\Cvs}
+%<11pt&yoko>        \setlength\textheight{36\Cvs}
+%<12pt&yoko>        \setlength\textheight{34\Cvs}
+%<10pt&tate>        \setlength\textheight{48\Cvs}
+%<11pt&tate>        \setlength\textheight{48\Cvs}
+%<12pt&tate>        \setlength\textheight{45\Cvs}
+      \else
+%<10pt&yoko>        \setlength\textheight{57\Cvs}
+%<11pt&yoko>        \setlength\textheight{55\Cvs}
+%<12pt&yoko>        \setlength\textheight{52\Cvs}
+%<10pt&tate>        \setlength\textheight{33\Cvs}
+%<11pt&tate>        \setlength\textheight{33\Cvs}
+%<12pt&tate>        \setlength\textheight{31\Cvs}
+      \fi
     \else\ifnum\c@@paper=4 % B5
-%<10pt&yoko>      \setlength\textheight{35\Cvs}
-%<11pt&yoko>      \setlength\textheight{34\Cvs}
-%<12pt&yoko>      \setlength\textheight{32\Cvs}
-%<10pt&tate>      \setlength\textheight{21\Cvs}
-%<11pt&tate>      \setlength\textheight{21\Cvs}
-%<12pt&tate>      \setlength\textheight{20\Cvs}
+      \if@landscape
+%<10pt&yoko>        \setlength\textheight{22\Cvs}
+%<11pt&yoko>        \setlength\textheight{21\Cvs}
+%<12pt&yoko>        \setlength\textheight{20\Cvs}
+%<10pt&tate>        \setlength\textheight{34\Cvs}
+%<11pt&tate>        \setlength\textheight{34\Cvs}
+%<12pt&tate>        \setlength\textheight{32\Cvs}
+      \else
+%<10pt&yoko>        \setlength\textheight{35\Cvs}
+%<11pt&yoko>        \setlength\textheight{34\Cvs}
+%<12pt&yoko>        \setlength\textheight{32\Cvs}
+%<10pt&tate>        \setlength\textheight{21\Cvs}
+%<11pt&tate>        \setlength\textheight{21\Cvs}
+%<12pt&tate>        \setlength\textheight{20\Cvs}
+      \fi
     \else % A4 and other
-%<10pt&yoko>      \setlength\textheight{43\Cvs}
-%<11pt&yoko>      \setlength\textheight{42\Cvs}
-%<12pt&yoko>      \setlength\textheight{39\Cvs}
-%<10pt&tate>      \setlength\textheight{26\Cvs}
-%<11pt&tate>      \setlength\textheight{26\Cvs}
-%<12pt&tate>      \setlength\textheight{22\Cvs}
+      \if@landscape
+%<10pt&yoko>        \setlength\textheight{27\Cvs}
+%<11pt&yoko>        \setlength\textheight{26\Cvs}
+%<12pt&yoko>        \setlength\textheight{25\Cvs}
+%<10pt&tate>        \setlength\textheight{41\Cvs}
+%<11pt&tate>        \setlength\textheight{41\Cvs}
+%<12pt&tate>        \setlength\textheight{38\Cvs}
+      \else
+%<10pt&yoko>        \setlength\textheight{43\Cvs}
+%<11pt&yoko>        \setlength\textheight{42\Cvs}
+%<12pt&yoko>        \setlength\textheight{39\Cvs}
+%<10pt&tate>        \setlength\textheight{26\Cvs}
+%<11pt&tate>        \setlength\textheight{26\Cvs}
+%<12pt&tate>        \setlength\textheight{22\Cvs}
+      \fi
     \fi\fi\fi
 %<yoko>    \addtolength\textheight{\topskip}
 %<bk&yoko>    \addtolength\textheight{\baselineskip}
@@ -1674,6 +1737,7 @@
   }
 %    \end{macrocode}
 % 片面印刷の場合：
+% \changes{v1.1g}{1997/08/25}{sectinレベルが出力されないのを修正}
 %    \begin{macrocode}
 \else % if not twoside
   \def\ps@headings{\let\ps@jpl@in\ps@headnombre
@@ -1682,23 +1746,17 @@
 %<tate>    \def\@oddhead{\thepage\hfil\rightmark}%
     \let\@mkboth\markboth
 %<*article>
-  \def\sectionmark##1{\markboth{%
-     \ifnum \c@secnumdepth >\z@ \thesection.\hskip1zw\fi
-     ##1}{}}%
-  \def\subsectionmark##1{\markright{%
-     \ifnum \c@secnumdepth >\@ne \thesubsection.\hskip1zw\fi
+  \def\sectionmark##1{\markright{%
+     \ifnum \c@secnumdepth >\m@ne \thesection.\hskip1zw\fi
      ##1}}%
 %</article>
 %<*report|book>
-\def\chaptermark##1{\markboth{%
+\def\chaptermark##1{\markright{%
    \ifnum \c@secnumdepth >\m@ne
 %<book>         \if@mainmatter
        \@chapapp\thechapter\@chappos\hskip1zw
 %<book>         \fi
    \fi
-   ##1}{}}%
-\def\sectionmark##1{\markright{%
-   \ifnum \c@secnumdepth >\z@ \thesection.\hskip1zw\fi
    ##1}}%
 %</report|book>
   }
@@ -1715,6 +1773,7 @@
 % このスタイルは、両面印刷と片面印刷とで形式が異なります。
 % \changes{v1.0d}{1995/08/23}{横組の evenfoot が中央揃えになっていたのを修正}
 % \changes{v1.0d}{1996/03/05}{横組で偶数ページと奇数ページの設定が逆なのを修正}
+% \changes{v1.1g}{1997/08/25}{sectinレベルが出力されないのを修正}
 %    \begin{macrocode}
 \if@twoside
   \def\ps@bothstyle{\let\ps@jpl@in\ps@footnombre
@@ -1752,7 +1811,7 @@
      ##1}}%
 %</report|book>
   }
-\else % if not two column
+\else % if one column
   \def\ps@bothstyle{\let\ps@jpl@in\ps@footnombre
 %<yoko>    \def\@oddhead{\hfil\rightmark}%
 %<yoko>    \def\@oddfoot{\hfil\thepage}%
@@ -1760,11 +1819,8 @@
 %<tate>    \def\@oddfoot{\thepage\hfil}%
     \let\@mkboth\markboth
 %<*article>
-  \def\sectionmark##1{\markboth{%
-     \ifnum \c@secnumdepth >\z@ \thesection.\hskip1zw\fi
-     ##1}{}}%
-  \def\subsectionmark##1{\markright{%
-     \ifnum \c@secnumdepth >\@ne \thesubsection.\hskip1zw\fi
+  \def\sectionmark##1{\markright{%
+     \ifnum \c@secnumdepth >\m@ne \thesection.\hskip1zw\fi
      ##1}}%
 %</article>
 %<*report|book>
@@ -1774,9 +1830,6 @@
          \@chapapp\thechapter\@chappos\hskip1zw
 %<book>         \fi
      \fi
-     ##1}{}}%
-  \def\sectionmark##1{\markright{%
-     \ifnum \c@secnumdepth >\z@ \thesection.\hskip1zw\fi
      ##1}}%
 %</report|book>
   }
